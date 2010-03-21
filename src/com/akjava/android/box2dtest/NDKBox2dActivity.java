@@ -1,16 +1,16 @@
 package com.akjava.android.box2dtest;
 
-import com.akjava.android.box2dtest.ndkbox2d.MoveBoxActivity;
-import com.akjava.android.box2dtest.ndkbox2d.BlockBreakActivity;
-import com.akjava.android.box2dtest.ndkbox2d.BoundBallActivity;
-import com.akjava.android.box2dtest.ndkbox2d.BoundBoxActivity;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.akjava.android.box2dtest.ndkbox2d.BlockBreakActivity;
+import com.akjava.android.box2dtest.ndkbox2d.BoundBallActivity;
+import com.akjava.android.box2dtest.ndkbox2d.BoundBoxActivity;
+import com.akjava.android.box2dtest.ndkbox2d.MoveBoxActivity;
 
 public class NDKBox2dActivity extends ListActivity {
 	/** Called when the activity is first created. */

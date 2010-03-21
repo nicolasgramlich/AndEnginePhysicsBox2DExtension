@@ -5,19 +5,20 @@ import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.anddev.andengine.physics.box2d.BodyInfo;
+import org.anddev.andengine.physics.box2d.Box2DNativeWrapper;
+import org.anddev.andengine.physics.box2d.util.collisionIdKeeper;
+
 import android.content.Context;
 import android.opengl.GLU;
 
-import com.akjava.android.box2d.BodyInfo;
-import com.akjava.android.box2d.Box2dControler;
-import com.akjava.android.box2d.collisionIdKeeper;
 import com.akjava.lib.android.math.MathUtils;
 import com.akjava.lib.android.opengl.ImageStringDrawer;
 import com.akjava.lib.android.opengl.OpenGLUtils;
 
 public class BlockBreakRenderer extends AbstractBox2dTestRender {
 
-	public BlockBreakRenderer(Context context, Box2dControler box2dControler) {
+	public BlockBreakRenderer(Context context, Box2DNativeWrapper box2dControler) {
 		super(context, box2dControler);
 	}
 

@@ -1,4 +1,4 @@
-package com.akjava.android.box2d;
+package org.anddev.andengine.physics.box2d.util;
 
 public class collisionIdKeeper {
 	public int[] contactIds;

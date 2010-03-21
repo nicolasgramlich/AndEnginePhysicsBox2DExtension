@@ -2,10 +2,11 @@ package com.akjava.android.box2dtest;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.anddev.andengine.physics.box2d.Box2DNativeWrapper;
+
 import android.content.Context;
 import android.opengl.GLU;
 
-import com.akjava.android.box2d.Box2dControler;
 import com.akjava.lib.android.opengl.AbstractRenderer;
 import com.akjava.lib.android.opengl.ImageStringDrawer;
 
@@ -15,9 +16,9 @@ public abstract class AbstractBox2dTestRender extends AbstractRenderer {
 
 	protected float stepTime = 1.0f / 15f;
 
-	protected Box2dControler box2dControler;
+	protected Box2DNativeWrapper box2dControler;
 
-	public AbstractBox2dTestRender(Context context, Box2dControler box2dControler) {
+	public AbstractBox2dTestRender(Context context, Box2DNativeWrapper box2dControler) {
 		super(context);
 		this.box2dControler = box2dControler;
 	}

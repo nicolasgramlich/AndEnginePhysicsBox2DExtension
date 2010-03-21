@@ -16,13 +16,12 @@
 
 package com.akjava.android.box2dtest.ndkbox2d;
 
-import org.anddev.andengine.physics.box2d.NDKBox2dControler;
+import org.anddev.andengine.physics.box2d.Box2DNativeWrapper;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
-import com.akjava.android.box2d.Box2dControler;
 import com.akjava.android.box2dtest.AbstractBox2dTestRender;
 import com.akjava.android.box2dtest.BoundBallRenderer;
 
@@ -42,7 +41,7 @@ public class BoundBallActivity extends Activity {
 		glView = new GLSurfaceView(this);
 		setContentView(glView);
 
-		Box2dControler controler = new NDKBox2dControler();
+		Box2DNativeWrapper controler = new Box2DNativeWrapper();
 		AbstractBox2dTestRender render = new BoundBallRenderer(this, controler);
 		glView.setRenderer(render);
 

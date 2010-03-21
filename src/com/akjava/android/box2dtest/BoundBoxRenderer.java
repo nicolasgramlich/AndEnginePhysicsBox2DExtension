@@ -3,11 +3,12 @@ package com.akjava.android.box2dtest;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.anddev.andengine.physics.box2d.BodyInfo;
+import org.anddev.andengine.physics.box2d.Box2DNativeWrapper;
+
 import android.content.Context;
 import android.opengl.GLU;
 
-import com.akjava.android.box2d.BodyInfo;
-import com.akjava.android.box2d.Box2dControler;
 import com.akjava.lib.android.math.MathUtils;
 import com.akjava.lib.android.opengl.ImageStringDrawer;
 import com.akjava.lib.android.opengl.OpenGLUtils;
@@ -17,7 +18,7 @@ public class BoundBoxRenderer extends AbstractBox2dTestRender {
 	private int gravityX = 1;
 	private int gravityY = 10;
 
-	public BoundBoxRenderer(Context context, Box2dControler box2dControler) {
+	public BoundBoxRenderer(Context context, Box2DNativeWrapper box2dControler) {
 		super(context, box2dControler);
 
 	}
@@ -32,7 +33,7 @@ public class BoundBoxRenderer extends AbstractBox2dTestRender {
 
 	@Override
 	public void actionCenter() {
-		if (lastIndex < Box2dControler.maxBodySize - 1) {
+		if (lastIndex < Box2DNativeWrapper.MAXBODYSIZE - 1) {
 			lastIndex = box2dControler.createCircle(MathUtils.random(1, 31), MathUtils.random(1, 20), 1, 10, 1f);
 		}
 	}

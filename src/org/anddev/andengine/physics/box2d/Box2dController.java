@@ -1,6 +1,8 @@
-package com.akjava.android.box2d;
+package org.anddev.andengine.physics.box2d;
 
-public interface Box2dControler {
+import org.anddev.andengine.physics.box2d.util.collisionIdKeeper;
+
+public interface Box2dController {
 
 	public static final int maxBodySize = 300;
 

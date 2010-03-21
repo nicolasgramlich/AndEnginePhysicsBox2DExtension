@@ -16,12 +16,11 @@
 
 package com.akjava.android.box2dtest.ndkbox2d;
 
-import org.anddev.andengine.physics.box2d.NDKBox2dControler;
+import org.anddev.andengine.physics.box2d.Box2DNativeWrapper;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.akjava.android.box2d.Box2dControler;
 import com.akjava.android.box2dtest.BoundBoxRenderer;
 import com.akjava.lib.android.opengl.AbstractGLSurfaceView;
 import com.akjava.lib.android.opengl.SimpleGameGLSurfaceView;
@@ -40,7 +39,7 @@ public class BoundBoxActivity extends Activity {
 		setTitle("ndk bound box(center key add ball)");
 
 		mGLView = new SimpleGameGLSurfaceView(this);
-		Box2dControler controler = new NDKBox2dControler();
+		Box2DNativeWrapper controler = new Box2DNativeWrapper();
 		setContentView(mGLView);
 
 		BoundBoxRenderer render = new BoundBoxRenderer(this, controler);
