@@ -16,8 +16,8 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 	
-LOCAL_MODULE    := box2d
-LOCAL_SRC_FILES := box2d.cpp \
+LOCAL_MODULE    := andenginephysicsbox2d
+LOCAL_SRC_FILES := andenginephysicsbox2d.cpp \
 	box2d-trunk-27062009/Common/b2Math.cpp \
 	box2d-trunk-27062009/Common/b2Settings.cpp \
 	box2d-trunk-27062009/Common/b2StackAllocator.cpp \

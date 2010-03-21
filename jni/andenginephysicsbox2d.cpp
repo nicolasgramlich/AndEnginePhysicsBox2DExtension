@@ -1,4 +1,4 @@
-#include "com_akjava_android_box2d_NDKBox2dControler.h"
+#include "org_anddev_andengine_physics_box2d_NDKBox2dControler.h"
 #include "box2d-trunk-27062009/Include/Box2D.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -36,11 +36,11 @@ extern "C" {
 
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    createWorld
 	 * Signature: (FFFFFF)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_createWorld
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_createWorld
 	  (JNIEnv* env, jobject caller, jfloat minX, jfloat minY, jfloat maxX, jfloat maxY, jfloat gravityX, jfloat gravityY){
 
 		//clear
@@ -73,11 +73,11 @@ extern "C" {
 
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    createBox
 	 * Signature: (FFFF)I
 	 */
-	JNIEXPORT jint JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_createBox
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_createBox
 	  (JNIEnv* env, jobject caller, jfloat x, jfloat y, jfloat width, jfloat height){
 
 		b2BodyDef groundBodyDef;
@@ -102,11 +102,11 @@ extern "C" {
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    createCircle
 	 * Signature: (FFFFF)I
 	 */
-	JNIEXPORT jint JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_createCircle
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_createCircle
 	  (JNIEnv* env, jobject caller, jfloat x, jfloat y, jfloat radius, jfloat weight, jfloat restitution){
 		b2BodyDef ballDef;
 					ballDef.position.Set(
@@ -126,11 +126,11 @@ extern "C" {
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    getBodyInfo
 	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)Lcom/akjava/android/box2d/BodyInfo;
 	 */
-	JNIEXPORT jobject JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_getBodyInfo
+	JNIEXPORT jobject JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_getBodyInfo
 	  (JNIEnv* env, jobject caller, jobject bodyInfo, jint bindex){
 if(bodies[bindex]==NULL){
 	return NULL;
@@ -146,47 +146,45 @@ if(bodies[bindex]==NULL){
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    step
 	 * Signature: (FII)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_step
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_step
 	  (JNIEnv *env, jobject caller, jfloat timeStep, jint velocityIterations, jint positionIterations){
 		world->Step(timeStep, velocityIterations, positionIterations);
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    setGravity
 	 * Signature: (FF)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_setGravity
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_setGravity
 	  (JNIEnv *env, jobject caller, jfloat gravityX, jfloat gravityY){
 		b2Vec2 gravity(gravityX,gravityY);
 		world->SetGravity(gravity);
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    destroyBody
 	 * Signature: (I)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_destroyBody
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_destroyBody
 	  (JNIEnv *env, jobject caller, jint id){
-
 		if(bodies[id]!=NULL){
 		world->DestroyBody(bodies[id]);
 		bodies[id]=NULL;
 		}
-
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    getCollisions
 	 * Signature: (Lcom/akjava/android/box2d/collisionIdKeeper;I)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_getCollisions
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_getCollisions
 	  (JNIEnv *env, jobject caller, jobject keeper, jint target){
 
 		jclass ballView = env->GetObjectClass(keeper);
@@ -205,11 +203,11 @@ if(bodies[bindex]==NULL){
 
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    createBox
 	 * Signature: (FFFFFFF)I
 	 */
-	JNIEXPORT jint JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_createBox2
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_createBox2
 	  (JNIEnv *env, jobject caller, jfloat x, jfloat y, jfloat width, jfloat height, jfloat density, jfloat restitution, jfloat friction){
 		b2BodyDef groundBodyDef;
 						groundBodyDef.position.Set(x+width/2, y+height/2);
@@ -239,11 +237,11 @@ if(bodies[bindex]==NULL){
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    setBodyXForm
 	 * Signature: (IFFF)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_setBodyXForm
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_setBodyXForm
 	  (JNIEnv *env, jobject caller, jint id, jfloat x, jfloat y, jfloat angle){
 		if(bodies[id]!=NULL){
 		b2Vec2 vec(x,y);
@@ -252,11 +250,11 @@ if(bodies[bindex]==NULL){
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    setBodyAngularVelocity
 	 * Signature: (IF)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_setBodyAngularVelocity
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_setBodyAngularVelocity
 	  (JNIEnv *env, jobject caller, jint id, jfloat angle){
 		if(bodies[id]!=NULL){
 				bodies[id]->SetAngularVelocity(angle);
@@ -264,11 +262,11 @@ if(bodies[bindex]==NULL){
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    setBodyLinearVelocity
 	 * Signature: (IFF)V
 	 */
-	JNIEXPORT void JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_setBodyLinearVelocity
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_setBodyLinearVelocity
 	  (JNIEnv *env, jobject caller, jint id, jfloat x, jfloat y){
 		if(bodies[id]!=NULL){
 				b2Vec2 vec(x,y);
@@ -279,11 +277,11 @@ if(bodies[bindex]==NULL){
 
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    getStatus
 	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)Lcom/akjava/android/box2d/BodyInfo;
 	 */
-	JNIEXPORT jobject JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_getStatus
+	JNIEXPORT jobject JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_getStatus
 	  (JNIEnv *env, jobject caller, jobject bodyInfo , jint bindex){
 
 		if(bodies[bindex]==NULL){
@@ -301,11 +299,11 @@ if(bodies[bindex]==NULL){
 	}
 
 	/*
-	 * Class:     com_akjava_android_box2d_NDKBox2dControler
+	 * Class:     org_anddev_andengine_physics_box2d_NDKBox2dControler
 	 * Method:    getLinerVelocity
 	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)Lcom/akjava/android/box2d/BodyInfo;
 	 */
-	JNIEXPORT jobject JNICALL Java_com_akjava_android_box2d_NDKBox2dControler_getLinerVelocity
+	JNIEXPORT jobject JNICALL Java_org_anddev_andengine_physics_box2d_NDKBox2dControler_getLinerVelocity
 	  (JNIEnv *env, jobject caller, jobject bodyInfo, jint bindex){
 
 

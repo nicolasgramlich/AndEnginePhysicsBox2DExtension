@@ -16,11 +16,12 @@
 
 package com.akjava.android.box2dtest.ndkbox2d;
 
+import org.anddev.andengine.physics.box2d.NDKBox2dControler;
+
 import android.app.Activity;
 import android.os.Bundle;
 
 import com.akjava.android.box2d.Box2dControler;
-import com.akjava.android.box2d.NDKBox2dControler;
 import com.akjava.android.box2dtest.MoveBoxRenderer;
 import com.akjava.lib.android.opengl.AbstractGLSurfaceView;
 import com.akjava.lib.android.opengl.SimpleGameGLSurfaceView;

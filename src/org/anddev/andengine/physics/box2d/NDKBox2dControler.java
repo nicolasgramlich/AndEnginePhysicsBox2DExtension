@@ -1,9 +1,13 @@
-package com.akjava.android.box2d;
+package org.anddev.andengine.physics.box2d;
+
+import com.akjava.android.box2d.BodyInfo;
+import com.akjava.android.box2d.Box2dControler;
+import com.akjava.android.box2d.collisionIdKeeper;
 
 public class NDKBox2dControler implements Box2dControler {
 
 	static {
-		System.loadLibrary("box2d");
+		System.loadLibrary("andenginephysicsbox2d");
 	}
 
 	@Override
