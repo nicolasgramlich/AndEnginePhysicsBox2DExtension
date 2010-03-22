@@ -101,8 +101,8 @@ public class BlockBreakRenderer extends AbstractBox2dTestRender {
 
 		// blocks.
 		for (int i = 5; i <= lastIndex; i++) {
-			BodyInfo tmp = box2dControler.getBodyInfo(info, i);
-			if (tmp != null) {
+			box2dControler.getBodyInfo(info, i);
+			if (info != null) {
 				fillArrayBox(gl, info.getX() * WORLD_SCALE, info.getY() * WORLD_SCALE, 12, 8, MathUtils.radToDeg(info.getAngle()));
 			} else {
 				// Log.i("app","null");

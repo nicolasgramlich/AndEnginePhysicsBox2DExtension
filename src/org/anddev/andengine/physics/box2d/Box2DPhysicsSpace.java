@@ -4,9 +4,13 @@ import java.util.ArrayList;
 
 import org.anddev.andengine.entity.DynamicEntity;
 import org.anddev.andengine.entity.StaticEntity;
+import org.anddev.andengine.physics.DynamicPhysicsBody;
 import org.anddev.andengine.physics.IPhysicsSpace;
-import org.anddev.andengine.physics.PhysicsData;
+import org.anddev.andengine.physics.StaticPhysicsBody;
 import org.anddev.andengine.physics.box2d.util.BidirectionalMap;
+import org.anddev.andengine.util.Debug;
+
+import com.akjava.lib.android.math.MathUtils;
 
 
 /**
@@ -19,7 +23,7 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	// ===========================================================
 
 //	private static final float STEPTIME = 1 / 60f;
-	
+
 	private static final int VELOCITYITERATIONS = 8;
 	private static final int POSITIONITERATIONS = 1;
 
@@ -29,10 +33,10 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 
 	private final Box2DNativeWrapper mBox2DNativeWrapper;
 
-	private final BidirectionalMap<StaticEntity, Integer> mStaticEntityToPhysicsIDMapping = new BidirectionalMap<StaticEntity, Integer>();
+	private final BidirectionalMap<StaticPhysicsBody, Integer> mStaticPhysicsBodyToPhysicsIDMapping = new BidirectionalMap<StaticPhysicsBody, Integer>();
 
-	private final ArrayList<DynamicEntity> mDynamicEntities = new ArrayList<DynamicEntity>();
-	private final BidirectionalMap<DynamicEntity, Integer> mDynamicEntityToPhysicsIDMapping = new BidirectionalMap<DynamicEntity, Integer>();
+	private final ArrayList<DynamicPhysicsBody> mDynamicPhysicsBodies = new ArrayList<DynamicPhysicsBody>();
+	private final BidirectionalMap<DynamicPhysicsBody, Integer> mDynamicPhysicsBodyToPhysicsIDMapping = new BidirectionalMap<DynamicPhysicsBody, Integer>();
 
 	private final BodyInfo mBodyInfo = new BodyInfo();
 
@@ -58,40 +62,47 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	}
 
 	@Override
-	public void addDynamicEntity(final DynamicEntity pDynamicEntity, final PhysicsData pPhysicsData) {
-		assert(pPhysicsData.mMass != 0);
-		pDynamicEntity.setUpdatePhysicsSelf(false);
-		final int physicsID = this.mBox2DNativeWrapper.createBox2(pDynamicEntity.getX(), pDynamicEntity.getY(), pDynamicEntity.getWidth(), pDynamicEntity.getHeight(), pPhysicsData.mMass, pPhysicsData.mElasticity, pPhysicsData.mFricition);
-		this.mDynamicEntities.add(pDynamicEntity);
-		this.mDynamicEntityToPhysicsIDMapping.put(pDynamicEntity, physicsID);
+	public void addDynamicEntity(final DynamicPhysicsBody pDynamicPhysicsBody) {
+		assert(pDynamicPhysicsBody.mMass != 0);
+		final DynamicEntity dynamicEntity = pDynamicPhysicsBody.getEntity(); 
+		dynamicEntity.setUpdatePhysicsSelf(false);
+		final int physicsID = this.mBox2DNativeWrapper.createBox2(dynamicEntity.getX(), dynamicEntity.getY(), dynamicEntity.getInitialWidth(), dynamicEntity.getInitialHeight(), pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition);
+		this.mDynamicPhysicsBodies.add(pDynamicPhysicsBody);
+		this.mDynamicPhysicsBodyToPhysicsIDMapping.put(pDynamicPhysicsBody, physicsID);		
 	}
 
 	@Override
-	public void addStaticEntity(final StaticEntity pStaticEntity, final PhysicsData pPhysicsData) {
-		assert(pPhysicsData.mMass == 0);
-		final int physicsID = this.mBox2DNativeWrapper.createBox2(pStaticEntity.getX(), pStaticEntity.getY(), pStaticEntity.getWidth(), pStaticEntity.getHeight(), pPhysicsData.mMass, pPhysicsData.mElasticity, pPhysicsData.mFricition);
-		this.mStaticEntityToPhysicsIDMapping.put(pStaticEntity, physicsID);
+	public void addStaticEntity(final StaticPhysicsBody pStaticPhysicsBody) {
+		assert(pStaticPhysicsBody.mMass == 0);
+		final StaticEntity staticEntity = pStaticPhysicsBody.getEntity();
+		final int physicsID = this.mBox2DNativeWrapper.createBox2(staticEntity.getX(), staticEntity.getY(), staticEntity.getWidth(), staticEntity.getHeight(), 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition);
+		this.mStaticPhysicsBodyToPhysicsIDMapping.put(pStaticPhysicsBody, physicsID);
 	}
 
 	@Override
-	public void setVelocity(final DynamicEntity pDynamicEntity, final float pVelocityX, final float pVelocityY) {
-		final int physicsID = this.mDynamicEntityToPhysicsIDMapping.get(pDynamicEntity);
+	public void setVelocity(final DynamicPhysicsBody pDynamicPhysicsBody, final float pVelocityX, final float pVelocityY) {
+		final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.get(pDynamicPhysicsBody);
 		this.mBox2DNativeWrapper.setBodyLinearVelocity(physicsID, pVelocityX, pVelocityY);
 	}
 
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
+		Debug.d("Before step");
 		this.mBox2DNativeWrapper.step(pSecondsElapsed, VELOCITYITERATIONS, POSITIONITERATIONS);
+//		this.mBox2DNativeWrapper.step(STEPTIME, VELOCITYITERATIONS, POSITIONITERATIONS);
+		Debug.d("After step");
 
-		final BidirectionalMap<DynamicEntity, Integer> dynamicEntityToPhysicsIDMapping = this.mDynamicEntityToPhysicsIDMapping;
-		final ArrayList<DynamicEntity> dynamicEntities = this.mDynamicEntities;
+		final BidirectionalMap<DynamicPhysicsBody, Integer> dynamicPhysicsBodyToPhysicsIDMapping = this.mDynamicPhysicsBodyToPhysicsIDMapping;
+		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
 		final BodyInfo bodyInfo = this.mBodyInfo;
 
-		for(int i = dynamicEntities.size() - 1; i >= 0; i--) {
-			final DynamicEntity dynamicEntity = dynamicEntities.get(i);
-			this.mBox2DNativeWrapper.getBodyInfo(bodyInfo, dynamicEntityToPhysicsIDMapping.get(dynamicEntity));
-			dynamicEntity.setPosition(bodyInfo.getX(), bodyInfo.getY());
-			dynamicEntity.setAngle(bodyInfo.getAngle());
+		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
+			final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodies.get(i);
+			this.mBox2DNativeWrapper.getBodyInfo(bodyInfo, dynamicPhysicsBodyToPhysicsIDMapping.get(dynamicPhysicsBody));
+			final DynamicEntity dynamicEntity = dynamicPhysicsBody.getEntity();
+			
+			dynamicEntity.setPosition(bodyInfo.getX() - dynamicEntity.getInitialWidth() / 2, bodyInfo.getY() - dynamicEntity.getInitialHeight() / 2);
+			dynamicEntity.setAngle(MathUtils.radToDeg(bodyInfo.getAngle()));
 		}
 
 		// TODO Collisions

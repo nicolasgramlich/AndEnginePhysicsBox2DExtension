@@ -11,7 +11,7 @@ b2World *world = NULL;
 // Prepare for simulation. Typically we use a time step of 1/60 of a
 // second (60Hz) and 10 iterations. This provides a high quality simulation
 // in most game scenarios.
-float32 timeStep = 1.0f / 15.0f;
+float32 timeStep = 1.0f / 60.0f;
 int32 velocityIterations = 8; // 8
 int32 positionIterations = 1; // 1
 
@@ -112,17 +112,13 @@ extern "C" {
 	/*
 	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
 	 * Method:    getBodyInfo
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)Lcom/akjava/android/box2d/BodyInfo;
+	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
 	 */
-	JNIEXPORT jobject JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv* env, jobject caller, jobject bodyInfo, jint bindex){
-		if(bodies[bindex] == NULL){
-			return NULL;
-		}
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv* env, jobject caller, jobject bodyInfo, jint bindex){
 		jclass ballView = env->GetObjectClass(bodyInfo);
 		jmethodID setValuesId = env->GetMethodID(ballView, "setValues", "(FFF)V");
 		b2Body *body = bodies[bindex];
 		env->CallVoidMethod(bodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle());
-		return bodyInfo;
 	}
 
 	/*
@@ -161,17 +157,17 @@ extern "C" {
 	 * Method:    getCollisions
 	 * Signature: (Lcom/akjava/android/box2d/collisionIdKeeper;I)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getCollisions (JNIEnv *env, jobject caller, jobject keeper, jint target){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getCollisions (JNIEnv *env, jobject caller, jobject keeper, jint bindex){
 		jclass ballView = env->GetObjectClass(keeper);
 		jmethodID addId = env->GetMethodID(ballView, "add", "(I)V");
 
-		b2ContactEdge* c = bodies[target]->GetConactList();
+		b2ContactEdge* c = bodies[bindex]->GetConactList();
 		while(c != NULL){
 			int id = findId(c->other);
 			if(id != -1){
 				env->CallVoidMethod(keeper, addId, id);
 			}
-			c=c->next;
+			c = c->next;
 		}
 	}
 
@@ -210,10 +206,10 @@ extern "C" {
 	 * Method:    setBodyXForm
 	 * Signature: (IFFF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *env, jobject caller, jint id, jfloat x, jfloat y, jfloat angle){
-		if(bodies[id] != NULL){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *env, jobject caller, jint bindex, jfloat x, jfloat y, jfloat angle){
+		if(bodies[bindex] != NULL){
 			b2Vec2 vec(x,y);
-			bodies[id]->SetXForm(vec,angle);
+			bodies[bindex]->SetXForm(vec,angle);
 		}
 	}
 
@@ -222,9 +218,9 @@ extern "C" {
 	 * Method:    setBodyAngularVelocity
 	 * Signature: (IF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *env, jobject caller, jint id, jfloat angle){
-		if(bodies[id] != NULL){
-			bodies[id]->SetAngularVelocity(angle);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *env, jobject caller, jint bindex, jfloat angle){
+		if(bodies[bindex] != NULL){
+			bodies[bindex]->SetAngularVelocity(angle);
 		}
 	}
 
@@ -233,42 +229,34 @@ extern "C" {
 	 * Method:    setBodyLinearVelocity
 	 * Signature: (IFF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *env, jobject caller, jint id, jfloat x, jfloat y){
-		if(bodies[id] != NULL){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *env, jobject caller, jint bindex, jfloat x, jfloat y){
+		if(bodies[bindex] != NULL){
 			b2Vec2 vec(x,y);
-			bodies[id]->SetLinearVelocity(vec);
+			bodies[bindex]->SetLinearVelocity(vec);
 		}
 	}
 
 	/*
 	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
 	 * Method:    getStatus
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)Lcom/akjava/android/box2d/BodyInfo;
+	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
 	 */
-	JNIEXPORT jobject JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getStatus (JNIEnv *env, jobject caller, jobject bodyInfo , jint bindex){
-		if(bodies[bindex] == NULL){
-			return NULL;
-		}
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getStatus (JNIEnv *env, jobject caller, jobject bodyInfo , jint bindex){
 		jclass ballView = env->GetObjectClass(bodyInfo);
 		jmethodID setValuesId = env->GetMethodID(ballView, "setStatus", "(ZZZZZ)V");
 		b2Body *body = bodies[bindex];
 		env->CallVoidMethod(bodyInfo, setValuesId, body->IsBullet(), body->IsSleeping(), body->IsFrozen(),body->IsDynamic(),body->IsStatic());
-		return bodyInfo;
 	}
 
 	/*
 	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
 	 * Method:    getLinearVelocity
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)Lcom/akjava/android/box2d/BodyInfo;
+	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
 	 */
-	JNIEXPORT jobject JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getLinearVelocity (JNIEnv *env, jobject caller, jobject bodyInfo, jint bindex){
-		if(bodies[bindex] == NULL){
-			return NULL;
-		}
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getLinearVelocity (JNIEnv *env, jobject caller, jobject bodyInfo, jint bindex){
 		jclass ballView = env->GetObjectClass(bodyInfo);
 		jmethodID setValuesId = env->GetMethodID(ballView, "setLinearVelocity", "(FF)V");
 		b2Body *body = bodies[bindex];
 		env->CallVoidMethod(bodyInfo, setValuesId, body->GetLinearVelocity().x, body->GetLinearVelocity().y);
-		return bodyInfo;
 	}
 }

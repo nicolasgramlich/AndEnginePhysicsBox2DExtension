@@ -39,7 +39,7 @@ public class Box2DNativeWrapper {
 
 	public native int createCircle(final float pX, final float PY, final float pRadius, final float weight, final float restitution);
 
-	public native BodyInfo getBodyInfo(final BodyInfo pBodyInfo, final int pPhysicsID);
+	public native void getBodyInfo(final BodyInfo pBodyInfo, final int pPhysicsID);
 
 	public native void step(final float pStepTime, final int pVelocityIterations, final int pPositionIterations);
 
@@ -57,9 +57,9 @@ public class Box2DNativeWrapper {
 
 	public native void setBodyLinearVelocity(final int pPhysicsID, final float pX, final float pY);
 
-	public native BodyInfo getStatus(final BodyInfo pBodyInfo, final int pPhysicsID);
+	public native void getStatus(final BodyInfo pBodyInfo, final int pPhysicsID);
 
-	public native BodyInfo getLinearVelocity(final BodyInfo pBodyInfo, final int pPhysicsID);
+	public native void getLinearVelocity(final BodyInfo pBodyInfo, final int pPhysicsID);
 
 	// ===========================================================
 	// Inner and Anonymous Classes
