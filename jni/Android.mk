@@ -15,6 +15,10 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
+
+# To enable Native Logging START
+LOCAL_LDLIBS := -Lbuild/platforms/android-1.5/arch-arm/usr/lib -llog
+# To enable Native Logging END 
 	
 LOCAL_MODULE    := andenginephysicsbox2d
 LOCAL_SRC_FILES := org_anddev_andengine_physics_box2d_Box2DNativeWrapper.cpp \

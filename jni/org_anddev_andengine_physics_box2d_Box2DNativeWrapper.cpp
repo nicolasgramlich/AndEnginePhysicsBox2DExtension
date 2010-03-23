@@ -3,122 +3,98 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include <jni.h>
+#include <android/log.h> 
 
-int32 maxBodySize=300;
-b2Body *bodies[300];//i have no idea
-b2World *world = NULL;
+#define LOG_TAG "AndEngine-Native"
 
-// Prepare for simulation. Typically we use a time step of 1/60 of a
-// second (60Hz) and 10 iterations. This provides a high quality simulation
-// in most game scenarios.
-float32 timeStep = 1.0f / 60.0f;
-int32 velocityIterations = 8; // 8
-int32 positionIterations = 1; // 1
+const int32 MAX_BODIES = 300;
 
-int32 bodyIndex=0;
+int32 BODYINDEX = 0;
+b2Body *BODIES[MAX_BODIES];
+bool BODIES_CONTACT_ENABLED[MAX_BODIES];
 
-extern "C" {
+b2World *WORLD = NULL;
 
-	int32 findId(b2Body *body){
-		for(int32 i=0; i < maxBodySize; i++){
-			if(bodies[i] == body){
-				return i;
+struct BodyIndexBodyData {
+   int32 bodyIndex;
+};
+
+class JNIProxyContactListener : public b2ContactListener {
+private:
+	JNIEnv* mEnv;
+	jobject mContactListener;
+	jmethodID mAddMethodID;
+
+public:
+	void Add(const b2ContactPoint* pContactPoint) {
+		if(this->mContactListener != NULL) {
+			int32 physicsIDA = ((BodyIndexBodyData*)pContactPoint->shape1->GetBody()->GetUserData())->bodyIndex;
+			int32 physicsIDB = ((BodyIndexBodyData*)pContactPoint->shape2->GetBody()->GetUserData())->bodyIndex;
+			if(BODIES_CONTACT_ENABLED[physicsIDA] || BODIES_CONTACT_ENABLED[physicsIDB]) {
+				this->mEnv->CallVoidMethod(this->mContactListener, this->mAddMethodID, physicsIDA, physicsIDB);
 			}
 		}
-		return -1;
 	}
 
+	void SetEnv(JNIEnv* pEnv, jobject pContactListener) {
+		this->mEnv = pEnv;
+		this->mContactListener = pContactListener;
+		
+		if(pContactListener != NULL) {
+			jclass contactListenerClass = this->mEnv->GetObjectClass(this->mContactListener);
+			this->mAddMethodID = this->mEnv->GetMethodID(contactListenerClass, "add", "(II)V");
+		}
+	}
+
+	void Persist(const b2ContactPoint* pContactPoint) {
+		// handle persist point
+	}
+
+	void Remove(const b2ContactPoint* pContactPoint) {
+		// handle remove point
+	}
+
+	void Result(const b2ContactResult* pContactResult) {
+		// handle results
+	}
+};
+
+JNIProxyContactListener *JNI_PROXY_CONTACTLISTENER;
+
+extern "C" {
 	/*
 	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
 	 * Method:    createWorld
 	 * Signature: (FFFFFF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createWorld (JNIEnv* env, jobject caller, jfloat minX, jfloat minY, jfloat maxX, jfloat maxY, jfloat gravityX, jfloat gravityY){
-		//clear
-		if(world!=NULL){
-			for(int32 i = 0; i < maxBodySize; i++){
-				if(bodies[i] != NULL){
-					world->DestroyBody(bodies[i]);
-					bodies[i] = NULL;
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createWorld (JNIEnv* pEnvironment, jobject pCaller, jfloat pMinX, jfloat pMinY, jfloat pMaxX, jfloat pMaxY, jfloat pGravityX, jfloat pGravityY){
+		if(WORLD != NULL){
+			/* Clear the WORLD. */
+			for(int32 i = 0; i < MAX_BODIES; i++){
+				if(BODIES[i] != NULL){
+					WORLD->DestroyBody(BODIES[i]);
+					BODIES[i] = NULL;
 				}
 			}
-			world=NULL;
+			WORLD = NULL;
+			BODYINDEX = 0;
 		}
-		bodyIndex=0;
 
 		b2AABB worldAABB;
-		worldAABB.lowerBound.Set(minX, minY);
-		worldAABB.upperBound.Set(maxX, maxY);
+		worldAABB.lowerBound.Set(pMinX, pMinY);
+		worldAABB.upperBound.Set(pMaxX, pMaxY);
 
 		// Define the gravity vector.
-		b2Vec2 gravity(gravityX, gravityY);
+		b2Vec2 gravity(pGravityX, pGravityY);
 
 		// Do we want to let bodies sleep?
-		bool doSleep = false;//
+		bool doSleep = false;
 
 		// Construct a world object, which will hold and simulate the rigid bodies.
-		world = new b2World(worldAABB, gravity, doSleep);
-	}
-
-
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    createBox
-	 * Signature: (FFFF)I
-	 */
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv* env, jobject caller, jfloat x, jfloat y, jfloat width, jfloat height){
-		b2BodyDef groundBodyDef;
-		groundBodyDef.position.Set(x + width/2, y + height/2);
-
-		// Call the body factory which allocates memory for the ground body
-		// from a pool and creates the ground box shape (also from a pool).
-		// The body is also added to the world.
-		b2Body* groundBody = world->CreateBody(&groundBodyDef);
-
-		// Define the ground box shape.
-		b2PolygonDef groundShapeDef;
-
-		// The extents are the half-widths of the box.
-		groundShapeDef.SetAsBox(width/2, height/2);
-
-		// Add the ground shape to the ground body.
-		groundBody->CreateShape(&groundShapeDef);
-
-		bodies[bodyIndex] = groundBody;
-		return bodyIndex++;
-	}
-
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    createCircle
-	 * Signature: (FFFFF)I
-	 */
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* env, jobject caller, jfloat x, jfloat y, jfloat radius, jfloat density, jfloat restitution){
-		b2BodyDef ballDef;
-		ballDef.position.Set(x, y);
-		b2Body* body = world->CreateBody(&ballDef);
-
-		b2CircleDef circleDef;
-		circleDef.radius = radius;
-		circleDef.density = density;
-		circleDef.restitution = restitution;
-
-		body->CreateShape(&circleDef);
-		body->SetMassFromShapes();
-		bodies[bodyIndex] = body;
-		return bodyIndex++;
-	}
-
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    getBodyInfo
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
-	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv* env, jobject caller, jobject bodyInfo, jint bindex){
-		jclass ballView = env->GetObjectClass(bodyInfo);
-		jmethodID setValuesId = env->GetMethodID(ballView, "setValues", "(FFF)V");
-		b2Body *body = bodies[bindex];
-		env->CallVoidMethod(bodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle());
+		WORLD = new b2World(worldAABB, gravity, doSleep);
+		
+		JNI_PROXY_CONTACTLISTENER = new JNIProxyContactListener();
+		WORLD->SetContactListener(JNI_PROXY_CONTACTLISTENER);
 	}
 
 	/*
@@ -126,51 +102,39 @@ extern "C" {
 	 * Method:    step
 	 * Signature: (FII)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *env, jobject caller, jfloat timeStep, jint iterations){
-		world->Step(timeStep, iterations);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *pEnvironment, jobject pCaller, jobject pContactListener, jfloat pTimeStep, jint pIterations){
+		JNI_PROXY_CONTACTLISTENER->SetEnv(pEnvironment, pContactListener);
+		WORLD->Step(pTimeStep, pIterations);
 	}
 
 	/*
 	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    setGravity
-	 * Signature: (FF)V
+	 * Method:    createCircle
+	 * Signature: (FFFFF)I
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setGravity (JNIEnv *env, jobject caller, jfloat gravityX, jfloat gravityY){
-		b2Vec2 gravity(gravityX,gravityY);
-		world->SetGravity(gravity);
-	}
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pHandleContacts){
+		b2BodyDef bodyDef;
+		bodyDef.position.Set(pX, pY);
+		
+		b2Body* body = WORLD->CreateBody(&bodyDef);
+		BodyIndexBodyData* bodyData = new BodyIndexBodyData;
+		bodyData->bodyIndex = BODYINDEX;
+		body->SetUserData(bodyData);
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    destroyBody
-	 * Signature: (I)V
-	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_destroyBody (JNIEnv *env, jobject caller, jint id){
-		if(bodies[id] != NULL){
-			world->DestroyBody(bodies[id]);
-			bodies[id] = NULL;
-		}
-	}
+		// Define the circle shape.
+		b2CircleDef circleDef;
+		circleDef.radius = pRadius;
+		circleDef.density = pDensity;
+		circleDef.restitution = pRestitution;
+		circleDef.friction = pFriction;
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    getCollisions
-	 * Signature: (Lcom/akjava/android/box2d/collisionIdKeeper;I)V
-	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getCollisions (JNIEnv *env, jobject caller, jobject keeper, jint bindex){
-		/*
-		jclass ballView = env->GetObjectClass(keeper);
-		jmethodID addId = env->GetMethodID(ballView, "add", "(I)V");
-
-		b2ContactEdge* c = bodies[bindex]->GetContactList();
-		while(c != NULL){
-			int id = findId(c->other);
-			if(id != -1){
-				env->CallVoidMethod(keeper, addId, id);
-			}
-			c = c->next;
-		}
-		*/
+		body->CreateShape(&circleDef);
+		body->SetMassFromShapes();
+		
+		BODIES[BODYINDEX] = body;
+		BODIES_CONTACT_ENABLED[BODYINDEX] = pHandleContacts;
+		
+		return BODYINDEX++;
 	}
 
 	/*
@@ -178,29 +142,66 @@ extern "C" {
 	 * Method:    createBox
 	 * Signature: (FFFFFFF)I
 	 */
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox2 (JNIEnv *env, jobject caller, jfloat x, jfloat y, jfloat width, jfloat height, jfloat density, jfloat restitution, jfloat friction){
-		b2BodyDef groundBodyDef;
-		groundBodyDef.position.Set(x+width/2, y+height/2);
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pHandleContacts){
+		b2BodyDef bodyDef;
+		bodyDef.position.Set(pX + pWidth/2, pY + pHeight/2);
 
-		// Call the body factory which allocates memory for the ground body
-		// from a pool and creates the ground box shape (also from a pool).
-		// The body is also added to the world.
-		b2Body* groundBody = world->CreateBody(&groundBodyDef);
+		b2Body* body = WORLD->CreateBody(&bodyDef);
+		BodyIndexBodyData* bodyData = new BodyIndexBodyData();
+		bodyData->bodyIndex = BODYINDEX;
+		body->SetUserData(bodyData);
 
-		// Define the ground box shape.
-		b2PolygonDef groundShapeDef;
-		groundShapeDef.density = density;
-		groundShapeDef.restitution = restitution;
-		groundShapeDef.friction = friction;
+		// Define the box shape.
+		b2PolygonDef boxDef;
+		boxDef.density = pDensity;
+		boxDef.restitution = pRestitution;
+		boxDef.friction = pFriction;
 
 		// The extents are the half-widths of the box.
-		groundShapeDef.SetAsBox(width/2, height/2);
+		boxDef.SetAsBox(pWidth/2, pHeight/2);
 
-		// Add the ground shape to the ground body.
-		groundBody->CreateShape(&groundShapeDef);
-		groundBody->SetMassFromShapes();
-		bodies[bodyIndex] = groundBody;
-		return bodyIndex++;
+		body->CreateShape(&boxDef);
+		body->SetMassFromShapes();
+		
+		BODIES[BODYINDEX] = body;
+		BODIES_CONTACT_ENABLED[BODYINDEX] = pHandleContacts;
+		
+		return BODYINDEX++;
+	}
+
+	/*
+	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
+	 * Method:    destroyBody
+	 * Signature: (I)V
+	 */
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_destroyBody (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex){
+		if(BODIES[pBodyIndex] != NULL){
+			delete ((BodyIndexBodyData*)BODIES[pBodyIndex]->GetUserData());
+			WORLD->DestroyBody(BODIES[pBodyIndex]);
+			BODIES[pBodyIndex] = NULL;
+		}
+	}
+
+	/*
+	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
+	 * Method:    getBodyInfo
+	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
+	 */
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv* pEnvironment, jobject pCaller, jobject pBodyInfo, jint pBodyIndex){
+		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
+		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setValues", "(FFF)V");
+		b2Body *body = BODIES[pBodyIndex];
+		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle());
+	}
+
+	/*
+	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
+	 * Method:    setGravity
+	 * Signature: (FF)V
+	 */
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setGravity (JNIEnv *pEnvironment, jobject pCaller, jfloat pGravityX, jfloat pGravityY){
+		b2Vec2 gravity(pGravityX, pGravityY);
+		WORLD->SetGravity(gravity);
 	}
 
 	/*
@@ -208,10 +209,10 @@ extern "C" {
 	 * Method:    setBodyXForm
 	 * Signature: (IFFF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *env, jobject caller, jint bindex, jfloat x, jfloat y, jfloat angle){
-		if(bodies[bindex] != NULL){
-			b2Vec2 vec(x,y);
-			bodies[bindex]->SetXForm(vec,angle);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY, jfloat pAngle){
+		if(BODIES[pBodyIndex] != NULL){
+			b2Vec2 vec(pX, pY);
+			BODIES[pBodyIndex]->SetXForm(vec, pAngle);
 		}
 	}
 
@@ -220,9 +221,9 @@ extern "C" {
 	 * Method:    setBodyAngularVelocity
 	 * Signature: (IF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *env, jobject caller, jint bindex, jfloat angle){
-		if(bodies[bindex] != NULL){
-			bodies[bindex]->SetAngularVelocity(angle);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pAngle){
+		if(BODIES[pBodyIndex] != NULL){
+			BODIES[pBodyIndex]->SetAngularVelocity(pAngle);
 		}
 	}
 
@@ -231,10 +232,10 @@ extern "C" {
 	 * Method:    setBodyLinearVelocity
 	 * Signature: (IFF)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *env, jobject caller, jint bindex, jfloat x, jfloat y){
-		if(bodies[bindex] != NULL){
-			b2Vec2 vec(x,y);
-			bodies[bindex]->SetLinearVelocity(vec);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY){
+		if(BODIES[pBodyIndex] != NULL){
+			b2Vec2 vec(pX, pY);
+			BODIES[pBodyIndex]->SetLinearVelocity(vec);
 		}
 	}
 
@@ -243,11 +244,11 @@ extern "C" {
 	 * Method:    getStatus
 	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getStatus (JNIEnv *env, jobject caller, jobject bodyInfo , jint bindex){
-		jclass ballView = env->GetObjectClass(bodyInfo);
-		jmethodID setValuesId = env->GetMethodID(ballView, "setStatus", "(ZZZZZ)V");
-		b2Body *body = bodies[bindex];
-		env->CallVoidMethod(bodyInfo, setValuesId, body->IsBullet(), body->IsSleeping(), body->IsFrozen(),body->IsDynamic(),body->IsStatic());
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getStatus (JNIEnv *pEnvironment, jobject pCaller, jobject pBodyInfo, jint pBodyIndex){
+		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
+		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setStatus", "(ZZZZZ)V");
+		b2Body *body = BODIES[pBodyIndex];
+		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->IsBullet(), body->IsSleeping(), body->IsFrozen(),body->IsDynamic(),body->IsStatic());
 	}
 
 	/*
@@ -255,10 +256,10 @@ extern "C" {
 	 * Method:    getLinearVelocity
 	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getLinearVelocity (JNIEnv *env, jobject caller, jobject bodyInfo, jint bindex){
-		jclass ballView = env->GetObjectClass(bodyInfo);
-		jmethodID setValuesId = env->GetMethodID(ballView, "setLinearVelocity", "(FF)V");
-		b2Body *body = bodies[bindex];
-		env->CallVoidMethod(bodyInfo, setValuesId, body->GetLinearVelocity().x, body->GetLinearVelocity().y);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getLinearVelocity (JNIEnv *pEnvironment, jobject pCaller, jobject pBodyInfo, jint pBodyIndex){
+		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
+		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setLinearVelocity", "(FF)V");
+		b2Body *body = BODIES[pBodyIndex];
+		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->GetLinearVelocity().x, body->GetLinearVelocity().y);
 	}
 }

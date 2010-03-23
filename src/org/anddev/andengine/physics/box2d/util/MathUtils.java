@@ -1,4 +1,4 @@
-package com.akjava.lib.android.math;
+package org.anddev.andengine.physics.box2d.util;
 
 import java.math.BigDecimal;
 

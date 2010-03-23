@@ -8,15 +8,19 @@ import org.anddev.andengine.physics.DynamicPhysicsBody;
 import org.anddev.andengine.physics.IPhysicsSpace;
 import org.anddev.andengine.physics.StaticPhysicsBody;
 import org.anddev.andengine.physics.box2d.util.BidirectionalMap;
+import org.anddev.andengine.physics.box2d.util.Box2DJNIProxyContactListener;
+import org.anddev.andengine.physics.box2d.util.MathUtils;
 
-import com.akjava.lib.android.math.MathUtils;
+import android.os.Handler;
+import android.os.Message;
+
 
 
 /**
  * @author Nicolas Gramlich
  * @since 10:56:23 - 21.03.2010
  */
-public class Box2DPhysicsSpace implements IPhysicsSpace {
+public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -24,6 +28,8 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	//	private static final float STEPTIME = 1 / 60f;
 
 	private static final int ITERATIONS = 8;
+
+	private static final int WHAT_CONTACT_NEW = 1;
 
 	// ===========================================================
 	// Fields
@@ -39,7 +45,9 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	private final ArrayList<DynamicPhysicsBody> mDynamicPhysicsBodies = new ArrayList<DynamicPhysicsBody>();
 	private final BidirectionalMap<DynamicPhysicsBody, Integer> mDynamicPhysicsBodyToPhysicsIDMapping = new BidirectionalMap<DynamicPhysicsBody, Integer>();
 
-	private final BodyInfo mBodyInfo = new BodyInfo();
+	private final Box2DBodyInfo mBodyInfo = new Box2DBodyInfo();
+
+	private Handler mHandler;
 
 	// ===========================================================
 	// Constructors
@@ -47,6 +55,15 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 
 	public Box2DPhysicsSpace() {
 		this.mBox2DNativeWrapper = new Box2DNativeWrapper();
+		this.mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message pMsg) {
+				if(pMsg.what == WHAT_CONTACT_NEW) {
+					onHandleCollision(pMsg.arg1, pMsg.arg2);
+				}
+				super.handleMessage(pMsg);
+			}
+		};
 	}
 
 	// ===========================================================
@@ -66,13 +83,19 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	public void addDynamicEntity(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		assert(pDynamicPhysicsBody.mMass != 0);
 
-		this.mDynamicPhysicsBodiesPendingToGoNative .add(pDynamicPhysicsBody);
+		this.mDynamicPhysicsBodiesPendingToGoNative.add(pDynamicPhysicsBody);
 	}
+	
 	@Override
 	public void addStaticEntity(final StaticPhysicsBody pStaticPhysicsBody) {
 		assert(pStaticPhysicsBody.mMass == 0);
 
 		this.mStaticPhysicsBodiesPendingToGoNative.add(pStaticPhysicsBody);
+	}
+
+	@Override
+	public void onNewContact(final int pPhysicsIDA, final int pPhysicsIDB) {
+		this.mHandler.sendMessage(this.mHandler.obtainMessage(WHAT_CONTACT_NEW, pPhysicsIDA, pPhysicsIDB));
 	}
 
 	@Override
@@ -85,11 +108,11 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	public void onUpdate(final float pSecondsElapsed) {
 		this.loadPendingBodiesToGoNative();
 
-		this.mBox2DNativeWrapper.step(pSecondsElapsed, ITERATIONS);
+		this.mBox2DNativeWrapper.step(new Box2DJNIProxyContactListener(this), pSecondsElapsed, ITERATIONS);
 
 		final BidirectionalMap<DynamicPhysicsBody, Integer> dynamicPhysicsBodyToPhysicsIDMapping = this.mDynamicPhysicsBodyToPhysicsIDMapping;
 		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
-		final BodyInfo bodyInfo = this.mBodyInfo;
+		final Box2DBodyInfo bodyInfo = this.mBodyInfo;
 
 		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
 			final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodies.get(i);
@@ -98,9 +121,11 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 
 			dynamicEntity.setPosition(bodyInfo.getX() - dynamicEntity.getInitialWidth() / 2, bodyInfo.getY() - dynamicEntity.getInitialHeight() / 2);
 			dynamicEntity.setAngle(MathUtils.radToDeg(bodyInfo.getAngle()));
+			
+			if(dynamicPhysicsBody.hasCollisionCallback()) {
+//				this.mBox2DNativeWrapper.getCollisions(pKeeper, pPhysicsID)
+			}
 		}
-
-		// TODO Collisions
 	}
 
 	@Override
@@ -111,6 +136,31 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 	// ===========================================================
 	// Methods
 	// ===========================================================
+
+	private void onHandleCollision(final int pPhysicsIDA, final int pPhysicsIDB) {
+		final DynamicPhysicsBody dynamicPhysicsBodyA = this.mDynamicPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDA);
+		final DynamicPhysicsBody dynamicPhysicsBodyB = this.mDynamicPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDB);
+		
+		if(dynamicPhysicsBodyA != null && dynamicPhysicsBodyB != null){
+			if(dynamicPhysicsBodyA.hasCollisionCallback()){
+				dynamicPhysicsBodyA.getCollisionCallback().onCollision(dynamicPhysicsBodyA.getEntity(), dynamicPhysicsBodyB.getEntity());
+			}
+			
+			if(dynamicPhysicsBodyB.hasCollisionCallback()){
+				dynamicPhysicsBodyB.getCollisionCallback().onCollision(dynamicPhysicsBodyB.getEntity(), dynamicPhysicsBodyA.getEntity());
+			}
+		} else if(dynamicPhysicsBodyA != null) {
+			if(dynamicPhysicsBodyA.hasCollisionCallback()){
+				final StaticPhysicsBody staticPhysicsBodyB = this.mStaticPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDB);
+				dynamicPhysicsBodyA.getCollisionCallback().onCollision(dynamicPhysicsBodyA.getEntity(), staticPhysicsBodyB.getEntity());
+			}
+		} else if(dynamicPhysicsBodyB != null) {
+			if(dynamicPhysicsBodyB.hasCollisionCallback()){
+				final StaticPhysicsBody staticPhysicsBodyA = this.mStaticPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDA);
+				dynamicPhysicsBodyB.getCollisionCallback().onCollision(dynamicPhysicsBodyB.getEntity(), staticPhysicsBodyA.getEntity());
+			}
+		}
+	}
 
 	private void loadPendingBodiesToGoNative() {
 		this.loadPendingStaticBodiesToGoNative();
@@ -123,7 +173,7 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 			for(int i = staticPhysicsBodiesPendingToGoNative.size() - 1; i >= 0; i--) {
 				final StaticPhysicsBody staticPhysicsBody = staticPhysicsBodiesPendingToGoNative.get(i);
 				final StaticEntity staticEntity = staticPhysicsBody.getEntity();
-				final int physicsID = this.mBox2DNativeWrapper.createBox2(staticEntity.getX(), staticEntity.getY(), staticEntity.getWidth(), staticEntity.getHeight(), 0, staticPhysicsBody.mElasticity, staticPhysicsBody.mFricition);
+				final int physicsID = this.mBox2DNativeWrapper.createBox(staticEntity.getX(), staticEntity.getY(), staticEntity.getWidth(), staticEntity.getHeight(), 0, staticPhysicsBody.mElasticity, staticPhysicsBody.mFricition, false);
 				this.mStaticPhysicsBodyToPhysicsIDMapping.put(staticPhysicsBody, physicsID);
 			}
 			this.mStaticPhysicsBodiesPendingToGoNative.clear();
@@ -137,7 +187,7 @@ public class Box2DPhysicsSpace implements IPhysicsSpace {
 				final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodiesPendingToGoNative.get(i);
 				final DynamicEntity dynamicEntity = dynamicPhysicsBody.getEntity();
 				dynamicEntity.setUpdatePhysicsSelf(false);
-				final int physicsID = this.mBox2DNativeWrapper.createBox2(dynamicEntity.getX(), dynamicEntity.getY(), dynamicEntity.getInitialWidth(), dynamicEntity.getInitialHeight(), dynamicPhysicsBody.mMass, dynamicPhysicsBody.mElasticity, dynamicPhysicsBody.mFricition);
+				final int physicsID = this.mBox2DNativeWrapper.createBox(dynamicEntity.getX(), dynamicEntity.getY(), dynamicEntity.getInitialWidth(), dynamicEntity.getInitialHeight(), dynamicPhysicsBody.mMass, dynamicPhysicsBody.mElasticity, dynamicPhysicsBody.mFricition, dynamicPhysicsBody.hasCollisionCallback());
 				this.mDynamicPhysicsBodies.add(dynamicPhysicsBody);
 				this.mDynamicPhysicsBodyToPhysicsIDMapping.put(dynamicPhysicsBody, physicsID);
 			}

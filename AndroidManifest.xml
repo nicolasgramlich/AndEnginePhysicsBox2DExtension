@@ -5,17 +5,4 @@
 	
 	<uses-sdk android:minSdkVersion="4" />
 	
-	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".AndroidBox2dTest" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-
-		<activity android:name=".NDKBox2dActivity" android:label="@string/app_name"/>
-		<activity android:name=".ndkbox2d.BoundBallActivity" android:label="@string/app_name"/>
-		<activity android:name=".ndkbox2d.BoundBoxActivity" android:label="@string/app_name"/>
-		<activity android:name=".ndkbox2d.BlockBreakActivity" android:label="@string/app_name"/>
-	</application>
 </manifest> 

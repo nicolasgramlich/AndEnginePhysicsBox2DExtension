@@ -4,7 +4,7 @@ package org.anddev.andengine.physics.box2d;
  * @author Nicolas Gramlich
  * @since 16:29:00 - 21.03.2010
  */
-public class BodyInfo {
+public class Box2DBodyInfo {
 	// ===========================================================
 	// Constants
 	// ===========================================================

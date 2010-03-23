@@ -16,38 +16,24 @@ JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrappe
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
- * Method:    createBox
- * Signature: (FFFF)I
+ * Method:    step
+ * Signature: (FI)V
  */
-JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat);
+JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *, jobject, jobject, jfloat, jint);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
  * Method:    createCircle
  * Signature: (FFFFF)I
  */
-JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat);
+JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
- * Method:    getBodyInfo
- * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V;
+ * Method:    createBox2
+ * Signature: (FFFFFFF)I
  */
-JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv *, jobject, jobject, jint);
-
-/*
- * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
- * Method:    step
- * Signature: (FI)V
- */
-JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *, jobject, jfloat, jint);
-
-/*
- * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
- * Method:    setGravity
- * Signature: (FF)V
- */
-JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setGravity (JNIEnv *, jobject, jfloat, jfloat);
+JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
@@ -58,17 +44,17 @@ JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrappe
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
- * Method:    getCollisions
- * Signature: (Lcom/akjava/android/box2d/collisionIdKeeper;I)V
+ * Method:    getBodyInfo
+ * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V;
  */
-JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getCollisions (JNIEnv *, jobject, jobject, jint);
+JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv *, jobject, jobject, jint);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
- * Method:    createBox2
- * Signature: (FFFFFFF)I
+ * Method:    setGravity
+ * Signature: (FF)V
  */
-JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox2 (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat);
+JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setGravity (JNIEnv *, jobject, jfloat, jfloat);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
