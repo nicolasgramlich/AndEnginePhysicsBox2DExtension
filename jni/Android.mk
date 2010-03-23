@@ -17,7 +17,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 	
 LOCAL_MODULE    := andenginephysicsbox2d
-LOCAL_SRC_FILES := andenginephysicsbox2d.cpp \
+LOCAL_SRC_FILES := org_anddev_andengine_physics_box2d_Box2DNativeWrapper.cpp \
 	box2d-trunk-27062009/Common/b2Math.cpp \
 	box2d-trunk-27062009/Common/b2Settings.cpp \
 	box2d-trunk-27062009/Common/b2StackAllocator.cpp \
