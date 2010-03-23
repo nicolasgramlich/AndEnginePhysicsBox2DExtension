@@ -128,7 +128,7 @@ public class BlockBreakRenderer extends AbstractBox2dTestRender {
 		if (before > lastStep + target) {
 			// step
 
-			box2dControler.step(stepTime, 8, 2);
+			box2dControler.step(stepTime, 8);
 			long end = System.currentTimeMillis();
 			long endStep = end - before;
 			// Log.i("app","stepped:"+beforeStep+","+endStep);

@@ -1,5 +1,5 @@
 #include "org_anddev_andengine_physics_box2d_Box2DNativeWrapper.h"
-#include "box2d-trunk-27062009/Include/Box2D.h"
+#include "box2d-2.0.1/Include/Box2D.h"
 #include "stdlib.h"
 #include "stdio.h"
 #include <jni.h>
@@ -82,7 +82,7 @@ extern "C" {
 		groundShapeDef.SetAsBox(width/2, height/2);
 
 		// Add the ground shape to the ground body.
-		groundBody->CreateFixture(&groundShapeDef);
+		groundBody->CreateShape(&groundShapeDef);
 
 		bodies[bodyIndex] = groundBody;
 		return bodyIndex++;
@@ -103,7 +103,7 @@ extern "C" {
 		circleDef.density = density;
 		circleDef.restitution = restitution;
 
-		body->CreateFixture(&circleDef);
+		body->CreateShape(&circleDef);
 		body->SetMassFromShapes();
 		bodies[bodyIndex] = body;
 		return bodyIndex++;
@@ -126,8 +126,8 @@ extern "C" {
 	 * Method:    step
 	 * Signature: (FII)V
 	 */
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *env, jobject caller, jfloat timeStep, jint velocityIterations, jint positionIterations){
-		world->Step(timeStep, velocityIterations, positionIterations);
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *env, jobject caller, jfloat timeStep, jint iterations){
+		world->Step(timeStep, iterations);
 	}
 
 	/*
@@ -158,10 +158,11 @@ extern "C" {
 	 * Signature: (Lcom/akjava/android/box2d/collisionIdKeeper;I)V
 	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getCollisions (JNIEnv *env, jobject caller, jobject keeper, jint bindex){
+		/*
 		jclass ballView = env->GetObjectClass(keeper);
 		jmethodID addId = env->GetMethodID(ballView, "add", "(I)V");
 
-		b2ContactEdge* c = bodies[bindex]->GetConactList();
+		b2ContactEdge* c = bodies[bindex]->GetContactList();
 		while(c != NULL){
 			int id = findId(c->other);
 			if(id != -1){
@@ -169,6 +170,7 @@ extern "C" {
 			}
 			c = c->next;
 		}
+		*/
 	}
 
 	/*
@@ -195,7 +197,7 @@ extern "C" {
 		groundShapeDef.SetAsBox(width/2, height/2);
 
 		// Add the ground shape to the ground body.
-		groundBody->CreateFixture(&groundShapeDef);
+		groundBody->CreateShape(&groundShapeDef);
 		groundBody->SetMassFromShapes();
 		bodies[bodyIndex] = groundBody;
 		return bodyIndex++;

@@ -8,7 +8,7 @@
 	<property name="bin" value="bin" />
 	<property name="src" value="src" />
 	
-	<property name="binfile" value="bin/andengine.jar" />
+	<property name="binfile" value="bin/andenginephysicsbox2d.jar" />
 	<property name="targetfile_1" value="../AndEnginePlayground/lib/andenginephysicsbox2d.jar" />
    
 	<target name="createjar" >

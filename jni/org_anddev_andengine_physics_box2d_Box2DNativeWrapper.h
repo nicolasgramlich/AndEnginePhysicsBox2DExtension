@@ -38,9 +38,9 @@ JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrappe
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
  * Method:    step
- * Signature: (FII)V
+ * Signature: (FI)V
  */
-JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *, jobject, jfloat, jint, jint);
+JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *, jobject, jfloat, jint);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper

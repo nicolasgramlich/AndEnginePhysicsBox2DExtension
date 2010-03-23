@@ -41,7 +41,7 @@ public class Box2DNativeWrapper {
 
 	public native void getBodyInfo(final BodyInfo pBodyInfo, final int pPhysicsID);
 
-	public native void step(final float pStepTime, final int pVelocityIterations, final int pPositionIterations);
+	public native void step(final float pStepTime, final int pIterations);
 
 	public native void setGravity(final float pGravityX, final float pGravityY);
 
