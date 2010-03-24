@@ -112,9 +112,10 @@ extern "C" {
 	 * Method:    createCircle
 	 * Signature: (FFFFF)I
 	 */
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pHandleContacts){
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
+		bodyDef.fixedRotation = pFixedRotation;
 		
 		b2Body* body = WORLD->CreateBody(&bodyDef);
 		BodyIndexBodyData* bodyData = new BodyIndexBodyData;
@@ -142,9 +143,10 @@ extern "C" {
 	 * Method:    createBox
 	 * Signature: (FFFFFFF)I
 	 */
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pHandleContacts){
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
 		b2BodyDef bodyDef;
-		bodyDef.position.Set(pX + pWidth/2, pY + pHeight/2);
+		bodyDef.position.Set(pX, pY);
+		bodyDef.fixedRotation = pFixedRotation;
 
 		b2Body* body = WORLD->CreateBody(&bodyDef);
 		BodyIndexBodyData* bodyData = new BodyIndexBodyData();

@@ -1,41 +1,57 @@
 package org.anddev.andengine.physics.box2d.util;
 
-import java.math.BigDecimal;
 
+/**
+ * @author Nicolas Gramlich
+ * @since 12:47:21 - 24.03.2010
+ */
 public final class MathUtils {
-	/*
-	 * these code come from jme
-	 */
+	// ===========================================================
+	// Constants
+	// ===========================================================
+
 	public static final float PI = (float) Math.PI;
 	public static final float DEG_TO_RAD = PI / 180.0f;
 	public static final float RAD_TO_DEG = 180.0f / PI;
 
-	public static float radToDeg(final float rad) {
-		return RAD_TO_DEG * rad;
+
+	// ===========================================================
+	// Fields
+	// ===========================================================
+
+	// ===========================================================
+	// Constructors
+	// ===========================================================
+
+	// ===========================================================
+	// Getter & Setter
+	// ===========================================================
+
+	// ===========================================================
+	// Methods for/from SuperClass/Interfaces
+	// ===========================================================
+
+	// ===========================================================
+	// Methods
+	// ===========================================================
+
+	public static float radToDeg(final float pRad) {
+		return RAD_TO_DEG * pRad;
 	}
 
-	public static float degToRad(final float deg) {
-		return DEG_TO_RAD * deg;
+	public static float degToRad(final float pDegree) {
+		return DEG_TO_RAD * pDegree;
 	}
 
-	public static float random(final float min, final float max) {
-		return (float) Math.random() * (max - min) + min;
+	public static float random(final float pMin, final float pMax) {
+		return (float) Math.random() * (pMax - pMin) + pMin;
 	}
 
-	public static int randomInt(final int min, final int max) {
-		return (int) (Math.random() * (max - min) + min);
+	public static int random(final int pMin, final int max) {
+		return (int) (Math.random() * (max - pMin) + pMin);
 	}
 
-	public static float toRoundHalfUp(float value, int index) {
-		BigDecimal ret = new BigDecimal(value);
-		try {
-
-			return ret.setScale(index, BigDecimal.ROUND_HALF_UP).floatValue();
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		return 0;// ret direct
-
-	}
+	// ===========================================================
+	// Inner and Anonymous Classes
+	// ===========================================================
 }
