@@ -9,7 +9,7 @@ import org.anddev.andengine.physics.IPhysicsSpace;
 import org.anddev.andengine.physics.StaticPhysicsBody;
 import org.anddev.andengine.physics.box2d.util.BidirectionalMap;
 import org.anddev.andengine.physics.box2d.util.Box2DJNIProxyContactListener;
-import org.anddev.andengine.physics.box2d.util.MathUtils;
+import org.anddev.andengine.util.MathUtils;
 
 import android.os.Handler;
 import android.os.Message;
@@ -108,7 +108,8 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 	public void onUpdate(final float pSecondsElapsed) {
 		this.loadPendingBodiesToGoNative();
 
-		this.mBox2DNativeWrapper.step(new Box2DJNIProxyContactListener(this), pSecondsElapsed, ITERATIONS);
+		final Box2DNativeWrapper box2DNativeWrapper = this.mBox2DNativeWrapper;
+		box2DNativeWrapper.step(new Box2DJNIProxyContactListener(this), pSecondsElapsed, ITERATIONS);
 
 		final BidirectionalMap<DynamicPhysicsBody, Integer> dynamicPhysicsBodyToPhysicsIDMapping = this.mDynamicPhysicsBodyToPhysicsIDMapping;
 		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
@@ -116,11 +117,12 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 
 		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
 			final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodies.get(i);
-			this.mBox2DNativeWrapper.getBodyInfo(bodyInfo, dynamicPhysicsBodyToPhysicsIDMapping.get(dynamicPhysicsBody));
+			box2DNativeWrapper.getBodyInfo(bodyInfo, dynamicPhysicsBodyToPhysicsIDMapping.get(dynamicPhysicsBody));
 			final DynamicEntity dynamicEntity = dynamicPhysicsBody.getEntity();
 
 			dynamicEntity.setPosition(bodyInfo.getX() - dynamicEntity.getInitialWidth() / 2, bodyInfo.getY() - dynamicEntity.getInitialHeight() / 2);
 			dynamicEntity.setAngle(MathUtils.radToDeg(bodyInfo.getAngle()));
+			dynamicEntity.setVelocity(bodyInfo.getVelocityX(), bodyInfo.getVelocityY());
 		}
 	}
 

@@ -7,16 +7,20 @@
 	<property name="source" value="1.6" />
 	<property name="bin" value="bin" />
 	<property name="src" value="src" />
-	<!-- <property name="libs" value="libs" />  -->
+	
+	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2d.so" />
+	
+	<property name="targetnativelib_1" value="../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2d.so" />
+	<property name="targetnativelib_2" value="../SuperDroid/libs/armeabi/libandenginephysicsbox2d.so" />
+	<property name="targetnativelib_3" value="../HighRise/libs/armeabi/libandenginephysicsbox2d.so" />
 	
 	<property name="binfile" value="bin/andenginephysicsbox2d.jar" />
 	<property name="targetfile_1" value="../AndEnginePlayground/lib/andenginephysicsbox2d.jar" />
+	<property name="targetfile_2" value="../SuperDroid/lib/andenginephysicsbox2d.jar" />
+	<property name="targetfile_3" value="../HighRise/lib/andenginephysicsbox2d.jar" />
    
 	<target name="createjar" >
 		<jar destfile="${binfile}">
-			<!-- <zipfileset prefix="lib" dir="${libs}">
-				<include name="**/*.so" />
-			</zipfileset> -->
 			<zipfileset dir="${src}">
 				<include name="**/*.*" />
 				<exclude name="**/R.java" />
@@ -29,5 +33,16 @@
         </jar>
         
 		<copy file="${binfile}" tofile="${targetfile_1}"/>
+		<copy file="${binfile}" tofile="${targetfile_2}"/>
+		<copy file="${binfile}" tofile="${targetfile_3}"/>
+		
+		
+		<copy file="${nativelib}" tofile="${targetnativelib_1}"/>
+		<copy file="${nativelib}" tofile="${targetnativelib_2}"/>
+		<copy file="${nativelib}" tofile="${targetnativelib_3}"/>
+		
+		
+	
+	
     </target>
 </project>

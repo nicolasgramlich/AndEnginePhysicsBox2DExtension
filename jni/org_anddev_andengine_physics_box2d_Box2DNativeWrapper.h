@@ -45,7 +45,7 @@ JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrappe
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
  * Method:    getBodyInfo
- * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V;
+ * Signature: (Lorg/anddev/andengine/physics/box2d/Box2DBodyInfo;I)V;
  */
 JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv *, jobject, jobject, jint);
 
@@ -80,14 +80,14 @@ JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrappe
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
  * Method:    getStatus
- * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
+ * Signature: (Lorg/anddev/andengine/physics/box2d/Box2DBodyInfo;I)V
  */
 JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getStatus (JNIEnv *, jobject, jobject, jint);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
  * Method:    getLinearVelocity
- * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
+ * Signature: (Lorg/anddev/andengine/physics/box2d/Box2DBodyInfo;I)V
  */
 JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getLinearVelocity (JNIEnv *, jobject, jobject, jint);
 

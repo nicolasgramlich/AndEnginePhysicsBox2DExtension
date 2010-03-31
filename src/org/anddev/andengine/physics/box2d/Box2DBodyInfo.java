@@ -58,10 +58,12 @@ public class Box2DBodyInfo {
 		this.mAngle = pAngle;
 	}
 
-	public void setValues(final float pX, final float pY, final float pAngle) {
+	public void setValues(final float pX, final float pY, final float pAngle, final float pVelocityX, final float pVelocityY) {
 		this.mX = pX;
 		this.mY = pY;
 		this.mAngle = pAngle;
+		this.mVelocityX = pVelocityX;
+		this.mVelocityY = pVelocityY;
 	}
 
 	public boolean isBullet() {

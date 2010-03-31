@@ -9,9 +9,9 @@
 	<property name="src" value="src" />
 	
 	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2d.so" />
-	<property name="targetnativelib" value="../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2d.so" />
+	<property name="targetnativelib" value="../SuperDroid/libs/armeabi/libandenginephysicsbox2d.so" />
 	
-	<property name="targetfile" value="../AndEnginePlayground/lib/andenginephysicsbox2d.jar" />
+	<property name="targetfile" value="../HighRise/lib/andenginephysicsbox2d.jar" />
    
 	<target name="createjar" >
 		<jar destfile="${targetfile}">

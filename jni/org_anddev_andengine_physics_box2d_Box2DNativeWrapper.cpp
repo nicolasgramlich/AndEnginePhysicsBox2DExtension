@@ -16,7 +16,7 @@ bool BODIES_CONTACT_ENABLED[MAX_BODIES];
 b2World *WORLD = NULL;
 
 struct BodyIndexBodyData {
-   int32 bodyIndex;
+   int32 mBodyIndex;
 };
 
 class JNIProxyContactListener : public b2ContactListener {
@@ -28,8 +28,8 @@ private:
 public:
 	void Add(const b2ContactPoint* pContactPoint) {
 		if(this->mContactListener != NULL) {
-			int32 physicsIDA = ((BodyIndexBodyData*)pContactPoint->shape1->GetBody()->GetUserData())->bodyIndex;
-			int32 physicsIDB = ((BodyIndexBodyData*)pContactPoint->shape2->GetBody()->GetUserData())->bodyIndex;
+			int32 physicsIDA = ((BodyIndexBodyData*)pContactPoint->shape1->GetBody()->GetUserData())->mBodyIndex;
+			int32 physicsIDB = ((BodyIndexBodyData*)pContactPoint->shape2->GetBody()->GetUserData())->mBodyIndex;
 			if(BODIES_CONTACT_ENABLED[physicsIDA] || BODIES_CONTACT_ENABLED[physicsIDB]) {
 				this->mEnv->CallVoidMethod(this->mContactListener, this->mAddMethodID, physicsIDA, physicsIDB);
 			}
@@ -46,27 +46,14 @@ public:
 		}
 	}
 
-	void Persist(const b2ContactPoint* pContactPoint) {
-		// handle persist point
-	}
-
-	void Remove(const b2ContactPoint* pContactPoint) {
-		// handle remove point
-	}
-
-	void Result(const b2ContactResult* pContactResult) {
-		// handle results
-	}
+	void Persist(const b2ContactPoint* pContactPoint) { }
+	void Remove(const b2ContactPoint* pContactPoint) { }
+	void Result(const b2ContactResult* pContactResult) { }
 };
 
 JNIProxyContactListener *JNI_PROXY_CONTACTLISTENER;
 
 extern "C" {
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    createWorld
-	 * Signature: (FFFFFF)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createWorld (JNIEnv* pEnvironment, jobject pCaller, jfloat pMinX, jfloat pMinY, jfloat pMaxX, jfloat pMaxY, jfloat pGravityX, jfloat pGravityY){
 		if(WORLD != NULL){
 			/* Clear the WORLD. */
@@ -97,21 +84,11 @@ extern "C" {
 		WORLD->SetContactListener(JNI_PROXY_CONTACTLISTENER);
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    step
-	 * Signature: (FII)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_step (JNIEnv *pEnvironment, jobject pCaller, jobject pContactListener, jfloat pTimeStep, jint pIterations){
 		JNI_PROXY_CONTACTLISTENER->SetEnv(pEnvironment, pContactListener);
 		WORLD->Step(pTimeStep, pIterations);
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    createCircle
-	 * Signature: (FFFFF)I
-	 */
 	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
@@ -119,7 +96,7 @@ extern "C" {
 		
 		b2Body* body = WORLD->CreateBody(&bodyDef);
 		BodyIndexBodyData* bodyData = new BodyIndexBodyData;
-		bodyData->bodyIndex = BODYINDEX;
+		bodyData->mBodyIndex = BODYINDEX;
 		body->SetUserData(bodyData);
 
 		// Define the circle shape.
@@ -138,11 +115,6 @@ extern "C" {
 		return BODYINDEX++;
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    createBox
-	 * Signature: (FFFFFFF)I
-	 */
 	JNIEXPORT jint JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
@@ -150,7 +122,7 @@ extern "C" {
 
 		b2Body* body = WORLD->CreateBody(&bodyDef);
 		BodyIndexBodyData* bodyData = new BodyIndexBodyData();
-		bodyData->bodyIndex = BODYINDEX;
+		bodyData->mBodyIndex = BODYINDEX;
 		body->SetUserData(bodyData);
 
 		// Define the box shape.
@@ -171,11 +143,6 @@ extern "C" {
 		return BODYINDEX++;
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    destroyBody
-	 * Signature: (I)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_destroyBody (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex){
 		if(BODIES[pBodyIndex] != NULL){
 			delete ((BodyIndexBodyData*)BODIES[pBodyIndex]->GetUserData());
@@ -184,33 +151,18 @@ extern "C" {
 		}
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    getBodyInfo
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getBodyInfo (JNIEnv* pEnvironment, jobject pCaller, jobject pBodyInfo, jint pBodyIndex){
 		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
-		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setValues", "(FFF)V");
+		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setValues", "(FFFFF)V");
 		b2Body *body = BODIES[pBodyIndex];
-		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle());
+		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle(), body->GetLinearVelocity().x, body->GetLinearVelocity().y);
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    setGravity
-	 * Signature: (FF)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setGravity (JNIEnv *pEnvironment, jobject pCaller, jfloat pGravityX, jfloat pGravityY){
 		b2Vec2 gravity(pGravityX, pGravityY);
 		WORLD->SetGravity(gravity);
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    setBodyXForm
-	 * Signature: (IFFF)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY, jfloat pAngle){
 		if(BODIES[pBodyIndex] != NULL){
 			b2Vec2 vec(pX, pY);
@@ -218,22 +170,12 @@ extern "C" {
 		}
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    setBodyAngularVelocity
-	 * Signature: (IF)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pAngle){
 		if(BODIES[pBodyIndex] != NULL){
 			BODIES[pBodyIndex]->SetAngularVelocity(pAngle);
 		}
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    setBodyLinearVelocity
-	 * Signature: (IFF)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY){
 		if(BODIES[pBodyIndex] != NULL){
 			b2Vec2 vec(pX, pY);
@@ -241,11 +183,6 @@ extern "C" {
 		}
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    getStatus
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getStatus (JNIEnv *pEnvironment, jobject pCaller, jobject pBodyInfo, jint pBodyIndex){
 		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
 		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setStatus", "(ZZZZZ)V");
@@ -253,11 +190,6 @@ extern "C" {
 		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->IsBullet(), body->IsSleeping(), body->IsFrozen(),body->IsDynamic(),body->IsStatic());
 	}
 
-	/*
-	 * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
-	 * Method:    getLinearVelocity
-	 * Signature: (Lcom/akjava/android/box2d/BodyInfo;I)V
-	 */
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_physics_box2d_Box2DNativeWrapper_getLinearVelocity (JNIEnv *pEnvironment, jobject pCaller, jobject pBodyInfo, jint pBodyIndex){
 		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
 		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setLinearVelocity", "(FF)V");

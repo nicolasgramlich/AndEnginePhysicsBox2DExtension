@@ -9,7 +9,7 @@
 	<property name="src" value="src" />
 	
 	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2d.so" />
-	<property name="targetnativelib" value="../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2d.so" />
+	<property name="targetnativelib" value="../HighRise/libs/armeabi/libandenginephysicsbox2d.so" />
 	
 	<property name="targetfile" value="../AndEnginePlayground/lib/andenginephysicsbox2d.jar" />
    
