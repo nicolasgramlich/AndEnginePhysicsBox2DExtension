@@ -1,6 +1,6 @@
-package org.anddev.andengine.physics.box2d.util;
+package org.anddev.andengine.extension.physics.box2d.util;
 
-import org.anddev.andengine.physics.box2d.Box2DContactListener;
+import org.anddev.andengine.extension.physics.box2d.Box2DContactListener;
 
 /**
  * @author Nicolas Gramlich

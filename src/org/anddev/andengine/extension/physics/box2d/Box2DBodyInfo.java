@@ -1,4 +1,4 @@
-package org.anddev.andengine.physics.box2d;
+package org.anddev.andengine.extension.physics.box2d;
 
 /**
  * @author Nicolas Gramlich

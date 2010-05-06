@@ -1,19 +1,17 @@
-package org.anddev.andengine.physics.box2d;
+package org.anddev.andengine.extension.physics.box2d;
 
 import java.util.ArrayList;
 
 import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.extension.physics.box2d.util.BidirectionalMap;
+import org.anddev.andengine.extension.physics.box2d.util.Box2DJNIProxyContactListener;
 import org.anddev.andengine.physics.DynamicPhysicsBody;
 import org.anddev.andengine.physics.IPhysicsSpace;
 import org.anddev.andengine.physics.StaticPhysicsBody;
-import org.anddev.andengine.physics.box2d.util.BidirectionalMap;
-import org.anddev.andengine.physics.box2d.util.Box2DJNIProxyContactListener;
 import org.anddev.andengine.util.MathUtils;
 
 import android.os.Handler;
 import android.os.Message;
-
-
 
 /**
  * @author Nicolas Gramlich

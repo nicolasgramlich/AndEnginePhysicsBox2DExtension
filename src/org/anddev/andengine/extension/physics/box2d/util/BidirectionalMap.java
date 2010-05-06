@@ -1,4 +1,4 @@
-package org.anddev.andengine.physics.box2d.util;
+package org.anddev.andengine.extension.physics.box2d.util;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
-package org.anddev.andengine.physics.box2d;
+package org.anddev.andengine.extension.physics.box2d;
 
-import org.anddev.andengine.physics.box2d.util.Box2DJNIProxyContactListener;
+import org.anddev.andengine.extension.physics.box2d.util.Box2DJNIProxyContactListener;
 
 public class Box2DNativeWrapper {
 	// ===========================================================

@@ -18,14 +18,14 @@
 	<property name="nativetargetlist" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2d.so,
 	../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2d.so,
 	../SuperDroid/libs/armeabi/libandenginephysicsbox2d.so,
-	../HighRise/libs/armeabi/libandenginephysicsbox2d.so,
-	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2d.so" />
+	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2d.so,
+	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2d.so" />
 	
 	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2d.jar,
 	../AndEnginePlayground/lib/andenginephysicsbox2d.jar,
 	../SuperDroid/lib/andenginephysicsbox2d.jar,
-	../HighRise/lib/andenginephysicsbox2d.jar,
-	../BoxFacePhysicsLiveWallpaper/lib/andenginephysicsbox2d.jar" />
+	../BoxFacePhysicsLiveWallpaper/lib/andenginephysicsbox2d.jar, 
+	../BoxFaceStacker/lib/andenginephysicsbox2d.jar" />
 	
 	<target name="createjar" >
 		<echo>${targetfile}</echo>
