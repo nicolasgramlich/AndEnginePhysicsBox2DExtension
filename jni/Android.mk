@@ -20,7 +20,7 @@ include $(CLEAR_VARS)
 LOCAL_LDLIBS := -Lbuild/platforms/android-1.5/arch-arm/usr/lib -llog
 # To enable Native Logging END 
 	
-LOCAL_MODULE    := andenginephysicsbox2d
+LOCAL_MODULE    := andenginephysicsbox2dextension
 LOCAL_SRC_FILES := org_anddev_andengine_physics_box2d_Box2DNativeWrapper.cpp \
 	box2d-2.0.1/Common/b2Math.cpp \
 	box2d-2.0.1/Common/b2Settings.cpp \

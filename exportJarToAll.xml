@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="createjars" name="AndEngine">
+<project basedir="." default="createjars" name="AndEnginePhysicsBox2DExtension">
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 	
@@ -11,21 +11,21 @@
 	<property name="bin" value="bin" />
 	<property name="src" value="src" />
 	
-	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2d.so" />
+	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2dextension.so" />
 	
-	<property name="binfile" value="bin/andenginephysicsbox2d.jar" />
+	<property name="binfile" value="bin/andenginephysicsbox2dextension.jar" />
 	
-	<property name="nativetargetlist" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2d.so,
-	../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2d.so,
-	../SuperDroid/libs/armeabi/libandenginephysicsbox2d.so,
-	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2d.so,
-	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2d.so" />
+	<property name="nativetargetlist" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../SuperDroid/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2dextension.so" />
 	
-	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2d.jar,
-	../AndEnginePlayground/lib/andenginephysicsbox2d.jar,
-	../SuperDroid/lib/andenginephysicsbox2d.jar,
-	../BoxFacePhysicsLiveWallpaper/lib/andenginephysicsbox2d.jar, 
-	../BoxFaceStacker/lib/andenginephysicsbox2d.jar" />
+	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar,
+	../AndEnginePlayground/lib/andenginephysicsbox2dextension.jar,
+	../SuperDroid/lib/andenginephysicsbox2dextension.jar,
+	../BoxFacePhysicsLiveWallpaper/lib/andenginephysicsbox2dextension.jar, 
+	../BoxFaceStacker/lib/andenginephysicsbox2dextension.jar" />
 	
 	<target name="createjar" >
 		<echo>${targetfile}</echo>

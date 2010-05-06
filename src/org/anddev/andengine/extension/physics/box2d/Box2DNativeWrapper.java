@@ -18,7 +18,7 @@ public class Box2DNativeWrapper {
 	// ===========================================================
 
 	static {
-		System.loadLibrary("andenginephysicsbox2d");
+		System.loadLibrary("andenginephysicsbox2dextension");
 	}
 
 	// ===========================================================
