@@ -72,6 +72,11 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 	// ===========================================================
 
 	@Override
+	public void reset() {
+		// TODO !?!?
+	}
+
+	@Override
 	public void createWorld(final float pX, final float pY, final float pWidth, final float pHeight) {
 		this.mBox2DNativeWrapper.createWorld(pX, pY, pX + pWidth, pY + pHeight, 0, 0);
 	}
@@ -147,12 +152,16 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 		} else if(dynamicPhysicsBodyA != null) {
 			if(dynamicPhysicsBodyA.hasCollisionCallback()){
 				final StaticPhysicsBody staticPhysicsBodyB = this.mStaticPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDB);
-				dynamicPhysicsBodyA.getCollisionCallback().onCollision(dynamicPhysicsBodyA.getShape(), staticPhysicsBodyB.getShape());
+				if(staticPhysicsBodyB != null) {
+					dynamicPhysicsBodyA.getCollisionCallback().onCollision(dynamicPhysicsBodyA.getShape(), staticPhysicsBodyB.getShape());
+				}
 			}
 		} else if(dynamicPhysicsBodyB != null) {
 			if(dynamicPhysicsBodyB.hasCollisionCallback()){
 				final StaticPhysicsBody staticPhysicsBodyA = this.mStaticPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDA);
-				dynamicPhysicsBodyB.getCollisionCallback().onCollision(dynamicPhysicsBodyB.getShape(), staticPhysicsBodyA.getShape());
+				if(staticPhysicsBodyA != null) {
+					dynamicPhysicsBodyB.getCollisionCallback().onCollision(dynamicPhysicsBodyB.getShape(), staticPhysicsBodyA.getShape());
+				}
 			}
 		}
 	}
