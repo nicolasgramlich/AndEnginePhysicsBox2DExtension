@@ -19,7 +19,7 @@
 #include "b2PairManager.h"
 #include "b2BroadPhase.h"
 
-#include <algorithm>
+//#include <algorithm>
 
 // Thomas Wang's hash, see: http://www.concentric.net/~Ttwang/tech/inthash.htm
 // This assumes proxyId1 and proxyId2 are 16-bit.

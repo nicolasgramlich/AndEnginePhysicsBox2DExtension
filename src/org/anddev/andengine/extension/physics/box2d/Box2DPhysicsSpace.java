@@ -2,12 +2,12 @@ package org.anddev.andengine.extension.physics.box2d;
 
 import java.util.ArrayList;
 
+import org.anddev.andengine.entity.IUpdateHandler;
 import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.extension.physics.box2d.adt.DynamicPhysicsBody;
+import org.anddev.andengine.extension.physics.box2d.adt.StaticPhysicsBody;
 import org.anddev.andengine.extension.physics.box2d.util.BidirectionalMap;
 import org.anddev.andengine.extension.physics.box2d.util.Box2DJNIProxyContactListener;
-import org.anddev.andengine.physics.DynamicPhysicsBody;
-import org.anddev.andengine.physics.IPhysicsSpace;
-import org.anddev.andengine.physics.StaticPhysicsBody;
 import org.anddev.andengine.util.MathUtils;
 
 import android.os.Handler;
@@ -17,7 +17,7 @@ import android.os.Message;
  * @author Nicolas Gramlich
  * @since 10:56:23 - 21.03.2010
  */
-public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
+public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -73,22 +73,18 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 
 	@Override
 	public void reset() {
-		// TODO !?!?
 	}
 
-	@Override
 	public void createWorld(final float pX, final float pY, final float pWidth, final float pHeight) {
 		this.mBox2DNativeWrapper.createWorld(pX, pY, pX + pWidth, pY + pHeight, 0, 0);
 	}
 
-	@Override
 	public void addDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		assert(pDynamicPhysicsBody.mMass != 0);
 
 		this.mDynamicPhysicsBodiesPendingToGoNative.add(pDynamicPhysicsBody);
 	}
 	
-	@Override
 	public void addStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
 		assert(pStaticPhysicsBody.mMass == 0);
 
@@ -100,7 +96,6 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 		this.mHandler.sendMessage(this.mHandler.obtainMessage(WHAT_CONTACT_NEW, pPhysicsIDA, pPhysicsIDB));
 	}
 
-	@Override
 	public void setVelocity(final DynamicPhysicsBody pDynamicPhysicsBody, final float pVelocityX, final float pVelocityY) {
 		final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.get(pDynamicPhysicsBody);
 		this.mBox2DNativeWrapper.setBodyLinearVelocity(physicsID, pVelocityX, pVelocityY);
@@ -128,7 +123,6 @@ public class Box2DPhysicsSpace implements IPhysicsSpace, Box2DContactListener {
 		}
 	}
 
-	@Override
 	public void setGravity(final float pGravityX, final float pGravityY) {
 		this.mBox2DNativeWrapper.setGravity(pGravityX, pGravityY);
 	}
