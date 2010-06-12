@@ -182,30 +182,28 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	}
 
 	private int loadStaticShape(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {
-		final int physicsID;
 		switch(pStaticPhysicsBody.mPhysicsShape) {
-//			case CIRCLE:
-//				physicsID = loadStaticCircle(pStaticPhysicsBody, pShape);
-//				break;
+			case CIRCLE:
+				return loadStaticCircle(pStaticPhysicsBody, pShape);
 			case RECTANGLE:
+				return loadStaticBox(pStaticPhysicsBody, pShape);
 			default:
-				physicsID = loadStaticBox(pStaticPhysicsBody, pShape);
+				throw new IllegalArgumentException("Invalid PhysicsShape supplied.");
 		}
-		return physicsID;
 	}
 
-//	private int loadStaticCircle(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {		
-//		final float width = pShape.getBaseWidth();
-//		final float height = pShape.getBaseHeight();
-//
-//		assert(width == height);
-//
-//		final float x = pShape.getX() + width / 2;
-//		final float y = pShape.getY() + height / 2;
-//		final float radius = width / 2;
-//
-//		return this.mBox2DNativeWrapper.createCircle(x, y, radius, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
-//	}
+	private int loadStaticCircle(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {		
+		final float width = pShape.getBaseWidth();
+		final float height = pShape.getBaseHeight();
+
+		assert(width == height);
+
+		final float x = pShape.getX() + width / 2;
+		final float y = pShape.getY() + height / 2;
+		final float radius = width / 2;
+
+		return this.mBox2DNativeWrapper.createCircle(x, y, radius, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
+	}
 
 	private int loadStaticBox(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {
 		final float width = pShape.getBaseWidth();
@@ -236,30 +234,28 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	}
 
 	private int loadDynamicShape(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
-		final int physicsID;
 		switch(pDynamicPhysicsBody.mPhysicsShape) {
-//			case CIRCLE:
-//				physicsID = loadDynamicCircle(pDynamicPhysicsBody, pShape);
-//				break;
+			case CIRCLE:
+				return loadDynamicCircle(pDynamicPhysicsBody, pShape);
 			case RECTANGLE:
+				return loadDynamicBox(pDynamicPhysicsBody, pShape);
 			default:
-				physicsID = loadDynamicBox(pDynamicPhysicsBody, pShape);
+				throw new IllegalArgumentException("Invalid PhysicsShape supplied.");
 		}
-		return physicsID;
 	}
 
-//	private int loadDynamicCircle(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
-//		final float width = pShape.getBaseWidth();
-//		final float height = pShape.getBaseHeight();
-//		
-//		assert(width == height);
-//		
-//		final float x = pShape.getX() + width / 2;
-//		final float y = pShape.getY() + height / 2;
-//		final float radius = width / 2;
-//		
-//		return this.mBox2DNativeWrapper.createCircle(x, y, radius, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
-//	}
+	private int loadDynamicCircle(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
+		final float width = pShape.getBaseWidth();
+		final float height = pShape.getBaseHeight();
+		
+		assert(width == height);
+		
+		final float x = pShape.getX() + width / 2;
+		final float y = pShape.getY() + height / 2;
+		final float radius = width / 2;
+		
+		return this.mBox2DNativeWrapper.createCircle(x, y, radius, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
+	}
 
 	private int loadDynamicBox(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
 		final float width = pShape.getBaseWidth();
