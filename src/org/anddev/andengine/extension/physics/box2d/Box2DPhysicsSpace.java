@@ -118,7 +118,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 			final Shape shape = dynamicPhysicsBody.getShape();
 
 			shape.setPosition(bodyInfo.getX() - shape.getBaseWidth() / 2, bodyInfo.getY() - shape.getBaseHeight() / 2);
-			shape.setAngle(MathUtils.radToDeg(bodyInfo.getAngle()));
+			shape.setRotation(MathUtils.radToDeg(bodyInfo.getRotation()));
 			shape.setVelocity(bodyInfo.getVelocityX(), bodyInfo.getVelocityY());
 		}
 	}

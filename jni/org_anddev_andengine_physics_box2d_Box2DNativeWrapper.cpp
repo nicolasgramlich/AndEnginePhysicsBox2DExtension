@@ -9,7 +9,7 @@
 
 const int32 MAX_BODIES = 300;
 
-int32 BODYINDEX = 0;
+int32 BODYCOUNT = 0;
 b2Body *BODIES[MAX_BODIES];
 bool BODIES_CONTACT_ENABLED[MAX_BODIES];
 
@@ -51,6 +51,15 @@ public:
 	void Result(const b2ContactResult* pContactResult) { }
 };
 
+int32 findFreeBodyIndex() {
+	for(int32 i = 0; i < MAX_BODIES; i++){
+		if(BODIES[i] == NULL){
+			return i;
+		}
+	}
+	return -1;
+}
+
 JNIProxyContactListener *JNI_PROXY_CONTACTLISTENER;
 
 extern "C" {
@@ -64,7 +73,7 @@ extern "C" {
 				}
 			}
 			WORLD = NULL;
-			BODYINDEX = 0;
+			BODYCOUNT = 0;
 		}
 
 		b2AABB worldAABB;
@@ -90,13 +99,15 @@ extern "C" {
 	}
 
 	JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
+		int32 bodyIndex = findFreeBodyIndex();
+		
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
 		bodyDef.fixedRotation = pFixedRotation;
 		
 		b2Body* body = WORLD->CreateBody(&bodyDef);
 		BodyIndexBodyData* bodyData = new BodyIndexBodyData;
-		bodyData->mBodyIndex = BODYINDEX;
+		bodyData->mBodyIndex = bodyIndex;
 		body->SetUserData(bodyData);
 
 		// Define the circle shape.
@@ -109,20 +120,23 @@ extern "C" {
 		body->CreateShape(&circleDef);
 		body->SetMassFromShapes();
 		
-		BODIES[BODYINDEX] = body;
-		BODIES_CONTACT_ENABLED[BODYINDEX] = pHandleContacts;
+		BODIES[bodyIndex] = body;
+		BODIES_CONTACT_ENABLED[bodyIndex] = pHandleContacts;
 		
-		return BODYINDEX++;
+		BODYCOUNT++;
+		return bodyIndex;
 	}
 
 	JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
+		int32 bodyIndex = findFreeBodyIndex();
+		
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
 		bodyDef.fixedRotation = pFixedRotation;
 
 		b2Body* body = WORLD->CreateBody(&bodyDef);
 		BodyIndexBodyData* bodyData = new BodyIndexBodyData();
-		bodyData->mBodyIndex = BODYINDEX;
+		bodyData->mBodyIndex = bodyIndex;
 		body->SetUserData(bodyData);
 
 		// Define the box shape.
@@ -137,10 +151,11 @@ extern "C" {
 		body->CreateShape(&boxDef);
 		body->SetMassFromShapes();
 		
-		BODIES[BODYINDEX] = body;
-		BODIES_CONTACT_ENABLED[BODYINDEX] = pHandleContacts;
+		BODIES[bodyIndex] = body;
+		BODIES_CONTACT_ENABLED[bodyIndex] = pHandleContacts;
 		
-		return BODYINDEX++;
+		BODYCOUNT++;
+		return bodyIndex;
 	}
 
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_destroyBody (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex){
@@ -163,16 +178,16 @@ extern "C" {
 		WORLD->SetGravity(gravity);
 	}
 
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY, jfloat pAngle){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyXForm (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY, jfloat pRotation){
 		if(BODIES[pBodyIndex] != NULL){
 			b2Vec2 vec(pX, pY);
-			BODIES[pBodyIndex]->SetXForm(vec, pAngle);
+			BODIES[pBodyIndex]->SetXForm(vec, pRotation);
 		}
 	}
 
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pAngle){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pRotation){
 		if(BODIES[pBodyIndex] != NULL){
-			BODIES[pBodyIndex]->SetAngularVelocity(pAngle);
+			BODIES[pBodyIndex]->SetAngularVelocity(pRotation);
 		}
 	}
 

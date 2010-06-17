@@ -15,7 +15,7 @@ public class Box2DBodyInfo {
 
 	private float mX;
 	private float mY;
-	private float mAngle; // rad
+	private float mRotation; // rad
 
 	private float mVelocityX;
 	private float mVelocityY;
@@ -50,18 +50,18 @@ public class Box2DBodyInfo {
 		this.mY = pY;
 	}
 
-	public float getAngle() {
-		return this.mAngle;
+	public float getRotation() {
+		return this.mRotation;
 	}
 
-	public void setAngle(final float pAngle) {
-		this.mAngle = pAngle;
+	public void setRotation(final float pRotation) {
+		this.mRotation = pRotation;
 	}
 
-	public void setValues(final float pX, final float pY, final float pAngle, final float pVelocityX, final float pVelocityY) {
+	public void setValues(final float pX, final float pY, final float pRotation, final float pVelocityX, final float pVelocityY) {
 		this.mX = pX;
 		this.mY = pY;
-		this.mAngle = pAngle;
+		this.mRotation = pRotation;
 		this.mVelocityX = pVelocityX;
 		this.mVelocityY = pVelocityY;
 	}
