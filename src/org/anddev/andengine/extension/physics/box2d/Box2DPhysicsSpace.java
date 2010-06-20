@@ -34,10 +34,11 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 	private final Box2DNativeWrapper mBox2DNativeWrapper;
 
+	private final ArrayList<StaticPhysicsBody> mStaticPhysicsBodies = new ArrayList<StaticPhysicsBody>();
 	private final BidirectionalMap<StaticPhysicsBody, Integer> mStaticPhysicsBodyToPhysicsIDMapping = new BidirectionalMap<StaticPhysicsBody, Integer>();
 
-	private final ArrayList<StaticPhysicsBody> mStaticPhysicsBodiesPendingToGoNative = new ArrayList<StaticPhysicsBody>();
-	private final ArrayList<DynamicPhysicsBody> mDynamicPhysicsBodiesPendingToGoNative = new ArrayList<DynamicPhysicsBody>();
+	private final ArrayList<StaticPhysicsBody> mStaticPhysicsBodiesToBeLoaded = new ArrayList<StaticPhysicsBody>();
+	private final ArrayList<DynamicPhysicsBody> mDynamicPhysicsBodiesToBeLoaded = new ArrayList<DynamicPhysicsBody>();
 
 	private final ArrayList<DynamicPhysicsBody> mDynamicPhysicsBodies = new ArrayList<DynamicPhysicsBody>();
 	private final BidirectionalMap<DynamicPhysicsBody, Integer> mDynamicPhysicsBodyToPhysicsIDMapping = new BidirectionalMap<DynamicPhysicsBody, Integer>();
@@ -82,13 +83,35 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	public void addDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		assert(pDynamicPhysicsBody.mMass != 0);
 
-		this.mDynamicPhysicsBodiesPendingToGoNative.add(pDynamicPhysicsBody);
+		this.mDynamicPhysicsBodiesToBeLoaded.add(pDynamicPhysicsBody);
+	}
+	
+	public void removeDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) { 
+		if(this.mDynamicPhysicsBodies.contains(pDynamicPhysicsBody)) {
+			this.mDynamicPhysicsBodies.remove(pDynamicPhysicsBody);
+			final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.remove(pDynamicPhysicsBody);
+			this.mBox2DNativeWrapper.destroyBody(physicsID);
+		} else if(this.mDynamicPhysicsBodiesToBeLoaded.contains(pDynamicPhysicsBody)) {
+			this.mDynamicPhysicsBodiesToBeLoaded.remove(pDynamicPhysicsBody);
+		}
+	}
+	
+	public void removeDynamicBodyByShape(final Shape pShape) {
+		// TODO Same for Static Bodies
+		// TODO Also check this.mDynamicPhysicsBodiesToBeLoaded if it contains this object
+		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
+		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
+			final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodies.get(i);
+			if(dynamicPhysicsBody.mShape == pShape){
+				removeDynamicBody(dynamicPhysicsBody);
+			}
+		}
 	}
 	
 	public void addStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
 		assert(pStaticPhysicsBody.mMass == 0);
 
-		this.mStaticPhysicsBodiesPendingToGoNative.add(pStaticPhysicsBody);
+		this.mStaticPhysicsBodiesToBeLoaded.add(pStaticPhysicsBody);
 	}
 
 	@Override
@@ -103,7 +126,8 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
-		this.loadPendingBodiesToGoNative();
+//		this.ensureBodiesUnloaded(); // TODO 
+		this.ensureBodiesLoaded();
 
 		final Box2DNativeWrapper box2DNativeWrapper = this.mBox2DNativeWrapper;
 		box2DNativeWrapper.step(new Box2DJNIProxyContactListener(this), pSecondsElapsed, ITERATIONS);
@@ -160,21 +184,20 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		}
 	}
 
-	private void loadPendingBodiesToGoNative() {
-		// TODO Refactor the naming of all subcalls!
-		this.loadPendingStaticBodiesToGoNative();
-		this.loadPendingDynamicBodiesToGoNative();
+	private void ensureBodiesLoaded() {
+		this.ensureStaticBodiesLoaded();
+		this.ensureDynamicBodiesLoaded();
 	}
 
-	private void loadPendingStaticBodiesToGoNative() {
-		final ArrayList<StaticPhysicsBody> staticPhysicsBodiesPendingToGoNative = this.mStaticPhysicsBodiesPendingToGoNative;
-		for(int i = staticPhysicsBodiesPendingToGoNative.size() - 1; i >= 0; i--) {
-			loadPendingStaticBodyToGoNative(staticPhysicsBodiesPendingToGoNative.get(i));
+	private void ensureStaticBodiesLoaded() {
+		final ArrayList<StaticPhysicsBody> staticPhysicsBodiesToBeLoaded = this.mStaticPhysicsBodiesToBeLoaded;
+		for(int i = staticPhysicsBodiesToBeLoaded.size() - 1; i >= 0; i--) {
+			loadPendingStaticBody(staticPhysicsBodiesToBeLoaded.get(i));
 		}
-		staticPhysicsBodiesPendingToGoNative.clear();	
+		staticPhysicsBodiesToBeLoaded.clear();	
 	}
 
-	private void loadPendingStaticBodyToGoNative(final StaticPhysicsBody pStaticPhysicsBody) {
+	private void loadPendingStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
 		final Shape shape = pStaticPhysicsBody.getShape();
 		
 		final int physicsID = loadStaticShape(pStaticPhysicsBody, shape);
@@ -216,15 +239,15 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	
 	
 
-	private void loadPendingDynamicBodiesToGoNative() {
-		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodiesPendingToGoNative = this.mDynamicPhysicsBodiesPendingToGoNative;
-		for(int i = dynamicPhysicsBodiesPendingToGoNative.size() - 1; i >= 0; i--) {
-			loadPendingDynamicBodyToGoNative(dynamicPhysicsBodiesPendingToGoNative.get(i));
+	private void ensureDynamicBodiesLoaded() {
+		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodiesToBeLoaded = this.mDynamicPhysicsBodiesToBeLoaded;
+		for(int i = dynamicPhysicsBodiesToBeLoaded.size() - 1; i >= 0; i--) {
+			loadDynamicBody(dynamicPhysicsBodiesToBeLoaded.get(i));
 		}
-		dynamicPhysicsBodiesPendingToGoNative.clear();
+		dynamicPhysicsBodiesToBeLoaded.clear();
 	}
 
-	private void loadPendingDynamicBodyToGoNative(final DynamicPhysicsBody pDynamicPhysicsBody) {
+	private void loadDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		final Shape shape = pDynamicPhysicsBody.getShape();
 		shape.setUpdatePhysicsSelf(false);
 		
