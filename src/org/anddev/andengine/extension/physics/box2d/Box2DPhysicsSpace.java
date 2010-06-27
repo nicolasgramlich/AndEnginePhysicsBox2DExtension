@@ -139,22 +139,6 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		}
 	}
 	
-	public void removeDynamicBodyByShape(final Shape pShape) {
-		// TODO Same for Static Bodies
-		final DynamicPhysicsBody dynamicPhysicsBody = this.findDynamicBodyByShape(pShape);
-		if(dynamicPhysicsBody != null) {
-			this.removeDynamicBody(dynamicPhysicsBody);
-		}
-	}
-	
-	public void removeStaticBodyByShape(final Shape pShape) {
-		// TODO Same for Static Bodies
-		final StaticPhysicsBody staticPhysicsBody = this.findStaticBodyByShape(pShape);
-		if(staticPhysicsBody != null) {
-			this.removeStaticBody(staticPhysicsBody);
-		}
-	}
-	
 	public DynamicPhysicsBody findDynamicBodyByShape(final Shape pShape) {
 		// TODO Also check this.mDynamicPhysicsBodiesToBeLoaded if it contains this object
 		
@@ -280,8 +264,6 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		return this.mBox2DNativeWrapper.createBox(x, y, width, height, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
 	}
 	
-	
-
 	private void ensureDynamicBodiesLoaded() {
 		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodiesToBeLoaded = this.mDynamicPhysicsBodiesToBeLoaded;
 		for(int i = dynamicPhysicsBodiesToBeLoaded.size() - 1; i >= 0; i--) {
