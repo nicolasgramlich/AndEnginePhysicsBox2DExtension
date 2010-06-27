@@ -74,54 +74,12 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 	@Override
 	public void reset() {
-	}
-
-	public void createWorld(final float pX, final float pY, final float pWidth, final float pHeight) {
-		this.mBox2DNativeWrapper.createWorld(pX, pY, pX + pWidth, pY + pHeight, 0, 0);
-	}
-
-	public void addDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
-		assert(pDynamicPhysicsBody.mMass != 0);
-
-		this.mDynamicPhysicsBodiesToBeLoaded.add(pDynamicPhysicsBody);
-	}
-	
-	public void removeDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) { 
-		if(this.mDynamicPhysicsBodies.contains(pDynamicPhysicsBody)) {
-			this.mDynamicPhysicsBodies.remove(pDynamicPhysicsBody);
-			final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.remove(pDynamicPhysicsBody);
-			this.mBox2DNativeWrapper.destroyBody(physicsID);
-		} else if(this.mDynamicPhysicsBodiesToBeLoaded.contains(pDynamicPhysicsBody)) {
-			this.mDynamicPhysicsBodiesToBeLoaded.remove(pDynamicPhysicsBody);
-		}
-	}
-	
-	public void removeDynamicBodyByShape(final Shape pShape) {
-		// TODO Same for Static Bodies
-		// TODO Also check this.mDynamicPhysicsBodiesToBeLoaded if it contains this object
-		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
-		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
-			final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodies.get(i);
-			if(dynamicPhysicsBody.mShape == pShape){
-				removeDynamicBody(dynamicPhysicsBody);
-			}
-		}
-	}
-	
-	public void addStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
-		assert(pStaticPhysicsBody.mMass == 0);
-
-		this.mStaticPhysicsBodiesToBeLoaded.add(pStaticPhysicsBody);
+		// TODO ???
 	}
 
 	@Override
 	public void onNewContact(final int pPhysicsIDA, final int pPhysicsIDB) {
 		this.mHandler.sendMessage(this.mHandler.obtainMessage(WHAT_CONTACT_NEW, pPhysicsIDA, pPhysicsIDB));
-	}
-
-	public void setVelocity(final DynamicPhysicsBody pDynamicPhysicsBody, final float pVelocityX, final float pVelocityY) {
-		final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.get(pDynamicPhysicsBody);
-		this.mBox2DNativeWrapper.setBodyLinearVelocity(physicsID, pVelocityX, pVelocityY);
 	}
 
 	@Override
@@ -146,14 +104,99 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 			shape.setVelocity(bodyInfo.getVelocityX(), bodyInfo.getVelocityY());
 		}
 	}
-
-	public void setGravity(final float pGravityX, final float pGravityY) {
-		this.mBox2DNativeWrapper.setGravity(pGravityX, pGravityY);
-	}
-
+	
 	// ===========================================================
 	// Methods
 	// ===========================================================
+
+	public void createWorld(final float pX, final float pY, final float pWidth, final float pHeight) {
+		this.mBox2DNativeWrapper.createWorld(pX, pY, pX + pWidth, pY + pHeight, 0, 0);
+	}
+
+	public void addDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
+		assert(pDynamicPhysicsBody.mMass != 0);
+
+		this.mDynamicPhysicsBodiesToBeLoaded.add(pDynamicPhysicsBody);
+	}
+	
+	public void removeDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) { 
+		if(this.mDynamicPhysicsBodies.contains(pDynamicPhysicsBody)) {
+			this.mDynamicPhysicsBodies.remove(pDynamicPhysicsBody);
+			final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.remove(pDynamicPhysicsBody);
+			this.mBox2DNativeWrapper.destroyBody(physicsID);
+		} else if(this.mDynamicPhysicsBodiesToBeLoaded.contains(pDynamicPhysicsBody)) {
+			this.mDynamicPhysicsBodiesToBeLoaded.remove(pDynamicPhysicsBody);
+		}
+	}
+	
+	public void removeStaticBody(final StaticPhysicsBody pStaticPhysicsBody) { 
+		if(this.mStaticPhysicsBodies.contains(pStaticPhysicsBody)) {
+			this.mStaticPhysicsBodies.remove(pStaticPhysicsBody);
+			final int physicsID = this.mStaticPhysicsBodyToPhysicsIDMapping.remove(pStaticPhysicsBody);
+			this.mBox2DNativeWrapper.destroyBody(physicsID);
+		} else if(this.mStaticPhysicsBodiesToBeLoaded.contains(pStaticPhysicsBody)) {
+			this.mStaticPhysicsBodiesToBeLoaded.remove(pStaticPhysicsBody);
+		}
+	}
+	
+	public void removeDynamicBodyByShape(final Shape pShape) {
+		// TODO Same for Static Bodies
+		final DynamicPhysicsBody dynamicPhysicsBody = this.findDynamicBodyByShape(pShape);
+		if(dynamicPhysicsBody != null) {
+			this.removeDynamicBody(dynamicPhysicsBody);
+		}
+	}
+	
+	public void removeStaticBodyByShape(final Shape pShape) {
+		// TODO Same for Static Bodies
+		final StaticPhysicsBody staticPhysicsBody = this.findStaticBodyByShape(pShape);
+		if(staticPhysicsBody != null) {
+			this.removeStaticBody(staticPhysicsBody);
+		}
+	}
+	
+	public DynamicPhysicsBody findDynamicBodyByShape(final Shape pShape) {
+		// TODO Also check this.mDynamicPhysicsBodiesToBeLoaded if it contains this object
+		
+		// TODO Instead of a linear search the lookup could be done through a HashMap
+		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
+		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
+			final DynamicPhysicsBody dynamicPhysicsBody = dynamicPhysicsBodies.get(i);
+			if(dynamicPhysicsBody.mShape == pShape){
+				return dynamicPhysicsBody;
+			}
+		}
+		return null;
+	}
+	
+	public StaticPhysicsBody findStaticBodyByShape(final Shape pShape) {
+		// TODO Also check this.mStaticPhysicsBodiesToBeLoaded if it contains this object
+		
+		// TODO Instead of a linear search the lookup could be done through a HashMap
+		final ArrayList<StaticPhysicsBody> staticPhysicsBodies = this.mStaticPhysicsBodies;
+		for(int i = staticPhysicsBodies.size() - 1; i >= 0; i--) {
+			final StaticPhysicsBody staticPhysicsBody = staticPhysicsBodies.get(i);
+			if(staticPhysicsBody.mShape == pShape){
+				return staticPhysicsBody;
+			}
+		}
+		return null;
+	}
+	
+	public void addStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
+		assert(pStaticPhysicsBody.mMass == 0);
+
+		this.mStaticPhysicsBodiesToBeLoaded.add(pStaticPhysicsBody);
+	}
+
+	public void setVelocity(final DynamicPhysicsBody pDynamicPhysicsBody, final float pVelocityX, final float pVelocityY) {
+		final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.get(pDynamicPhysicsBody);
+		this.mBox2DNativeWrapper.setBodyLinearVelocity(physicsID, pVelocityX, pVelocityY);
+	}
+	
+	public void setGravity(final float pGravityX, final float pGravityY) {
+		this.mBox2DNativeWrapper.setGravity(pGravityX, pGravityY);
+	}
 
 	private void onHandleCollision(final int pPhysicsIDA, final int pPhysicsIDB) {
 		final DynamicPhysicsBody dynamicPhysicsBodyA = this.mDynamicPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDA);
