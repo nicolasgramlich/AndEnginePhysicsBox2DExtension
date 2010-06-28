@@ -98,11 +98,12 @@ extern "C" {
 		WORLD->Step(pTimeStep, pIterations);
 	}
 
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv* pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pRadius, jfloat pRotation, jfloat pVelocityX, jfloat pVelocityY, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
 		int32 bodyIndex = findFreeBodyIndex();
 		
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
+		bodyDef.angle = pRotation;
 		bodyDef.fixedRotation = pFixedRotation;
 		
 		b2Body* body = WORLD->CreateBody(&bodyDef);
@@ -120,6 +121,9 @@ extern "C" {
 		body->CreateShape(&circleDef);
 		body->SetMassFromShapes();
 		
+		b2Vec2 velocity(pVelocityX, pVelocityY);
+		body->SetLinearVelocity(velocity);
+		
 		BODIES[bodyIndex] = body;
 		BODIES_CONTACT_ENABLED[bodyIndex] = pHandleContacts;
 		
@@ -127,11 +131,12 @@ extern "C" {
 		return bodyIndex;
 	}
 
-	JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
+	JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *pEnvironment, jobject pCaller, jfloat pX, jfloat pY, jfloat pWidth, jfloat pHeight, jfloat pRotation, jfloat pVelocityX, jfloat pVelocityY, jfloat pDensity, jfloat pRestitution, jfloat pFriction, jboolean pFixedRotation, jboolean pHandleContacts){
 		int32 bodyIndex = findFreeBodyIndex();
 		
 		b2BodyDef bodyDef;
 		bodyDef.position.Set(pX, pY);
+		bodyDef.angle = pRotation;
 		bodyDef.fixedRotation = pFixedRotation;
 
 		b2Body* body = WORLD->CreateBody(&bodyDef);
@@ -150,6 +155,9 @@ extern "C" {
 
 		body->CreateShape(&boxDef);
 		body->SetMassFromShapes();
+		
+		b2Vec2 velocity(pVelocityX, pVelocityY);
+		body->SetLinearVelocity(velocity);
 		
 		BODIES[bodyIndex] = body;
 		BODIES_CONTACT_ENABLED[bodyIndex] = pHandleContacts;
@@ -170,7 +178,7 @@ extern "C" {
 		jclass bodyInfoClass = pEnvironment->GetObjectClass(pBodyInfo);
 		jmethodID setValuesId = pEnvironment->GetMethodID(bodyInfoClass, "setValues", "(FFFFF)V");
 		b2Body *body = BODIES[pBodyIndex];
-		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle(), body->GetLinearVelocity().x, body->GetLinearVelocity().y);
+		pEnvironment->CallVoidMethod(pBodyInfo, setValuesId, body->GetPosition().x, body->GetPosition().y, body->GetAngle(), body->GetLinearVelocity().x, body->GetLinearVelocity().y); // TODO method calls could be reduced
 	}
 
 	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setGravity (JNIEnv *pEnvironment, jobject pCaller, jfloat pGravityX, jfloat pGravityY){
@@ -185,16 +193,16 @@ extern "C" {
 		}
 	}
 
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pRotation){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyAngularVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pVelocityAngular){
 		if(BODIES[pBodyIndex] != NULL){
-			BODIES[pBodyIndex]->SetAngularVelocity(pRotation);
+			BODIES[pBodyIndex]->SetAngularVelocity(pVelocityAngular);
 		}
 	}
 
-	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pX, jfloat pY){
+	JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_setBodyLinearVelocity (JNIEnv *pEnvironment, jobject pCaller, jint pBodyIndex, jfloat pVelocityX, jfloat pVelocityY){
 		if(BODIES[pBodyIndex] != NULL){
-			b2Vec2 vec(pX, pY);
-			BODIES[pBodyIndex]->SetLinearVelocity(vec);
+			b2Vec2 velocity(pVelocityX, pVelocityY);
+			BODIES[pBodyIndex]->SetLinearVelocity(velocity);
 		}
 	}
 

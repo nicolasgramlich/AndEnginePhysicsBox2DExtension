@@ -26,14 +26,14 @@ JNIEXPORT void JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNa
  * Method:    createCircle
  * Signature: (FFFFF)I
  */
-JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean, jboolean);
+JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createCircle (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean, jboolean);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper
  * Method:    createBox2
  * Signature: (FFFFFFF)I
  */
-JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean, jboolean);
+JNIEXPORT jint JNICALL Java_org_anddev_andengine_extension_physics_box2d_Box2DNativeWrapper_createBox (JNIEnv *, jobject, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jboolean, jboolean);
 
 /*
  * Class:     org_anddev_andengine_physics_box2d_Box2DNativeWrapper

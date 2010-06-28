@@ -37,9 +37,9 @@ public class Box2DNativeWrapper {
 
 	public native void step(final Box2DJNIProxyContactListener pBox2DJNIProxyContactListener, final float pStepTime, final int pIterations);
 
-	public native int createCircle(final float pX, final float pY, final float pRadius, final float pDensity, final float pRestitution, final float pFriction, final boolean pFixedRotation, final boolean pHandleContacts);
+	public native int createCircle(final float pX, final float pY, final float pRadius, final float pRotation, final float pVelocityX, final float pVelocityY, final float pDensity, final float pRestitution, final float pFriction, final boolean pFixedRotation, final boolean pHandleContacts);
 
-	public native int createBox(final float pX, final float pY, final float pWidth, final float pHeight, final float pDensity, final float pRestitution, final float pFriction, final boolean pFixedRotation, final boolean pHandleContacts);
+	public native int createBox(final float pX, final float pY, final float pWidth, final float pHeight, final float pRotation, final float pVelocityX, final float pVelocityY, final float pDensity, final float pRestitution, final float pFriction, final boolean pFixedRotation, final boolean pHandleContacts);
 
 	public native void destroyBody(final int pPhysicsID);
 

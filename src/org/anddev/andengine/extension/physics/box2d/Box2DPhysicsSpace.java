@@ -45,7 +45,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 	private final Box2DBodyInfo mBodyInfo = new Box2DBodyInfo();
 
-	private Handler mHandler;
+	private final Handler mHandler;
 
 	// ===========================================================
 	// Constructors
@@ -55,9 +55,9 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		this.mBox2DNativeWrapper = new Box2DNativeWrapper();
 		this.mHandler = new Handler(){
 			@Override
-			public void handleMessage(Message pMsg) {
+			public void handleMessage(final Message pMsg) {
 				if(pMsg.what == WHAT_CONTACT_NEW) {
-					onHandleCollision(pMsg.arg1, pMsg.arg2);
+					Box2DPhysicsSpace.this.onHandleCollision(pMsg.arg1, pMsg.arg2);
 				}
 				super.handleMessage(pMsg);
 			}
@@ -84,7 +84,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
-//		this.ensureBodiesUnloaded(); // TODO 
+		//		this.ensureBodiesUnloaded(); // TODO
 		this.ensureBodiesLoaded();
 
 		final Box2DNativeWrapper box2DNativeWrapper = this.mBox2DNativeWrapper;
@@ -104,7 +104,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 			shape.setVelocity(bodyInfo.getVelocityX(), bodyInfo.getVelocityY());
 		}
 	}
-	
+
 	// ===========================================================
 	// Methods
 	// ===========================================================
@@ -118,8 +118,8 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 		this.mDynamicPhysicsBodiesToBeLoaded.add(pDynamicPhysicsBody);
 	}
-	
-	public void removeDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) { 
+
+	public void removeDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		if(this.mDynamicPhysicsBodies.contains(pDynamicPhysicsBody)) {
 			this.mDynamicPhysicsBodies.remove(pDynamicPhysicsBody);
 			final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.remove(pDynamicPhysicsBody);
@@ -128,8 +128,8 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 			this.mDynamicPhysicsBodiesToBeLoaded.remove(pDynamicPhysicsBody);
 		}
 	}
-	
-	public void removeStaticBody(final StaticPhysicsBody pStaticPhysicsBody) { 
+
+	public void removeStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
 		if(this.mStaticPhysicsBodies.contains(pStaticPhysicsBody)) {
 			this.mStaticPhysicsBodies.remove(pStaticPhysicsBody);
 			final int physicsID = this.mStaticPhysicsBodyToPhysicsIDMapping.remove(pStaticPhysicsBody);
@@ -138,10 +138,10 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 			this.mStaticPhysicsBodiesToBeLoaded.remove(pStaticPhysicsBody);
 		}
 	}
-	
+
 	public DynamicPhysicsBody findDynamicBodyByShape(final Shape pShape) {
 		// TODO Also check this.mDynamicPhysicsBodiesToBeLoaded if it contains this object
-		
+
 		// TODO Instead of a linear search the lookup could be done through a HashMap
 		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodies = this.mDynamicPhysicsBodies;
 		for(int i = dynamicPhysicsBodies.size() - 1; i >= 0; i--) {
@@ -152,10 +152,10 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		}
 		return null;
 	}
-	
+
 	public StaticPhysicsBody findStaticBodyByShape(final Shape pShape) {
 		// TODO Also check this.mStaticPhysicsBodiesToBeLoaded if it contains this object
-		
+
 		// TODO Instead of a linear search the lookup could be done through a HashMap
 		final ArrayList<StaticPhysicsBody> staticPhysicsBodies = this.mStaticPhysicsBodies;
 		for(int i = staticPhysicsBodies.size() - 1; i >= 0; i--) {
@@ -166,7 +166,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		}
 		return null;
 	}
-	
+
 	public void addStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
 		assert(pStaticPhysicsBody.mMass == 0);
 
@@ -177,7 +177,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		final int physicsID = this.mDynamicPhysicsBodyToPhysicsIDMapping.get(pDynamicPhysicsBody);
 		this.mBox2DNativeWrapper.setBodyLinearVelocity(physicsID, pVelocityX, pVelocityY);
 	}
-	
+
 	public void setGravity(final float pGravityX, final float pGravityY) {
 		this.mBox2DNativeWrapper.setGravity(pGravityX, pGravityY);
 	}
@@ -185,12 +185,12 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	private void onHandleCollision(final int pPhysicsIDA, final int pPhysicsIDB) {
 		final DynamicPhysicsBody dynamicPhysicsBodyA = this.mDynamicPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDA);
 		final DynamicPhysicsBody dynamicPhysicsBodyB = this.mDynamicPhysicsBodyToPhysicsIDMapping.getKeyByValue(pPhysicsIDB);
-		
+
 		if(dynamicPhysicsBodyA != null && dynamicPhysicsBodyB != null){
 			if(dynamicPhysicsBodyA.hasCollisionCallback()){
 				dynamicPhysicsBodyA.getCollisionCallback().onCollision(dynamicPhysicsBodyA.getShape(), dynamicPhysicsBodyB.getShape());
 			}
-			
+
 			if(dynamicPhysicsBodyB.hasCollisionCallback()){
 				dynamicPhysicsBodyB.getCollisionCallback().onCollision(dynamicPhysicsBodyB.getShape(), dynamicPhysicsBodyA.getShape());
 			}
@@ -219,55 +219,64 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	private void ensureStaticBodiesLoaded() {
 		final ArrayList<StaticPhysicsBody> staticPhysicsBodiesToBeLoaded = this.mStaticPhysicsBodiesToBeLoaded;
 		for(int i = staticPhysicsBodiesToBeLoaded.size() - 1; i >= 0; i--) {
-			loadPendingStaticBody(staticPhysicsBodiesToBeLoaded.get(i));
+			this.loadPendingStaticBody(staticPhysicsBodiesToBeLoaded.get(i));
 		}
-		staticPhysicsBodiesToBeLoaded.clear();	
+		staticPhysicsBodiesToBeLoaded.clear();
 	}
 
 	private void loadPendingStaticBody(final StaticPhysicsBody pStaticPhysicsBody) {
 		final Shape shape = pStaticPhysicsBody.getShape();
-		
-		final int physicsID = loadStaticShape(pStaticPhysicsBody, shape);
+
+		final int physicsID = this.loadStaticShape(pStaticPhysicsBody, shape);
 		this.mStaticPhysicsBodyToPhysicsIDMapping.put(pStaticPhysicsBody, physicsID);
 	}
 
 	private int loadStaticShape(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {
 		switch(pStaticPhysicsBody.mPhysicsShape) {
 			case CIRCLE:
-				return loadStaticCircle(pStaticPhysicsBody, pShape);
+				return this.loadStaticCircle(pStaticPhysicsBody, pShape);
 			case RECTANGLE:
-				return loadStaticBox(pStaticPhysicsBody, pShape);
+				return this.loadStaticBox(pStaticPhysicsBody, pShape);
 			default:
 				throw new IllegalArgumentException("Invalid PhysicsShape supplied.");
 		}
 	}
 
-	private int loadStaticCircle(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {		
+	private int loadStaticCircle(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {
 		final float width = pShape.getBaseWidth();
 		final float height = pShape.getBaseHeight();
 
-		assert(width == height);
+		if(width != height) {
+			throw new IllegalArgumentException("The width and height of the pShape must be equal.");
+		}
+
+		final float rotation = MathUtils.degToRad(pShape.getRotation());
+		final float velocityX = pShape.getRotation();
+		final float velocityY = pShape.getRotation();
 
 		final float x = pShape.getX() + width / 2;
 		final float y = pShape.getY() + height / 2;
 		final float radius = width / 2;
 
-		return this.mBox2DNativeWrapper.createCircle(x, y, radius, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
+		return this.mBox2DNativeWrapper.createCircle(x, y, radius, rotation, velocityX, velocityY, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
 	}
 
 	private int loadStaticBox(final StaticPhysicsBody pStaticPhysicsBody, final Shape pShape) {
 		final float width = pShape.getBaseWidth();
 		final float height = pShape.getBaseHeight();
+		final float rotation = MathUtils.degToRad(pShape.getRotation());
+		final float velocityX = pShape.getRotation();
+		final float velocityY = pShape.getRotation();
 		final float x = pShape.getX() + width / 2;
 		final float y = pShape.getY() + height / 2;
-		
-		return this.mBox2DNativeWrapper.createBox(x, y, width, height, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
+
+		return this.mBox2DNativeWrapper.createBox(x, y, width, height, rotation, velocityX, velocityY, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
 	}
-	
+
 	private void ensureDynamicBodiesLoaded() {
 		final ArrayList<DynamicPhysicsBody> dynamicPhysicsBodiesToBeLoaded = this.mDynamicPhysicsBodiesToBeLoaded;
 		for(int i = dynamicPhysicsBodiesToBeLoaded.size() - 1; i >= 0; i--) {
-			loadDynamicBody(dynamicPhysicsBodiesToBeLoaded.get(i));
+			this.loadDynamicBody(dynamicPhysicsBodiesToBeLoaded.get(i));
 		}
 		dynamicPhysicsBodiesToBeLoaded.clear();
 	}
@@ -275,8 +284,8 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	private void loadDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		final Shape shape = pDynamicPhysicsBody.getShape();
 		shape.setUpdatePhysicsSelf(false);
-		
-		final int physicsID = loadDynamicShape(pDynamicPhysicsBody, shape);
+
+		final int physicsID = this.loadDynamicShape(pDynamicPhysicsBody, shape);
 		this.mDynamicPhysicsBodies.add(pDynamicPhysicsBody);
 		this.mDynamicPhysicsBodyToPhysicsIDMapping.put(pDynamicPhysicsBody, physicsID);
 	}
@@ -284,9 +293,9 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	private int loadDynamicShape(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
 		switch(pDynamicPhysicsBody.mPhysicsShape) {
 			case CIRCLE:
-				return loadDynamicCircle(pDynamicPhysicsBody, pShape);
+				return this.loadDynamicCircle(pDynamicPhysicsBody, pShape);
 			case RECTANGLE:
-				return loadDynamicBox(pDynamicPhysicsBody, pShape);
+				return this.loadDynamicBox(pDynamicPhysicsBody, pShape);
 			default:
 				throw new IllegalArgumentException("Invalid PhysicsShape supplied.");
 		}
@@ -295,23 +304,32 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 	private int loadDynamicCircle(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
 		final float width = pShape.getBaseWidth();
 		final float height = pShape.getBaseHeight();
-		
-		assert(width == height);
-		
+
+		if(width != height) {
+			throw new IllegalArgumentException("The width and height of the pShape must be equal.");
+		}
+
+		final float rotation = MathUtils.degToRad(pShape.getRotation());
+		final float velocityX = pShape.getRotation();
+		final float velocityY = pShape.getRotation();
+
 		final float x = pShape.getX() + width / 2;
 		final float y = pShape.getY() + height / 2;
 		final float radius = width / 2;
-		
-		return this.mBox2DNativeWrapper.createCircle(x, y, radius, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
+
+		return this.mBox2DNativeWrapper.createCircle(x, y, radius, rotation, velocityX, velocityY, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
 	}
 
 	private int loadDynamicBox(final DynamicPhysicsBody pDynamicPhysicsBody, final Shape pShape) {
 		final float width = pShape.getBaseWidth();
 		final float height = pShape.getBaseHeight();
+		final float rotation = MathUtils.degToRad(pShape.getRotation());
+		final float velocityX = pShape.getRotation();
+		final float velocityY = pShape.getRotation();
 		final float x = pShape.getX() + width / 2;
 		final float y = pShape.getY() + height / 2;
-		
-		return this.mBox2DNativeWrapper.createBox(x, y, width, height, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
+
+		return this.mBox2DNativeWrapper.createBox(x, y, width, height, rotation, velocityX, velocityY, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
 	}
 
 	// ===========================================================
