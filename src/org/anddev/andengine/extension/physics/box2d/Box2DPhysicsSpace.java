@@ -99,7 +99,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 			box2DNativeWrapper.getBodyInfo(bodyInfo, dynamicPhysicsBodyToPhysicsIDMapping.get(dynamicPhysicsBody));
 			final Shape shape = dynamicPhysicsBody.getShape();
 
-			shape.setPosition(bodyInfo.getX() - shape.getBaseWidth() / 2, bodyInfo.getY() - shape.getBaseHeight() / 2);
+			shape.setPosition(bodyInfo.getX() - shape.getBaseWidth() * 0.5f, bodyInfo.getY() - shape.getBaseHeight() * 0.5f);
 			shape.setRotation(MathUtils.radToDeg(bodyInfo.getRotation()));
 			shape.setVelocity(bodyInfo.getVelocityX(), bodyInfo.getVelocityY());
 		}
@@ -251,12 +251,12 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		}
 
 		final float rotation = MathUtils.degToRad(pShape.getRotation());
-		final float velocityX = pShape.getRotation();
-		final float velocityY = pShape.getRotation();
+		final float velocityX = pShape.getVelocityX();
+		final float velocityY = pShape.getVelocityY();
 
-		final float x = pShape.getX() + width / 2;
-		final float y = pShape.getY() + height / 2;
-		final float radius = width / 2;
+		final float radius = width * 0.5f;
+		final float x = pShape.getX() + radius;
+		final float y = pShape.getY() + radius;
 
 		return this.mBox2DNativeWrapper.createCircle(x, y, radius, rotation, velocityX, velocityY, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
 	}
@@ -265,10 +265,10 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		final float width = pShape.getBaseWidth();
 		final float height = pShape.getBaseHeight();
 		final float rotation = MathUtils.degToRad(pShape.getRotation());
-		final float velocityX = pShape.getRotation();
-		final float velocityY = pShape.getRotation();
-		final float x = pShape.getX() + width / 2;
-		final float y = pShape.getY() + height / 2;
+		final float velocityX = pShape.getVelocityX();
+		final float velocityY = pShape.getVelocityY();
+		final float x = pShape.getX() + width * 0.5f;
+		final float y = pShape.getY() + height * 0.5f;
 
 		return this.mBox2DNativeWrapper.createBox(x, y, width, height, rotation, velocityX, velocityY, 0, pStaticPhysicsBody.mElasticity, pStaticPhysicsBody.mFricition, false, false);
 	}
@@ -310,12 +310,12 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		}
 
 		final float rotation = MathUtils.degToRad(pShape.getRotation());
-		final float velocityX = pShape.getRotation();
-		final float velocityY = pShape.getRotation();
+		final float velocityX = pShape.getVelocityX();
+		final float velocityY = pShape.getVelocityY();
 
-		final float x = pShape.getX() + width / 2;
-		final float y = pShape.getY() + height / 2;
-		final float radius = width / 2;
+		final float radius = width * 0.5f;
+		final float x = pShape.getX() + radius;
+		final float y = pShape.getY() + radius;
 
 		return this.mBox2DNativeWrapper.createCircle(x, y, radius, rotation, velocityX, velocityY, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
 	}
@@ -324,10 +324,10 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 		final float width = pShape.getBaseWidth();
 		final float height = pShape.getBaseHeight();
 		final float rotation = MathUtils.degToRad(pShape.getRotation());
-		final float velocityX = pShape.getRotation();
-		final float velocityY = pShape.getRotation();
-		final float x = pShape.getX() + width / 2;
-		final float y = pShape.getY() + height / 2;
+		final float velocityX = pShape.getVelocityX();
+		final float velocityY = pShape.getVelocityY();
+		final float x = pShape.getX() + width * 0.5f;
+		final float y = pShape.getY() + height * 0.5f;
 
 		return this.mBox2DNativeWrapper.createBox(x, y, width, height, rotation, velocityX, velocityY, pDynamicPhysicsBody.mMass, pDynamicPhysicsBody.mElasticity, pDynamicPhysicsBody.mFricition, pDynamicPhysicsBody.isFixedRotation(), pDynamicPhysicsBody.hasCollisionCallback());
 	}
