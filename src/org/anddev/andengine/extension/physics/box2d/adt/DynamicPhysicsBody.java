@@ -1,6 +1,6 @@
 package org.anddev.andengine.extension.physics.box2d.adt;
 
-import org.anddev.andengine.entity.handler.collision.ICollisionCallback;
+import org.anddev.andengine.engine.handler.collision.ICollisionCallback;
 import org.anddev.andengine.entity.shape.Shape;
 
 /**

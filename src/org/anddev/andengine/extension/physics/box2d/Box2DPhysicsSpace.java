@@ -2,7 +2,7 @@ package org.anddev.andengine.extension.physics.box2d;
 
 import java.util.ArrayList;
 
-import org.anddev.andengine.entity.IUpdateHandler;
+import org.anddev.andengine.engine.handler.IUpdateHandler;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.extension.physics.box2d.adt.DynamicPhysicsBody;
 import org.anddev.andengine.extension.physics.box2d.adt.StaticPhysicsBody;
@@ -283,7 +283,7 @@ public class Box2DPhysicsSpace implements IUpdateHandler, Box2DContactListener {
 
 	private void loadDynamicBody(final DynamicPhysicsBody pDynamicPhysicsBody) {
 		final Shape shape = pDynamicPhysicsBody.getShape();
-		shape.setUpdatePhysicsSelf(false);
+		shape.setUpdatePhysics(false);
 
 		final int physicsID = this.loadDynamicShape(pDynamicPhysicsBody, shape);
 		this.mDynamicPhysicsBodies.add(pDynamicPhysicsBody);
