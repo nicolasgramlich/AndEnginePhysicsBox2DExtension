@@ -4,6 +4,7 @@ import org.anddev.andengine.entity.IUpdateHandler;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.util.MathUtils;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
@@ -50,9 +51,17 @@ public class PhysicsConnector implements IUpdateHandler {
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
 		// TODO OPTIMIZE HARD
-		this.mShape.setRotation(MathUtils.radToDeg(this.mBody.getAngle()));
-		this.mShape.setPosition(this.mBody.getPosition().x, this.mBody.getPosition().y);
-		this.mShape.setVelocity(this.mBody.getLinearVelocity().x, this.mBody.getLinearVelocity().y);
+		final Shape shape = this.mShape;
+		final Body body = this.mBody;
+		
+		final float angle = body.getAngle();
+		shape.setRotation(MathUtils.radToDeg(angle));
+		
+		final Vector2 position = body.getPosition();
+		shape.setPosition(position.x, position.y);
+		
+		final Vector2 linearVelocity = body.getLinearVelocity();
+		shape.setVelocity(linearVelocity.x, linearVelocity.y);
 	}
 
 	@Override
