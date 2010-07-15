@@ -22,6 +22,8 @@ public class PhysicsConnector implements IUpdateHandler {
 
 	private final Shape mShape;
 	private final Body mBody;
+	private final float mShapeHalfBaseWidth;
+	private final float mShapeHalfBaseHeight;
 
 	// ===========================================================
 	// Constructors
@@ -30,6 +32,9 @@ public class PhysicsConnector implements IUpdateHandler {
 	public PhysicsConnector(final Shape pShape, final Body pBody) {
 		this.mShape = pShape;
 		this.mBody = pBody;
+
+		this.mShapeHalfBaseWidth = pShape.getBaseWidth() * 0.5f;
+		this.mShapeHalfBaseHeight = pShape.getBaseHeight() * 0.5f;
 	}
 
 	// ===========================================================
@@ -50,16 +55,15 @@ public class PhysicsConnector implements IUpdateHandler {
 
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
-		// TODO OPTIMIZE HARD
 		final Shape shape = this.mShape;
 		final Body body = this.mBody;
-		
+
 		final float angle = body.getAngle();
 		shape.setRotation(MathUtils.radToDeg(angle));
-		
+
 		final Vector2 position = body.getPosition();
-		shape.setPosition(position.x, position.y);
-		
+		shape.setPosition(position.x - this.mShapeHalfBaseWidth, position.y - this.mShapeHalfBaseHeight); // TODO Could be stored on initialization as BaseWidth/Height never change.
+
 		final Vector2 linearVelocity = body.getLinearVelocity();
 		shape.setVelocity(linearVelocity.x, linearVelocity.y);
 	}
