@@ -3,12 +3,8 @@ package com.badlogic.gdx.physics.box2d;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
-
-import org.anddev.andengine.entity.IUpdateHandler;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.JointDef.JointType;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
@@ -35,13 +31,8 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
  * management facilities.
  * @author mzechner
  */
-public class World implements IUpdateHandler
-{
-	static
-	{
-		System.loadLibrary( "andenginephysicsbox2dextension" );
-	}
-	
+public class World
+{		
 	/** the address of the world instance **/
 	private final long addr;
 	
@@ -650,14 +641,5 @@ public class World implements IUpdateHandler
 			return queryCallback.reportFixture( fixtures.get( addr ) );
 		else
 			return false;
-	}
-
-	@Override
-	public void onUpdate(float pSecondsElapsed) {
-		this.step(pSecondsElapsed, 8, 8);
-	}
-
-	@Override
-	public void reset() {
 	}
 }
