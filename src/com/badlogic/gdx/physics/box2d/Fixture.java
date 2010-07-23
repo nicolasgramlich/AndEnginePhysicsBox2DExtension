@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2010 Mario Zechner (contact@badlogicgames.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.physics.box2d;
 
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +28,9 @@ public class Fixture
 	
 	/** the address of the fixture **/
 	protected final long addr;
+	
+	/** the shape, initialized lazy **/
+	protected Shape shape;
 	
 	/**
 	 * Constructs a new fixture
@@ -40,12 +58,27 @@ public class Fixture
 	
 	private native int jniGetType( long addr );
 
-//	/// Get the child shape. You can modify the child shape, however you should not change the
-//	/// number of vertices because this will crash some collision caching mechanisms.
-//	/// Manipulating the shape may lead to non-physical behavior.
-//	b2Shape* GetShape();
-//	const b2Shape* GetShape() const;
-
+	/**
+	 * Returns the shape of this fixture
+	 */
+	public Shape getShape( )
+	{
+		if( shape == null )
+		{
+			long shapeAddr = jniGetShape( addr );
+			int type = Shape.jniGetType( addr );
+			
+			if( type == 0 )
+				shape = new CircleShape( shapeAddr );
+			else
+				shape = new PolygonShape( shapeAddr );
+		}
+		
+		return shape;
+	}
+	
+	private native long jniGetShape( long addr );
+	
 	/**
 	 *  Set if this fixture is a sensor.
 	 */
