@@ -2,7 +2,9 @@ package org.anddev.andengine.extension.physics.box2d;
 
 
 import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.util.MathUtils;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -56,11 +58,16 @@ public class PhysicsFactory {
 		boxBodyDef.type = pBodyType;
 		boxBodyDef.position.x = pShape.getX() + halfWidth;
 		boxBodyDef.position.y = pShape.getY() + halfHeight;
+		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
+		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
 		final PolygonShape boxPoly = new PolygonShape();
-		boxPoly.setAsBox(halfWidth, halfHeight);
+		
+		final float localRotationCenterX = pShape.getRotationCenterX() - halfWidth;
+		final float localRotationCenterY = pShape.getRotationCenterY() - halfHeight;
+		boxPoly.setAsBox(halfWidth, halfHeight, new Vector2(localRotationCenterX, localRotationCenterY), MathUtils.degToRad(pShape.getRotation()));
 		pFixtureDef.shape = boxPoly;
 
 		boxBody.createFixture(pFixtureDef);
@@ -78,6 +85,9 @@ public class PhysicsFactory {
 		circleBodyDef.type = pBodyType;
 		circleBodyDef.position.x = pShape.getX() + halfWidth;
 		circleBodyDef.position.y = pShape.getY() + halfHeight;
+		circleBodyDef.angle = MathUtils.degToRad(pShape.getRotation());
+		circleBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
+		circleBodyDef.angularVelocity = pShape.getAngularVelocity();
 
 		final Body circleBody = pPhysicsWorld.createBody(circleBodyDef);
 
