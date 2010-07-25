@@ -19,13 +19,15 @@
 	../AndEnginePlayground/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../SuperDroid/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2dextension.so" />
+	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../GravityCollector/libs/armeabi/libandenginephysicsbox2dextension.so" />
 	
 	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar,
 	../AndEnginePlayground/lib/andenginephysicsbox2dextension.jar,
 	../SuperDroid/lib/andenginephysicsbox2dextension.jar,
 	../BoxFacePhysicsLiveWallpaper/lib/andenginephysicsbox2dextension.jar, 
-	../BoxFaceStacker/lib/andenginephysicsbox2dextension.jar" />
+	../BoxFaceStacker/lib/andenginephysicsbox2dextension.jar, 
+	../GravityCollector/lib/andenginephysicsbox2dextension.jar" />
 	
 	<target name="createjar" >
 		<echo>${targetfile}</echo>

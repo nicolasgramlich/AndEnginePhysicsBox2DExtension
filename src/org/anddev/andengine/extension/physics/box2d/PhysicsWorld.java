@@ -37,12 +37,12 @@ public class PhysicsWorld implements IUpdateHandler {
 	// Fields
 	// ===========================================================
 
-	private final PhysicsConnectorManager mPhysicsConnectorManager = new PhysicsConnectorManager();
-	private final RunnableHandler mRunnableHandler = new RunnableHandler();
-	private final World mWorld;
+	protected final PhysicsConnectorManager mPhysicsConnectorManager = new PhysicsConnectorManager();
+	protected final RunnableHandler mRunnableHandler = new RunnableHandler();
+	protected final World mWorld;
 
-	private int mVelocityIterations = VELOCITY_ITERATIONS_DEFAULT;
-	private int mPositionIterations = POSITION_ITERATIONS_DEFAULT;
+	protected int mVelocityIterations = VELOCITY_ITERATIONS_DEFAULT;
+	protected int mPositionIterations = POSITION_ITERATIONS_DEFAULT;
 
 	// ===========================================================
 	// Constructors
