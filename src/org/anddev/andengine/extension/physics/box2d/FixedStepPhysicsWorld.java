@@ -11,7 +11,7 @@ public class FixedStepPhysicsWorld extends PhysicsWorld {
 	// Constants
 	// ===========================================================
 	
-	private static final int STEPSPERSECOND_DEFAULT = 60;
+	public static final int STEPSPERSECOND_DEFAULT = 60;
 
 	// ===========================================================
 	// Fields

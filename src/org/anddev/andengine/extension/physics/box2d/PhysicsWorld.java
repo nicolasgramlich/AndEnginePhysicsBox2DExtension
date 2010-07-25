@@ -30,8 +30,8 @@ public class PhysicsWorld implements IUpdateHandler {
 		System.loadLibrary( "andenginephysicsbox2dextension" );
 	}
 
-	private static final int VELOCITY_ITERATIONS_DEFAULT = 8;
-	private static final int POSITION_ITERATIONS_DEFAULT = 8;
+	public static final int VELOCITY_ITERATIONS_DEFAULT = 8;
+	public static final int POSITION_ITERATIONS_DEFAULT = 8;
 
 	// ===========================================================
 	// Fields
