@@ -75,7 +75,7 @@ public class PhysicsConnector implements IUpdateHandler {
 
 		if(this.mUpdatePosition) {
 			final Vector2 position = body.getPosition();
-			shape.setPosition(position.x - this.mShapeHalfBaseWidth, position.y - this.mShapeHalfBaseHeight); // TODO Could be stored on initialization as BaseWidth/Height never change.			
+			shape.setPosition(position.x - this.mShapeHalfBaseWidth, position.y - this.mShapeHalfBaseHeight);			
 		}
 		
 		if(this.mUpdateRotation) {

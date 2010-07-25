@@ -1,5 +1,6 @@
 package org.anddev.andengine.extension.physics.box2d;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.anddev.andengine.engine.handler.IUpdateHandler;
@@ -149,6 +150,10 @@ public class PhysicsWorld implements IUpdateHandler {
 	public boolean getAutoClearForces() {
 		return this.mWorld.getAutoClearForces();
 	}
+	
+	public Collection<Body> getBodies() {
+		return this.mWorld.getBodies();
+	}
 
 	public int getBodyCount() {
 		return this.mWorld.getBodyCount();
@@ -164,6 +169,10 @@ public class PhysicsWorld implements IUpdateHandler {
 
 	public Vector2 getGravity() {
 		return this.mWorld.getGravity();
+	}
+	
+	public Collection<Joint> getJoints() {
+		return this.mWorld.getJoints();
 	}
 
 	public int getJointCount() {
