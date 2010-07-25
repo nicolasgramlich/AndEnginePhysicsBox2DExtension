@@ -17,7 +17,7 @@ public class FixedStepPhysicsWorld extends PhysicsWorld {
 	// Fields
 	// ===========================================================
 	
-	private float mTargetStepLength;
+	private final float mStepLength;
 	private float mSecondsElapsedAccumulator;
 
 	// ===========================================================
@@ -29,12 +29,12 @@ public class FixedStepPhysicsWorld extends PhysicsWorld {
 
 	public FixedStepPhysicsWorld(final int pStepsPerSecond, final Vector2 pGravity, final boolean pAllowSleep) {
 		super(pGravity, pAllowSleep);
-		this.mTargetStepLength = 1.0f / pStepsPerSecond;
+		this.mStepLength = 1.0f / pStepsPerSecond;
 	}
 
 	public FixedStepPhysicsWorld(final int pStepsPerSecond, final Vector2 pGravity, final boolean pAllowSleep, final int pVelocityIterations, final int pPositionIterations) {
 		super(pGravity, pAllowSleep, pVelocityIterations, pPositionIterations);
-		this.mTargetStepLength = 1.0f / pStepsPerSecond;
+		this.mStepLength = 1.0f / pStepsPerSecond;
 	}
 
 	// ===========================================================
@@ -50,9 +50,9 @@ public class FixedStepPhysicsWorld extends PhysicsWorld {
 		this.mRunnableHandler.onUpdate(pSecondsElapsed);
 		this.mSecondsElapsedAccumulator += pSecondsElapsed;
 		
-		while(this.mSecondsElapsedAccumulator >= this.mTargetStepLength) {
-			this.mWorld.step(this.mTargetStepLength, this.mVelocityIterations, this.mPositionIterations);
-			this.mSecondsElapsedAccumulator -= this.mTargetStepLength;
+		while(this.mSecondsElapsedAccumulator >= this.mStepLength) {
+			this.mWorld.step(this.mStepLength, this.mVelocityIterations, this.mPositionIterations);
+			this.mSecondsElapsedAccumulator -= this.mStepLength;
 		}
 		this.mPhysicsConnectorManager.onUpdate(pSecondsElapsed);
 	}
