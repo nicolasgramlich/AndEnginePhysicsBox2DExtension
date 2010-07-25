@@ -1,6 +1,7 @@
 package org.anddev.andengine.extension.physics.box2d;
 
 
+import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.util.MathUtils;
 
@@ -100,6 +101,24 @@ public class PhysicsFactory {
 		circlePoly.dispose();
 
 		return circleBody;
+	}
+	
+	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef) {
+		final BodyDef lineBodyDef = new BodyDef();
+		lineBodyDef.type = BodyType.StaticBody;
+
+		final Body boxBody = pPhysicsWorld.createBody(lineBodyDef);
+
+		final PolygonShape linePoly = new PolygonShape();
+		
+		linePoly.setAsEdge(new Vector2(pLine.getX1(), pLine.getY1()), new Vector2(pLine.getX2(), pLine.getY2()));
+		pFixtureDef.shape = linePoly;
+
+		boxBody.createFixture(pFixtureDef);
+
+		linePoly.dispose();
+
+		return boxBody;
 	}
 
 	// ===========================================================
