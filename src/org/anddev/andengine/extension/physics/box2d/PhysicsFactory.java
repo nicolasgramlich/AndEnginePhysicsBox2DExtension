@@ -111,8 +111,12 @@ public class PhysicsFactory implements PhysicsConstants {
 
 		return circleBody;
 	}
-	
+
 	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef) {
+		return createLineBody(pPhysicsWorld, pLine, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+	
+	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final BodyDef lineBodyDef = new BodyDef();
 		lineBodyDef.type = BodyType.StaticBody;
 
@@ -120,7 +124,7 @@ public class PhysicsFactory implements PhysicsConstants {
 
 		final PolygonShape linePoly = new PolygonShape();
 		
-		linePoly.setAsEdge(new Vector2(pLine.getX1(), pLine.getY1()), new Vector2(pLine.getX2(), pLine.getY2()));
+		linePoly.setAsEdge(new Vector2(pLine.getX1() / pPixelToMeterRatio, pLine.getY1() / pPixelToMeterRatio), new Vector2(pLine.getX2() / pPixelToMeterRatio, pLine.getY2() / pPixelToMeterRatio));
 		pFixtureDef.shape = linePoly;
 
 		boxBody.createFixture(pFixtureDef);
