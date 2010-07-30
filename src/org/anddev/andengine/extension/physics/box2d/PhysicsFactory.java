@@ -5,6 +5,7 @@ import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.util.MathUtils;
+import org.anddev.andengine.util.constants.Constants;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -57,23 +58,28 @@ public class PhysicsFactory implements PhysicsConstants {
 	}
 
 	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-		final float halfWidth = pShape.getBaseWidth() * 0.5f / pPixelToMeterRatio;
-		final float halfHeight = pShape.getBaseHeight() * 0.5f / pPixelToMeterRatio;
-
 		final BodyDef boxBodyDef = new BodyDef();
 		boxBodyDef.type = pBodyType;
-		boxBodyDef.position.x = pShape.getX() / pPixelToMeterRatio + halfWidth;
-		boxBodyDef.position.y = pShape.getY() / pPixelToMeterRatio + halfHeight;
+		
+		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
+		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
+		
 		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
 		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
 		final PolygonShape boxPoly = new PolygonShape();
+
+		final float halfWidth = pShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
+		final float halfHeight = pShape.getHeightScaled() * 0.5f / pPixelToMeterRatio;
 		
-		final float localRotationCenterX = pShape.getRotationCenterX() / pPixelToMeterRatio - halfWidth;
-		final float localRotationCenterY = pShape.getRotationCenterY() / pPixelToMeterRatio - halfHeight;
+		final float localRotationCenterX = pShape.getRotationCenterX() * pShape.getScaleX() / pPixelToMeterRatio - halfWidth;
+		final float localRotationCenterY = pShape.getRotationCenterY() * pShape.getScaleY() / pPixelToMeterRatio - halfHeight;
+
 		boxPoly.setAsBox(halfWidth, halfHeight, new Vector2(localRotationCenterX, localRotationCenterY), MathUtils.degToRad(pShape.getRotation()));
+		boxPoly.setAsBox(halfWidth, halfHeight);
 		pFixtureDef.shape = boxPoly;
 
 		boxBody.createFixture(pFixtureDef);
@@ -88,13 +94,14 @@ public class PhysicsFactory implements PhysicsConstants {
 	}
 
 	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-		final float halfWidth = pShape.getBaseWidth() * 0.5f / pPixelToMeterRatio;
-		final float halfHeight = pShape.getBaseHeight() * 0.5f / pPixelToMeterRatio;
 
 		final BodyDef circleBodyDef = new BodyDef();
 		circleBodyDef.type = pBodyType;
-		circleBodyDef.position.x = pShape.getX() / pPixelToMeterRatio + halfWidth;
-		circleBodyDef.position.y = pShape.getY() / pPixelToMeterRatio + halfHeight;
+		
+		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		circleBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
+		circleBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
+		
 		circleBodyDef.angle = MathUtils.degToRad(pShape.getRotation());
 		circleBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
 		circleBodyDef.angularVelocity = pShape.getAngularVelocity();
@@ -102,8 +109,10 @@ public class PhysicsFactory implements PhysicsConstants {
 		final Body circleBody = pPhysicsWorld.createBody(circleBodyDef);
 
 		final CircleShape circlePoly = new CircleShape();
-		circlePoly.setRadius(halfWidth);
 		pFixtureDef.shape = circlePoly;
+		
+		final float radius = pShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
+		circlePoly.setRadius(radius);
 
 		circleBody.createFixture(pFixtureDef);
 
