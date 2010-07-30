@@ -48,8 +48,7 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
  * @author mzechner
  */
 public class World 
-{
-	
+{	
 	/** the address of the world instance **/
 	private final long addr;
 	
