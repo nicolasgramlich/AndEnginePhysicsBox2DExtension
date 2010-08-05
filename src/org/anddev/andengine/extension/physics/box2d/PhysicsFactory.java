@@ -143,10 +143,28 @@ public class PhysicsFactory implements PhysicsConstants {
 		return boxBody;
 	}
 
+	/**
+	 * 
+	 * @param pPhysicsWorld
+	 * @param pShape
+	 * @param pVertices are to be defined relative to the center of the pShape.
+	 * @param pBodyType
+	 * @param pFixtureDef
+	 * @return
+	 */
 	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
 		return createPolygonBody(pPhysicsWorld, pShape, pVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 	
+	/**
+	 * 
+	 * @param pPhysicsWorld
+	 * @param pShape
+	 * @param pVertices are to be defined relative to the center of the pShape.
+	 * @param pBodyType
+	 * @param pFixtureDef
+	 * @return
+	 */
 	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final BodyDef boxBodyDef = new BodyDef();
 		boxBodyDef.type = pBodyType;
