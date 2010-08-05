@@ -143,6 +143,35 @@ public class PhysicsFactory implements PhysicsConstants {
 		return boxBody;
 	}
 
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return createPolygonBody(pPhysicsWorld, pShape, pVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+	
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		final BodyDef boxBodyDef = new BodyDef();
+		boxBodyDef.type = pBodyType;
+
+		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
+		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
+
+		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
+		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
+
+		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
+
+		final PolygonShape boxPoly = new PolygonShape();
+		
+		boxPoly.set(pVertices);
+		pFixtureDef.shape = boxPoly;
+
+		boxBody.createFixture(pFixtureDef);
+
+		boxPoly.dispose();
+
+		return boxBody;
+	}
+
 	// ===========================================================
 	// Methods
 	// ===========================================================
