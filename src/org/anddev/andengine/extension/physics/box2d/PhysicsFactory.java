@@ -144,7 +144,6 @@ public class PhysicsFactory implements PhysicsConstants {
 	}
 
 	/**
-	 * 
 	 * @param pPhysicsWorld
 	 * @param pShape
 	 * @param pVertices are to be defined relative to the center of the pShape.
@@ -157,7 +156,6 @@ public class PhysicsFactory implements PhysicsConstants {
 	}
 	
 	/**
-	 * 
 	 * @param pPhysicsWorld
 	 * @param pShape
 	 * @param pVertices are to be defined relative to the center of the pShape.
