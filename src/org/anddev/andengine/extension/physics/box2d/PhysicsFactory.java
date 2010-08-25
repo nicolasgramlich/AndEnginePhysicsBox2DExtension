@@ -74,17 +74,15 @@ public class PhysicsFactory implements PhysicsConstants {
 
 		final float halfWidth = pShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
 		final float halfHeight = pShape.getHeightScaled() * 0.5f / pPixelToMeterRatio;
-		
-		final float localRotationCenterX = pShape.getRotationCenterX() * pShape.getScaleX() / pPixelToMeterRatio - halfWidth;
-		final float localRotationCenterY = pShape.getRotationCenterY() * pShape.getScaleY() / pPixelToMeterRatio - halfHeight;
 
-		boxPoly.setAsBox(halfWidth, halfHeight, new Vector2(localRotationCenterX, localRotationCenterY), MathUtils.degToRad(pShape.getRotation()));
 		boxPoly.setAsBox(halfWidth, halfHeight);
 		pFixtureDef.shape = boxPoly;
 
 		boxBody.createFixture(pFixtureDef);
 
 		boxPoly.dispose();
+		
+		boxBody.setTransform(boxBody.getWorldCenter(), MathUtils.degToRad(pShape.getRotation()));
 
 		return boxBody;
 	}

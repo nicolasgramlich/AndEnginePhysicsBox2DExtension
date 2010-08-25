@@ -68,6 +68,17 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 		}
 		return null;
 	}
+	
+	public PhysicsConnector findPhysicsConnectorByShape(final Shape pShape) {
+		final ArrayList<PhysicsConnector> physicsConnectors = this;
+		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
+			final PhysicsConnector physicsConnector = physicsConnectors.get(i);
+			if(physicsConnector.mShape == pShape){
+				return physicsConnector;
+			}
+		}
+		return null;
+	}
 
 	// ===========================================================
 	// Inner and Anonymous Classes
