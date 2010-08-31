@@ -21,17 +21,17 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Fields
 	// ===========================================================
 
-	final Shape mShape;
-	final Body mBody;
+	protected final Shape mShape;
+	protected final Body mBody;
 
-	private final float mShapeHalfBaseWidth;
-	private final float mShapeHalfBaseHeight;
+	protected final float mShapeHalfBaseWidth;
+	protected final float mShapeHalfBaseHeight;
 
-	private final boolean mUpdatePosition;
-	private final boolean mUpdateLinearVelocity;
-	private final boolean mUpdateRotation;
-	private final boolean mUpdateAngularVelocity;
-	private final float mPixelToMeterRatio;
+	protected boolean mUpdatePosition;
+	protected boolean mUpdateLinearVelocity;
+	protected boolean mUpdateRotation;
+	protected boolean mUpdateAngularVelocity;
+	protected final float mPixelToMeterRatio;
 
 	// ===========================================================
 	// Constructors
@@ -73,6 +73,38 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 
 	public Body getBody() {
 		return this.mBody;
+	}
+	
+	public boolean isUpdatePosition() {
+		return this.mUpdatePosition;
+	}
+	
+	public boolean isUpdateRotation() {
+		return this.mUpdateRotation;
+	}
+	
+	public boolean isUpdateLinearVelocity() {
+		return this.mUpdateLinearVelocity;
+	}
+	
+	public boolean isUpdateAngularVelocity() {
+		return this.mUpdateAngularVelocity;
+	}
+
+	public void setUpdatePosition(final boolean pUpdatePosition) {
+		this.mUpdatePosition = pUpdatePosition;
+	}
+
+	public void setUpdateRotation(final boolean pUpdateRotation) {
+		this.mUpdateRotation = pUpdateRotation;
+	}
+
+	public void setUpdateLinearVelocity(final boolean pUpdateLinearVelocity) {
+		this.mUpdateLinearVelocity = pUpdateLinearVelocity;
+	}
+
+	public void setUpdateAngularVelocity(final boolean pUpdateAngularVelocity) {
+		this.mUpdateAngularVelocity = pUpdateAngularVelocity;
 	}
 
 	// ===========================================================
