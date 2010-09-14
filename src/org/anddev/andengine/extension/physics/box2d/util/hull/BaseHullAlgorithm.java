@@ -1,5 +1,7 @@
 package org.anddev.andengine.extension.physics.box2d.util.hull;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * @author Nicolas Gramlich
  * @since 14:05:51 - 14.09.2010
@@ -12,10 +14,10 @@ public abstract class BaseHullAlgorithm implements IHullAlgorithm {
 	// ===========================================================
 	// Fields
 	// ===========================================================
-	
-	protected Point[] mPoints;
-	protected int mPointCount;
-	protected int mHullPointCount;
+
+	protected Vector2[] mVertices;
+	protected int mVertexCount;
+	protected int mHullVertexCount;
 
 	// ===========================================================
 	// Constructors
@@ -33,12 +35,14 @@ public abstract class BaseHullAlgorithm implements IHullAlgorithm {
 	// Methods
 	// ===========================================================
 
-	protected int indexOfLowestPoint() {
+	protected int indexOfLowestVertex() {
+		final Vector2[] vertices = this.mVertices;
+		final int vertexCount = this.mVertexCount;
+
 		int min = 0;
-		final Point[] points = this.mPoints;
-		for(int i = 1; i < this.mPointCount; i++) {
-			final float dY = points[i].mY - points[min].mY;
-			final float dX = points[i].mX - points[min].mX;
+		for(int i = 1; i < vertexCount; i++) {
+			final float dY = vertices[i].y - vertices[min].y;
+			final float dX = vertices[i].x - vertices[min].x;
 			if(dY < 0 || dY == 0 && dX < 0) {
 				min = i;
 			}
@@ -47,10 +51,11 @@ public abstract class BaseHullAlgorithm implements IHullAlgorithm {
 	}
 
 	protected void swap(final int pIndexA, final int pIndexB) {
-		final Point[] points = this.mPoints;
-		final Point tmp = points[pIndexA];
-		points[pIndexA] = points[pIndexB];
-		points[pIndexB] = tmp;
+		final Vector2[] vertices = this.mVertices;
+		
+		final Vector2 tmp = vertices[pIndexA];
+		vertices[pIndexA] = vertices[pIndexB];
+		vertices[pIndexB] = tmp;
 	}
 
 	// ===========================================================

@@ -1,5 +1,7 @@
 package org.anddev.andengine.extension.physics.box2d.util.hull;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * @author Nicolas Gramlich
  * @since 14:01:18 - 14.09.2010
@@ -27,12 +29,12 @@ public class JarvisMarch extends BaseHullAlgorithm {
 	// ===========================================================
 
 	@Override
-	public int computeHull(final Point[] pPoints) {
-		this.mPoints = pPoints;
-		this.mPointCount = pPoints.length;
-		this.mHullPointCount = 0;
+	public int computeHull(final Vector2[] pVectors) {
+		this.mVertices = pVectors;
+		this.mVertexCount = pVectors.length;
+		this.mHullVertexCount = 0;
 		this.jarvisMarch();
-		return this.mHullPointCount;
+		return this.mHullVertexCount;
 	}
 
 	// ===========================================================
@@ -40,23 +42,23 @@ public class JarvisMarch extends BaseHullAlgorithm {
 	// ===========================================================
 
 	private void jarvisMarch() {
-		final Point[] points = this.mPoints;
-		
-		int index = this.indexOfLowestPoint();
+		final Vector2[] vertices = this.mVertices;
+
+		int index = this.indexOfLowestVertex();
 		do {
-			this.swap(this.mHullPointCount, index);
-			index = this.indexOfRightmostPointFrom(points[this.mHullPointCount]);
-			this.mHullPointCount++;
+			this.swap(this.mHullVertexCount, index);
+			index = this.indexOfRightmostVertexOf(vertices[this.mHullVertexCount]);
+			this.mHullVertexCount++;
 		} while(index > 0);
 	}
 
-	private int indexOfRightmostPointFrom(final Point pPoint) {
-		final Point[] points = this.mPoints;
-		
+	private int indexOfRightmostVertexOf(final Vector2 pVector) {
+		final Vector2[] vertices = this.mVertices;
+		final int vertexCount = this.mVertexCount;
+
 		int i = 0;
-		final int pointCount = this.mPointCount;
-		for(int j = 1; j < pointCount; j++) {
-			if(points[j].relativeTo(pPoint).isLess(points[i].relativeTo(pPoint))) {
+		for(int j = 1; j < vertexCount; j++) {
+			if(Vector2Util.isLess(Vector2Util.copyRelativeTo(vertices[j], pVector), Vector2Util.copyRelativeTo(vertices[i], pVector))) {
 				i = j;
 			}
 		}
