@@ -5,6 +5,7 @@ import static org.anddev.andengine.extension.physics.box2d.util.constants.Physic
 
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.util.MathUtils;
 import org.anddev.andengine.util.constants.Constants;
 
@@ -159,7 +160,7 @@ public class PhysicsFactory {
 	/**
 	 * @param pPhysicsWorld
 	 * @param pShape
-	 * @param pVertices are to be defined relative to the center of the pShape.
+	 * @param pVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
 	 * @param pBodyType
 	 * @param pFixtureDef
 	 * @return
