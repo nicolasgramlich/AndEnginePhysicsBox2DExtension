@@ -85,6 +85,14 @@ public final class Vector2
 	}
 	
 	/**
+	 * @return The manhattan length
+	 */
+	public float lenManhattan( ) 
+	{
+		return Math.abs(this.x) + Math.abs(this.y);
+	}
+	
+	/**
 	 * Sets this vector from the given vector
 	 * @param v The vector
 	 * @return This vector for chaining
@@ -168,6 +176,14 @@ public final class Vector2
 	public float dot( Vector2 v )
 	{
 		return x * v.x + y * v.y;
+	}
+	
+	/**
+	 * @param v the other vector
+	 * @return The cross product between this and the other vector
+	 */
+	public float cross(final Vector2 v) {
+		return this.x * v.y - v.x * this.y;
 	}
 	
 	/**

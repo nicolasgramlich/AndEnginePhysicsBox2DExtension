@@ -3,9 +3,12 @@ package org.anddev.andengine.extension.physics.box2d;
 
 import static org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 
+import java.util.List;
+
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
+import org.anddev.andengine.extension.physics.box2d.util.triangulation.EarClippingTriangulator;
 import org.anddev.andengine.util.MathUtils;
 import org.anddev.andengine.util.constants.Constants;
 
@@ -14,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -198,6 +202,62 @@ public class PhysicsFactory {
 		boxBody.createFixture(pFixtureDef);
 
 		boxPoly.dispose();
+
+		return boxBody;
+	}
+	
+
+	/**
+	 * @param pPhysicsWorld
+	 * @param pShape
+	 * @param pTriangleVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
+	 * @param pBodyType
+	 * @param pFixtureDef
+	 * @return
+	 */
+	public static Body createTrianglulatedBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final List<Vector2> pTriangleVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createTrianglulatedBody(pPhysicsWorld, pShape, pTriangleVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	}
+	
+	/**
+	 * @param pPhysicsWorld
+	 * @param pShape
+	 * @param pTriangleVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied. 
+	 * 					The vertices will be triangulated and for each triangle a {@link Fixture} will be created.
+	 * @param pBodyType
+	 * @param pFixtureDef
+	 * @return
+	 */
+	public static Body createTrianglulatedBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final List<Vector2> pTriangleVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		final Vector2[] TMP_TRIANGLE = new Vector2[3];
+		
+		final BodyDef boxBodyDef = new BodyDef();
+		boxBodyDef.type = pBodyType;
+
+		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
+		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
+
+		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
+		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
+
+		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
+
+		final int vertexCount = pTriangleVertices.size();
+		for(int i = 0; i < vertexCount; /* */) {
+			final PolygonShape boxPoly = new PolygonShape();
+			
+			TMP_TRIANGLE[2] = pTriangleVertices.get(i++);
+			TMP_TRIANGLE[1] = pTriangleVertices.get(i++);
+			TMP_TRIANGLE[0] = pTriangleVertices.get(i++);
+			
+			boxPoly.set(TMP_TRIANGLE);
+			pFixtureDef.shape = boxPoly;
+
+			boxBody.createFixture(pFixtureDef);
+
+			boxPoly.dispose();
+		}
 
 		return boxBody;
 	}

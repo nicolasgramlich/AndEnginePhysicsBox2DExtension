@@ -1,5 +1,7 @@
 package org.anddev.andengine.extension.physics.box2d.util.hull;
 
+import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
+
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -58,9 +60,14 @@ public class JarvisMarch extends BaseHullAlgorithm {
 
 		int i = 0;
 		for(int j = 1; j < vertexCount; j++) {
-			if(Vector2Util.isLess(Vector2Util.copyRelativeTo(vertices[j], pVector), Vector2Util.copyRelativeTo(vertices[i], pVector))) {
+			
+			final Vector2 vector2A = Vector2Pool.obtain().set(vertices[j]);
+			final Vector2 vector2B = Vector2Pool.obtain().set(vertices[i]);
+			if(Vector2Util.isLess(vector2A.sub(pVector), vector2B.sub(pVector))) {
 				i = j;
 			}
+			Vector2Pool.recycle(vector2A);
+			Vector2Pool.recycle(vector2B);
 		}
 		return i;
 	}
