@@ -106,7 +106,7 @@ public class Body
 	public void destroyFixture(Fixture fixture)
 	{
 		jniDestroyFixture( addr, fixture.addr );
-		this.world.fixtures.remove(fixture);
+		this.world.fixtures.remove(fixture.addr);
 		this.fixtures.remove(fixture);
 	}
 	
@@ -318,7 +318,7 @@ public class Body
 		massData.center.x = tmp[1];
 		massData.center.y = tmp[2];
 		massData.I = tmp[3];
-		return null;
+		return massData;
 	}
 	
 	private native void jniGetMassData( long addr, float[] massData );

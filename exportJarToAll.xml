@@ -20,8 +20,11 @@
 	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../GravityCollector/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../ABCShooter/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../BowMan/libs/armeabi/libandenginephysicsbox2dextension.so" />
+	../ABCShooter/libs/armeabi/libandenginephysicsbox2dextension.so, 
+	../BirdHunt/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../MasterBowMan/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../FarmTower/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../TetrisTower/libs/armeabi/libandenginephysicsbox2dextension.so" />
 	
 	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar,
 	../SuperDroid/lib/andenginephysicsbox2dextension.jar,
@@ -29,7 +32,10 @@
 	../BoxFaceStacker/lib/andenginephysicsbox2dextension.jar, 
 	../GravityCollector/lib/andenginephysicsbox2dextension.jar, 
 	../ABCShooter/lib/andenginephysicsbox2dextension.jar, 
-	../BowMan/lib/andenginephysicsbox2dextension.jar" />
+	../BirdHunt/lib/andenginephysicsbox2dextension.jar, 
+	../MasterBowMan/lib/andenginephysicsbox2dextension.jar, 
+	../FarmTower/lib/andenginephysicsbox2dextension.jar, 
+	../TetrisTower/lib/andenginephysicsbox2dextension.jar" />
 	
 	<target name="createjar" >
 		<echo>${targetfile}</echo>
