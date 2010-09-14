@@ -1,9 +1,10 @@
 package org.anddev.andengine.extension.physics.box2d;
 
 
+import static org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
+
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.shape.Shape;
-import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.util.MathUtils;
 import org.anddev.andengine.util.constants.Constants;
 
@@ -20,7 +21,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
  * @author Nicolas Gramlich
  * @since 13:59:03 - 15.07.2010
  */
-public class PhysicsFactory implements PhysicsConstants {
+public class PhysicsFactory {
 	// ===========================================================
 	// Constants
 	// ===========================================================
