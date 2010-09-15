@@ -23,12 +23,12 @@ import com.badlogic.gdx.math.Vector2;
 
 /**
  * A simple implementation of the ear cutting algorithm to triangulate simple
- * polygons without holes. For more information see
- * http://cgm.cs.mcgill.ca/~godfried/teaching/cg-projects/97/Ian/algorithm2.html
+ * polygons without holes. For more information:
+ * @see http://cgm.cs.mcgill.ca/~godfried/teaching/cg-projects/97/Ian/algorithm2.html
+ * @see http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
  * 
  * @author badlogicgames@gmail.com
- * @author modified by Nicolas Gramlich
- * 
+ * @author Nicolas Gramlich (collinear edges are now supported)
  */
 public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 	// ===========================================================
@@ -69,15 +69,13 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		}
 
 		while(vertices.size() >= 3) {
+			// TODO Usually(Always?) only the Types of the vertices next to the ear change! --> Improve
 			final int vertexTypes[] = this.classifyVertices(vertices);
 
-			for(int index = 0; index < vertices.size(); index++) {
-				final Vector2 previousVertex = vertices.get(EarClippingTriangulator.getPreviousIndex(vertices, index));
-				final Vector2 currentVertex = vertices.get(index);
-				final Vector2 nextVertex = vertices.get(EarClippingTriangulator.getNextIndex(vertices, index));
-
-				if(this.isEar(vertices, vertexTypes, previousVertex, currentVertex, nextVertex)) {
-					this.cutEar(vertices, triangles, index);
+			final int vertexCount = vertices.size();
+			for(int index = 0; index < vertexCount; index++) {
+				if(this.isEarTip(vertices, index, vertexTypes)) {
+					this.cutEarTip(vertices, index, triangles);
 					break;
 				}
 			}
@@ -90,11 +88,13 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 	// Methods
 	// ===========================================================
 
-	private static boolean isVerticesClockwise(final ArrayList<Vector2> pVertices) {
+	private static boolean areVerticesClockwise(final ArrayList<Vector2> pVertices) {
+		final int vertexCount = pVertices.size();
+
 		float area = 0;
-		for(int i = 0; i < pVertices.size(); i++) {
+		for(int i = 0; i < vertexCount; i++) {
 			final Vector2 p1 = pVertices.get(i);
-			final Vector2 p2 = pVertices.get(EarClippingTriangulator.getNextIndex(pVertices, i));
+			final Vector2 p2 = pVertices.get(EarClippingTriangulator.computeNextIndex(pVertices, i));
 			area += p1.x * p2.y - p2.x * p1.y;
 		}
 
@@ -106,8 +106,9 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 	}
 
 	/**
-	 * An array of either {@link EarClippingTriangulator#CONCAVE} or
-	 * {@link EarClippingTriangulator#CONVEX}
+	 * @param
+	 * @return An array of length <code>pVertices.size()</code> filled with either {@link EarClippingTriangulator#CONCAVE} or
+	 * {@link EarClippingTriangulator#CONVEX}.
 	 */
 	private int[] classifyVertices(final ArrayList<Vector2> pVertices) {
 		final int vertexCount = pVertices.size();
@@ -116,19 +117,19 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		this.mConcaveVertexCount = 0;
 
 		/* Ensure vertices are in clockwise order. */
-		if(!EarClippingTriangulator.isVerticesClockwise(pVertices)) {
+		if(!EarClippingTriangulator.areVerticesClockwise(pVertices)) {
 			Collections.reverse(pVertices);
 		}
 
 		for(int index = 0; index < vertexCount; index++) {
-			final int previousIndex = getPreviousIndex(pVertices, index);
-			final int nextIndex = getNextIndex(pVertices, index);
+			final int previousIndex = EarClippingTriangulator.computePreviousIndex(pVertices, index);
+			final int nextIndex = EarClippingTriangulator.computeNextIndex(pVertices, index);
 
 			final Vector2 previousVertex = pVertices.get(previousIndex);
 			final Vector2 currentVertex = pVertices.get(index);
 			final Vector2 nextVertex = pVertices.get(nextIndex);
 
-			if(EarClippingTriangulator.isConvex(previousVertex.x, previousVertex.y, currentVertex.x, currentVertex.y, nextVertex.x, nextVertex.y)) {
+			if(EarClippingTriangulator.isTriangleConvex(previousVertex.x, previousVertex.y, currentVertex.x, currentVertex.y, nextVertex.x, nextVertex.y)) {
 				vertexTypes[index] = CONVEX;
 			} else {
 				vertexTypes[index] = CONCAVE;
@@ -139,61 +140,48 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		return vertexTypes;
 	}
 
-	/**
-	 * @return <code>true</code> when the x2/y2 vertex is convex,
-	 *         <code>false</code> otherwise.
-	 */
-	private static boolean isConvex(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
-		if(EarClippingTriangulator.calculateArea(x1, y1, x2, y2, x3, y3) < 0) {
+	private static boolean isTriangleConvex(final float pX1, final float pY1, final float pX2, final float pY2, final float pX3, final float pY3) {
+		if(EarClippingTriangulator.computeSpannedAreaSign(pX1, pY1, pX2, pY2, pX3, pY3) < 0) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	/**
-	 * @return Area spanned by the three vertices.
-	 */
-	private static float calculateArea(final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
+	private static int computeSpannedAreaSign(final float pX1, final float pY1, final float pX2, final float pY2, final float pX3, final float pY3) {
 		float area = 0;
 
-		area += x1 * (y3 - y2);
-		area += x2 * (y1 - y3);
-		area += x3 * (y2 - y1);
+		area += pX1 * (pY3 - pY2);
+		area += pX2 * (pY1 - pY3);
+		area += pX3 * (pY2 - pY1);
 
-		/*
-		 * For actual area, we need to multiple areaSum * 0.5, but we are only
-		 * interested in the sign of the area (+/-)
-		 */
-
-		return area;
+		return (int)Math.signum(area);
 	}
 
 	/**
-	 * @return <code>true</code> when the Triangles contains one (or more
-	 *         vertex), <code>false</code> otherwise.
+	 * @return <code>true</code> when the Triangles contains one or more vertices, <code>false</code> otherwise.
 	 */
-	private static boolean isAnyVertexInTriangle(final ArrayList<Vector2> pVertices, final int[] pVertexTypes, final float x1, final float y1, final float x2, final float y2, final float x3, final float y3) {
+	private static boolean isAnyVertexInTriangle(final ArrayList<Vector2> pVertices, final int[] pVertexTypes, final float pX1, final float pY1, final float pX2, final float pY2, final float pX3, final float pY3) {
 		int i = 0;
-		float area1, area2, area3;
 
 		final int vertexCount = pVertices.size();
 		while(i < vertexCount - 1) {
-			final Vector2 currentVertex = pVertices.get(i);
+			if((pVertexTypes[i] == CONCAVE)) {
+				final Vector2 currentVertex = pVertices.get(i);
 
-			final float currentVertexX = currentVertex.x;
-			final float currentVertexY = currentVertex.y;
+				final float currentVertexX = currentVertex.x;
+				final float currentVertexY = currentVertex.y;
 
-			if((pVertexTypes[i] == CONCAVE) && (((currentVertexX != x1) && (currentVertexY != y1)) || ((currentVertexX != x2) && (currentVertexY != y2)) || ((currentVertexX != x3) && (currentVertexY != y3)))) {
+				if(((currentVertexX != pX1) && (currentVertexY != pY1)) || ((currentVertexX != pX2) && (currentVertexY != pY2)) || ((currentVertexX != pX3) && (currentVertexY != pY3))) {
+					final int area1 = EarClippingTriangulator.computeSpannedAreaSign(pX1, pY1, pX2, pY2, currentVertexX, currentVertexY);
+					final int area2 = EarClippingTriangulator.computeSpannedAreaSign(pX2, pY2, pX3, pY3, currentVertexX, currentVertexY);
+					final int area3 = EarClippingTriangulator.computeSpannedAreaSign(pX3, pY3, pX1, pY1, currentVertexX, currentVertexY);
 
-				area1 = EarClippingTriangulator.calculateArea(x1, y1, x2, y2, currentVertexX, currentVertexY);
-				area2 = EarClippingTriangulator.calculateArea(x2, y2, x3, y3, currentVertexX, currentVertexY);
-				area3 = EarClippingTriangulator.calculateArea(x3, y3, x1, y1, currentVertexX, currentVertexY);
-
-				if(area1 > 0 && area2 > 0 && area3 > 0) {
-					return true;
-				} else if(area1 <= 0 && area2 <= 0 && area3 <= 0) {
-					return true;
+					if(area1 > 0 && area2 > 0 && area3 > 0) {
+						return true;
+					} else if(area1 <= 0 && area2 <= 0 && area3 <= 0) {
+						return true;
+					}
 				}
 			}
 			i++;
@@ -201,12 +189,13 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		return false;
 	}
 
-	/**
-	 * @return <code>true</code> if the vertex at (x2, y2) is an ear, <code>false</code> otherwise.
-	 */
-	private boolean isEar(final ArrayList<Vector2> pVertices, final int[] pVertexTypes, final Vector2 pPreviousVertex, final Vector2 pVertex, final Vector2 pNextVertex) {
+	private boolean isEarTip(final ArrayList<Vector2> pVertices, final int pEarTipIndex, final int[] pVertexTypes) {
 		if(this.mConcaveVertexCount != 0) {
-			if(EarClippingTriangulator.isAnyVertexInTriangle(pVertices, pVertexTypes, pPreviousVertex.x, pPreviousVertex.y, pVertex.x, pVertex.y, pNextVertex.x, pNextVertex.y)) {
+			final Vector2 previousVertex = pVertices.get(EarClippingTriangulator.computePreviousIndex(pVertices, pEarTipIndex));
+			final Vector2 currentVertex = pVertices.get(pEarTipIndex);
+			final Vector2 nextVertex = pVertices.get(EarClippingTriangulator.computeNextIndex(pVertices, pEarTipIndex));
+
+			if(EarClippingTriangulator.isAnyVertexInTriangle(pVertices, pVertexTypes, previousVertex.x, previousVertex.y, currentVertex.x, currentVertex.y, nextVertex.x, nextVertex.y)) {
 				return false;
 			} else {
 				return true;
@@ -216,9 +205,9 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		}
 	}
 
-	private void cutEar(final ArrayList<Vector2> pVertices, final ArrayList<Vector2> pTriangles, final int pEarTipIndex) {
-		final int previousIndex = EarClippingTriangulator.getPreviousIndex(pVertices, pEarTipIndex);
-		final int nextIndex = EarClippingTriangulator.getNextIndex(pVertices, pEarTipIndex);
+	private void cutEarTip(final ArrayList<Vector2> pVertices, final int pEarTipIndex, final ArrayList<Vector2> pTriangles) {
+		final int previousIndex = EarClippingTriangulator.computePreviousIndex(pVertices, pEarTipIndex);
+		final int nextIndex = EarClippingTriangulator.computeNextIndex(pVertices, pEarTipIndex);
 
 		if(!EarClippingTriangulator.isCollinear(pVertices, previousIndex, pEarTipIndex, nextIndex)) {
 			pTriangles.add(new Vector2(pVertices.get(previousIndex)));
@@ -228,30 +217,32 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 
 		pVertices.remove(pEarTipIndex);
 		if(pVertices.size() >= 3) {
-			removeCollinearNeighborEarsAfterRemovingEar(pVertices, pEarTipIndex);
+			EarClippingTriangulator.removeCollinearNeighborEarsAfterRemovingEarTip(pVertices, pEarTipIndex);
 		}
 	}
 
-	private void removeCollinearNeighborEarsAfterRemovingEar(final ArrayList<Vector2> pVertices, final int pEarTipCutIndex) {
-		final int collinearCheckNext = pEarTipCutIndex % pVertices.size();
-		final int collinearCheckPrevious = getPreviousIndex(pVertices, collinearCheckNext);
-		if(EarClippingTriangulator.isCollinear(pVertices, collinearCheckNext)) {
-			pVertices.remove(collinearCheckNext);
-			
+	private static void removeCollinearNeighborEarsAfterRemovingEarTip(final ArrayList<Vector2> pVertices, final int pEarTipCutIndex) {
+		final int collinearityCheckNextIndex = pEarTipCutIndex % pVertices.size();
+		int collinearCheckPreviousIndex = EarClippingTriangulator.computePreviousIndex(pVertices, collinearityCheckNextIndex);
+
+		if(EarClippingTriangulator.isCollinear(pVertices, collinearityCheckNextIndex)) {
+			pVertices.remove(collinearityCheckNextIndex);
+
 			if(pVertices.size() > 3) {
-				final int collinearCheckPreviousUpdated = getPreviousIndex(pVertices, collinearCheckNext);
-				if(EarClippingTriangulator.isCollinear(pVertices, collinearCheckPreviousUpdated)){
-					pVertices.remove(collinearCheckPreviousUpdated);
+				/* Update */
+				collinearCheckPreviousIndex = EarClippingTriangulator.computePreviousIndex(pVertices, collinearityCheckNextIndex);
+				if(EarClippingTriangulator.isCollinear(pVertices, collinearCheckPreviousIndex)){
+					pVertices.remove(collinearCheckPreviousIndex);
 				}
 			}
-		} else if(EarClippingTriangulator.isCollinear(pVertices, collinearCheckPrevious)){
-			pVertices.remove(collinearCheckPrevious);
+		} else if(EarClippingTriangulator.isCollinear(pVertices, collinearCheckPreviousIndex)){
+			pVertices.remove(collinearCheckPreviousIndex);
 		}
 	}
 
 	private static boolean isCollinear(final ArrayList<Vector2> pVertices, final int pIndex) {
-		final int previousIndex = getPreviousIndex(pVertices, pIndex);
-		final int nextIndex = getNextIndex(pVertices, pIndex);
+		final int previousIndex = EarClippingTriangulator.computePreviousIndex(pVertices, pIndex);
+		final int nextIndex = EarClippingTriangulator.computeNextIndex(pVertices, pIndex);
 
 		return EarClippingTriangulator.isCollinear(pVertices, previousIndex, pIndex, nextIndex);
 	}
@@ -261,14 +252,14 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		final Vector2 vertex = pVertices.get(pIndex);
 		final Vector2 nextVertex = pVertices.get(pNextIndex);
 
-		return EarClippingTriangulator.calculateArea(previousVertex.x, previousVertex.y, vertex.x, vertex.y, nextVertex.x, nextVertex.y) == 0;
+		return EarClippingTriangulator.computeSpannedAreaSign(previousVertex.x, previousVertex.y, vertex.x, vertex.y, nextVertex.x, nextVertex.y) == 0;
 	}
 
-	private static int getPreviousIndex(final List<Vector2> pVertices, final int pIndex) {
+	private static int computePreviousIndex(final List<Vector2> pVertices, final int pIndex) {
 		return pIndex == 0 ? pVertices.size() - 1 : pIndex - 1;
 	}
 
-	private static int getNextIndex(final List<Vector2> pVertices, final int pIndex) {
+	private static int computeNextIndex(final List<Vector2> pVertices, final int pIndex) {
 		return pIndex == pVertices.size() - 1 ? 0 : pIndex + 1;
 	}
 
