@@ -28,7 +28,7 @@ import com.badlogic.gdx.math.Vector2;
  * @see http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
  * 
  * @author badlogicgames@gmail.com
- * @author Nicolas Gramlich (collinear edges are now supported)
+ * @author Nicolas Gramlich (Improved performance. Collinear edges are now supported.)
  */
 public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 	// ===========================================================
@@ -106,7 +106,7 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 	}
 
 	/**
-	 * @param
+	 * @param pVertices
 	 * @return An array of length <code>pVertices.size()</code> filled with either {@link EarClippingTriangulator#CONCAVE} or
 	 * {@link EarClippingTriangulator#CONVEX}.
 	 */
@@ -172,17 +172,21 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 				final float currentVertexX = currentVertex.x;
 				final float currentVertexY = currentVertex.y;
 
-				if(((currentVertexX != pX1) && (currentVertexY != pY1)) || ((currentVertexX != pX2) && (currentVertexY != pY2)) || ((currentVertexX != pX3) && (currentVertexY != pY3))) {
-					final int area1 = EarClippingTriangulator.computeSpannedAreaSign(pX1, pY1, pX2, pY2, currentVertexX, currentVertexY);
-					final int area2 = EarClippingTriangulator.computeSpannedAreaSign(pX2, pY2, pX3, pY3, currentVertexX, currentVertexY);
-					final int area3 = EarClippingTriangulator.computeSpannedAreaSign(pX3, pY3, pX1, pY1, currentVertexX, currentVertexY);
+				/* TODO The following condition fails for perpendicular, axis aligned triangles! 
+				 * Removing it doesn't seem to cause problems. 
+				 * Maybe it was an optimization?
+				 * Maybe it tried to handle collinear pieces ? */
+//				if(((currentVertexX != pX1) && (currentVertexY != pY1)) || ((currentVertexX != pX2) && (currentVertexY != pY2)) || ((currentVertexX != pX3) && (currentVertexY != pY3))) {
+					final int areaSign1 = EarClippingTriangulator.computeSpannedAreaSign(pX1, pY1, pX2, pY2, currentVertexX, currentVertexY);
+					final int areaSign2 = EarClippingTriangulator.computeSpannedAreaSign(pX2, pY2, pX3, pY3, currentVertexX, currentVertexY);
+					final int areaSign3 = EarClippingTriangulator.computeSpannedAreaSign(pX3, pY3, pX1, pY1, currentVertexX, currentVertexY);
 
-					if(area1 > 0 && area2 > 0 && area3 > 0) {
+					if(areaSign1 > 0 && areaSign2 > 0 && areaSign3 > 0) {
 						return true;
-					} else if(area1 <= 0 && area2 <= 0 && area3 <= 0) {
+					} else if(areaSign1 <= 0 && areaSign2 <= 0 && areaSign3 <= 0) {
 						return true;
 					}
-				}
+//				}
 			}
 			i++;
 		}
