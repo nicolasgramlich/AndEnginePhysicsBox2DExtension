@@ -8,7 +8,6 @@ import java.util.List;
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
-import org.anddev.andengine.extension.physics.box2d.util.triangulation.EarClippingTriangulator;
 import org.anddev.andengine.util.MathUtils;
 import org.anddev.andengine.util.constants.Constants;
 
