@@ -45,7 +45,7 @@ public class Vector2Pool {
 	}
 	
 	public static void recycle(final Vector2 pVector2) {
-		POOL.recylePoolItem(pVector2);
+		POOL.recyclePoolItem(pVector2);
 	}
 
 	// ===========================================================
