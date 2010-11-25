@@ -6,7 +6,7 @@ import static org.anddev.andengine.extension.physics.box2d.util.constants.Physic
 import java.util.List;
 
 import org.anddev.andengine.entity.primitive.Line;
-import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.util.MathUtils;
 import org.anddev.andengine.util.constants.Constants;
@@ -14,12 +14,12 @@ import org.anddev.andengine.util.constants.Constants;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 /**
  * @author Nicolas Gramlich
@@ -72,27 +72,27 @@ public class PhysicsFactory {
 		return fixtureDef;
 	}
 
-	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
-		return PhysicsFactory.createBoxBody(pPhysicsWorld, pShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createBoxBody(pPhysicsWorld, pIShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final BodyDef boxBodyDef = new BodyDef();
 		boxBodyDef.type = pBodyType;
 
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		final float[] sceneCenterCoordinates = pIShape.getSceneCenterCoordinates();
 		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
-		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
-		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
+		boxBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
+		boxBodyDef.angularVelocity = pIShape.getAngularVelocity();
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
 		final PolygonShape boxPoly = new PolygonShape();
 
-		final float halfWidth = pShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
-		final float halfHeight = pShape.getHeightScaled() * 0.5f / pPixelToMeterRatio;
+		final float halfWidth = pIShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
+		final float halfHeight = pIShape.getHeightScaled() * 0.5f / pPixelToMeterRatio;
 
 		boxPoly.setAsBox(halfWidth, halfHeight);
 		pFixtureDef.shape = boxPoly;
@@ -101,34 +101,34 @@ public class PhysicsFactory {
 
 		boxPoly.dispose();
 
-		boxBody.setTransform(boxBody.getWorldCenter(), MathUtils.degToRad(pShape.getRotation()));
+		boxBody.setTransform(boxBody.getWorldCenter(), MathUtils.degToRad(pIShape.getRotation()));
 
 		return boxBody;
 	}
 
-	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
-		return PhysicsFactory.createCircleBody(pPhysicsWorld, pShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createCircleBody(pPhysicsWorld, pIShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 
 		final BodyDef circleBodyDef = new BodyDef();
 		circleBodyDef.type = pBodyType;
 
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		final float[] sceneCenterCoordinates = pIShape.getSceneCenterCoordinates();
 		circleBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		circleBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
-		circleBodyDef.angle = MathUtils.degToRad(pShape.getRotation());
-		circleBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
-		circleBodyDef.angularVelocity = pShape.getAngularVelocity();
+		circleBodyDef.angle = MathUtils.degToRad(pIShape.getRotation());
+		circleBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
+		circleBodyDef.angularVelocity = pIShape.getAngularVelocity();
 
 		final Body circleBody = pPhysicsWorld.createBody(circleBodyDef);
 
 		final CircleShape circlePoly = new CircleShape();
 		pFixtureDef.shape = circlePoly;
 
-		final float radius = pShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
+		final float radius = pIShape.getWidthScaled() * 0.5f / pPixelToMeterRatio;
 		circlePoly.setRadius(radius);
 
 		circleBody.createFixture(pFixtureDef);
@@ -162,34 +162,34 @@ public class PhysicsFactory {
 
 	/**
 	 * @param pPhysicsWorld
-	 * @param pShape
-	 * @param pVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
+	 * @param pIShape
+	 * @param pVertices are to be defined relative to the center of the pIShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
 	 * @param pBodyType
 	 * @param pFixtureDef
 	 * @return
 	 */
-	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
-		return PhysicsFactory.createPolygonBody(pPhysicsWorld, pShape, pVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createPolygonBody(pPhysicsWorld, pIShape, pVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
 	/**
 	 * @param pPhysicsWorld
-	 * @param pShape
-	 * @param pVertices are to be defined relative to the center of the pShape.
+	 * @param pIShape
+	 * @param pVertices are to be defined relative to the center of the pIShape.
 	 * @param pBodyType
 	 * @param pFixtureDef
 	 * @return
 	 */
-	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createPolygonBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final Vector2[] pVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final BodyDef boxBodyDef = new BodyDef();
 		boxBodyDef.type = pBodyType;
 
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		final float[] sceneCenterCoordinates = pIShape.getSceneCenterCoordinates();
 		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
-		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
-		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
+		boxBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
+		boxBodyDef.angularVelocity = pIShape.getAngularVelocity();
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
@@ -208,37 +208,37 @@ public class PhysicsFactory {
 
 	/**
 	 * @param pPhysicsWorld
-	 * @param pShape
-	 * @param pTriangleVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
+	 * @param pIShape
+	 * @param pTriangleVertices are to be defined relative to the center of the pIShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied.
 	 * @param pBodyType
 	 * @param pFixtureDef
 	 * @return
 	 */
-	public static Body createTrianglulatedBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final List<Vector2> pTriangleVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
-		return PhysicsFactory.createTrianglulatedBody(pPhysicsWorld, pShape, pTriangleVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	public static Body createTrianglulatedBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final List<Vector2> pTriangleVertices, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createTrianglulatedBody(pPhysicsWorld, pIShape, pTriangleVertices, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 	
 	/**
 	 * @param pPhysicsWorld
-	 * @param pShape
-	 * @param pTriangleVertices are to be defined relative to the center of the pShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied. 
+	 * @param pIShape
+	 * @param pTriangleVertices are to be defined relative to the center of the pIShape and have the {@link PhysicsConstants#PIXEL_TO_METER_RATIO_DEFAULT} applied. 
 	 * 					The vertices will be triangulated and for each triangle a {@link Fixture} will be created.
 	 * @param pBodyType
 	 * @param pFixtureDef
 	 * @return
 	 */
-	public static Body createTrianglulatedBody(final PhysicsWorld pPhysicsWorld, final Shape pShape, final List<Vector2> pTriangleVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createTrianglulatedBody(final PhysicsWorld pPhysicsWorld, final IShape pIShape, final List<Vector2> pTriangleVertices, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final Vector2[] TMP_TRIANGLE = new Vector2[3];
 		
 		final BodyDef boxBodyDef = new BodyDef();
 		boxBodyDef.type = pBodyType;
 
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+		final float[] sceneCenterCoordinates = pIShape.getSceneCenterCoordinates();
 		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
-		boxBodyDef.linearVelocity.set(pShape.getVelocityX(), pShape.getVelocityY());
-		boxBodyDef.angularVelocity = pShape.getAngularVelocity();
+		boxBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
+		boxBodyDef.angularVelocity = pIShape.getAngularVelocity();
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 

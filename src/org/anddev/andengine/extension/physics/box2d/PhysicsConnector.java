@@ -1,7 +1,7 @@
 package org.anddev.andengine.extension.physics.box2d;
 
 import org.anddev.andengine.engine.handler.IUpdateHandler;
-import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.util.MathUtils;
 
@@ -21,7 +21,7 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Fields
 	// ===========================================================
 
-	protected final Shape mShape;
+	protected final IShape mShape;
 	protected final Body mBody;
 
 	protected final float mShapeHalfBaseWidth;
@@ -37,19 +37,19 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Constructors
 	// ===========================================================
 
-	public PhysicsConnector(final Shape pShape, final Body pBody) {
+	public PhysicsConnector(final IShape pShape, final Body pBody) {
 		this(pShape, pBody, true, true, true, true);
 	}
 
-	public PhysicsConnector(final Shape pShape, final Body pBody, final float pPixelToMeterRatio) {
+	public PhysicsConnector(final IShape pShape, final Body pBody, final float pPixelToMeterRatio) {
 		this(pShape, pBody, true, true, true, true, pPixelToMeterRatio);
 	}
 
-	public PhysicsConnector(final Shape pShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final boolean pUpdateLinearVelocity, final boolean pUpdateAngularVelocity) {
+	public PhysicsConnector(final IShape pShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final boolean pUpdateLinearVelocity, final boolean pUpdateAngularVelocity) {
 		this(pShape, pBody, pUdatePosition, pUpdateRotation, pUpdateLinearVelocity, pUpdateAngularVelocity, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public PhysicsConnector(final Shape pShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final boolean pUpdateLinearVelocity, final boolean pUpdateAngularVelocity, final float pPixelToMeterRatio) {
+	public PhysicsConnector(final IShape pShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final boolean pUpdateLinearVelocity, final boolean pUpdateAngularVelocity, final float pPixelToMeterRatio) {
 		this.mShape = pShape;
 		this.mBody = pBody;
 
@@ -67,7 +67,7 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Getter & Setter
 	// ===========================================================
 
-	public Shape getShape() {
+	public IShape getShape() {
 		return this.mShape;
 	}
 
@@ -113,7 +113,7 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
-		final Shape shape = this.mShape;
+		final IShape shape = this.mShape;
 		final Body body = this.mBody;
 
 		if(this.mUpdatePosition) {

@@ -24,6 +24,8 @@
 	../BirdHunt/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../MasterBowMan/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../FarmTower/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../FarmTowerLite/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../FarmTowerFull/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../TetrisTower/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../SuperPool/libs/armeabi/libandenginephysicsbox2dextension.so" />
 	
@@ -36,6 +38,8 @@
 	../BirdHunt/lib/andenginephysicsbox2dextension.jar, 
 	../MasterBowMan/lib/andenginephysicsbox2dextension.jar, 
 	../FarmTower/lib/andenginephysicsbox2dextension.jar, 
+	../FarmTowerLite/lib/andenginephysicsbox2dextension.jar, 
+	../FarmTowerFull/lib/andenginephysicsbox2dextension.jar, 
 	../TetrisTower/lib/andenginephysicsbox2dextension.jar,
 	../SuperPool/lib/andenginephysicsbox2dextension.jar" />
 	
