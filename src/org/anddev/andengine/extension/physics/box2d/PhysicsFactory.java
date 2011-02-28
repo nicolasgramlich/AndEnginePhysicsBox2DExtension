@@ -84,9 +84,6 @@ public class PhysicsFactory {
 		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
-		boxBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
-		boxBodyDef.angularVelocity = pIShape.getAngularVelocity();
-
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
 		final PolygonShape boxPoly = new PolygonShape();
@@ -120,8 +117,6 @@ public class PhysicsFactory {
 		circleBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
 		circleBodyDef.angle = MathUtils.degToRad(pIShape.getRotation());
-		circleBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
-		circleBodyDef.angularVelocity = pIShape.getAngularVelocity();
 
 		final Body circleBody = pPhysicsWorld.createBody(circleBodyDef);
 
@@ -188,9 +183,6 @@ public class PhysicsFactory {
 		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
 
-		boxBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
-		boxBodyDef.angularVelocity = pIShape.getAngularVelocity();
-
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
 		final PolygonShape boxPoly = new PolygonShape();
@@ -236,9 +228,6 @@ public class PhysicsFactory {
 		final float[] sceneCenterCoordinates = pIShape.getSceneCenterCoordinates();
 		boxBodyDef.position.x = sceneCenterCoordinates[Constants.VERTEX_INDEX_X] / pPixelToMeterRatio;
 		boxBodyDef.position.y = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y] / pPixelToMeterRatio;
-
-		boxBodyDef.linearVelocity.set(pIShape.getVelocityX(), pIShape.getVelocityY());
-		boxBodyDef.angularVelocity = pIShape.getAngularVelocity();
 
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
