@@ -27,7 +27,8 @@
 	../FarmTower/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../BlockSmasher/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../TetrisTower/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../SuperPool/libs/armeabi/libandenginephysicsbox2dextension.so" />
+	../SuperPool/libs/armeabi/libandenginephysicsbox2dextension.so,
+	../APlay/libs/armeabi/libandenginephysicsbox2dextension.so"/>
 	
 	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar,
 	../AndEngineGameTemplate/lib/andenginephysicsbox2dextension.jar,
@@ -45,7 +46,8 @@
 	../BlockSmasherEco/lib/andenginephysicsbox2dextension.jar, 
 	../BlockSmasherPro/lib/andenginephysicsbox2dextension.jar, 
 	../TetrisTower/lib/andenginephysicsbox2dextension.jar,
-	../SuperPool/lib/andenginephysicsbox2dextension.jar" />
+	../SuperPool/lib/andenginephysicsbox2dextension.jar,
+	../APlay/lib/andenginephysicsbox2dextension.jar"/>
 	
 	<target name="createjar" >
 		<echo>${targetfile}</echo>
