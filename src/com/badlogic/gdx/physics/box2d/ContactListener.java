@@ -25,4 +25,14 @@ public interface ContactListener {
 	 * Called when two fixtures cease to touch.
 	 */
 	public void endContact (Contact contact);
+
+	/**
+	 * This is called after a contact is updated.
+	 */
+	public void preSolve(Contact pContact);
+
+	/**
+	 * This lets you inspect a contact after the solver is finished. 
+	 */
+	public void postSolve(Contact pContact);
 }

@@ -20,6 +20,8 @@ static jclass worldClass = 0;
 static jmethodID shouldCollideID = 0;
 static jmethodID beginContactID = 0;
 static jmethodID endContactID = 0;
+static jmethodID preSolveID = 0;
+static jmethodID postSolveID = 0;
 static jmethodID reportFixtureID = 0;
 static jmethodID reportRayFixtureID = 0;
 
@@ -82,7 +84,7 @@ public:
 		virtual void BeginContact(b2Contact* contact)
 		{
 			if( beginContactID != 0 )
-				env->CallVoidMethod(obj, beginContactID, (jlong)contact );
+				env->CallVoidMethod(obj, beginContactID, (jlong)contact);
 		}
 
 		/// Called when two fixtures cease to touch.
@@ -90,6 +92,20 @@ public:
 		{
 			if( endContactID != 0 )
 				env->CallVoidMethod(obj, endContactID, (jlong)contact);
+		}
+
+		/// This is called after a contact is updated.
+		virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
+		{
+			if( preSolveID != 0 )
+				env->CallVoidMethod(obj, preSolveID, (jlong)contact);
+		}
+
+		/// This lets you inspect a contact after the solver is finished.
+		virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+		{
+			if( postSolveID != 0 )
+				env->CallVoidMethod(obj, postSolveID, (jlong)contact);
 		}
 };
 
@@ -123,6 +139,8 @@ JNIEXPORT jlong JNICALL Java_com_badlogic_gdx_physics_box2d_World_newWorld
 	worldClass = env->GetObjectClass(obj);
 	beginContactID = env->GetMethodID(worldClass, "beginContact", "(J)V" );
 	endContactID = env->GetMethodID( worldClass, "endContact", "(J)V" );
+	preSolveID = env->GetMethodID( worldClass, "preSolve", "(J)V" );
+	postSolveID = env->GetMethodID( worldClass, "postSolve", "(J)V" );
 	reportFixtureID = env->GetMethodID(worldClass, "reportFixture", "(J)Z" );
 	reportRayFixtureID = env->GetMethodID(worldClass, "reportRayFixture", "(JFFFFF)F" );
 	shouldCollideID = env->GetMethodID( worldClass, "contactFilter", "(JJ)Z");

@@ -528,6 +528,18 @@ public class World {
 		contact.getWorldManifold();
 		if (contactListener != null) contactListener.endContact(contact);
 	}
+	
+	private void preSolve (long contactAddr) {
+		contact.addr = contactAddr;
+		contact.getWorldManifold();
+		if (contactListener != null) contactListener.preSolve(contact);
+	}
+	
+	private void postSolve (long contactAddr) {
+		contact.addr = contactAddr;
+		contact.getWorldManifold();
+		if (contactListener != null) contactListener.postSolve(contact);
+	}
 
 	private boolean reportFixture (long addr) {
 		if (queryCallback != null)
