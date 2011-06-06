@@ -1,16 +1,18 @@
 /*******************************************************************************
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com)
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ******************************************************************************/
-
 package com.badlogic.gdx.physics.box2d;
 
 import java.util.ArrayList;
@@ -111,6 +113,18 @@ public class Body {
 	public void setTransform (Vector2 position, float angle) {
 		jniSetTransform(addr, position.x, position.y, angle);
 	}
+	
+	/**
+	 * Set the position of the body's origin and rotation. This breaks any contacts and wakes the other bodies. Manipulating a
+	 * body's transform may cause non-physical behavior.
+	 * @param x the world position on the x-axis
+	 * @param y the world position on the y-axis
+	 * @param angle the world rotation in radians.
+	 */
+	public void setTransform(float x, float y, float angle) {
+		jniSetTransform(addr, x, y, angle);
+	}
+	
 
 	private native void jniSetTransform (long addr, float positionX, float positionY, float angle);
 
@@ -127,6 +141,7 @@ public class Body {
 	private native void jniGetTransform (long addr, float[] vals);
 
 	private final Vector2 position = new Vector2();
+
 	/**
 	 * Get the world body origin position.
 	 * @return the world position of the body's origin.
@@ -184,6 +199,13 @@ public class Body {
 	public void setLinearVelocity (Vector2 v) {
 		jniSetLinearVelocity(addr, v.x, v.y);
 	}
+	
+	/**
+	 * Set the linear velocity of the center of mass.
+	 */
+	public void setLinearVelocity (float vX, float vY) {
+		jniSetLinearVelocity(addr, vX, vY);
+	}
 
 	private native void jniSetLinearVelocity (long addr, float x, float y);
 
@@ -228,6 +250,18 @@ public class Body {
 	public void applyForce (Vector2 force, Vector2 point) {
 		jniApplyForce(addr, force.x, force.y, point.x, point.y);
 	}
+	
+	/**
+	 * Apply a force at a world point. If the force is not applied at the center of mass, it will generate a torque and affect the
+	 * angular velocity. This wakes up the body.
+	 * @param forceX the world force vector on x, usually in Newtons (N).
+	 * @param forceY the world force vector on y, usually in Newtons (N).
+	 * @param pointX the world position of the point of application on x.
+	 * @param pointY the world position of the point of application on y.
+	 */
+	public void applyForce (float forceX, float forceY, float pointX, float pointY) {
+		jniApplyForce(addr, forceX, forceY, pointX, pointY);
+	}
 
 	private native void jniApplyForce (long addr, float forceX, float forceY, float pointX, float pointY);
 
@@ -250,6 +284,18 @@ public class Body {
 	 */
 	public void applyLinearImpulse (Vector2 impulse, Vector2 point) {
 		jniApplyLinearImpulse(addr, impulse.x, impulse.y, point.x, point.y);
+	}
+	
+	/**
+	 * Apply an impulse at a point. This immediately modifies the velocity. It also modifies the angular velocity if the point of
+	 * application is not at the center of mass. This wakes up the body.
+	 * @param impulseX the world impulse vector on the x-axis, usually in N-seconds or kg-m/s.
+	 * @param impulseY the world impulse vector on the y-axis, usually in N-seconds or kg-m/s.
+	 * @param pointX the world position of the point of application on the x-axis.
+	 * @param pointY the world position of the point of application on the y-axis.
+	 */
+	public void applyLinearImpulse(float impulseX, float impulseY, float pointX, float pointY) {
+		jniApplyLinearImpulse(addr, impulseX, impulseY, pointX, pointY);
 	}
 
 	private native void jniApplyLinearImpulse (long addr, float impulseX, float impulseY, float pointX, float pointY);
@@ -285,6 +331,7 @@ public class Body {
 	private native float jniGetInertia (long addr);
 
 	private final MassData massData = new MassData();
+
 	/**
 	 * Get the mass data of the body.
 	 * @return a struct containing the mass, inertia and center of the body.
@@ -322,6 +369,7 @@ public class Body {
 	private native void jniResetMassData (long addr);
 
 	private final Vector2 localPoint = new Vector2();
+
 	/**
 	 * Get the world coordinates of a point given the local coordinates.
 	 * @param localPoint a point on the body measured relative the the body's origin.
@@ -337,6 +385,7 @@ public class Body {
 	private native void jniGetWorldPoint (long addr, float localPointX, float localPointY, float[] worldPoint);
 
 	private final Vector2 worldVector = new Vector2();
+
 	/**
 	 * Get the world coordinates of a vector given the local coordinates.
 	 * @param localVector a vector fixed in the body.
@@ -352,6 +401,7 @@ public class Body {
 	private native void jniGetWorldVector (long addr, float localVectorX, float localVectorY, float[] worldVector);
 
 	public final Vector2 localPoint2 = new Vector2();
+
 	/**
 	 * Gets a local point relative to the body's origin given a world point.
 	 * @param worldPoint a point in world coordinates.
@@ -367,6 +417,7 @@ public class Body {
 	private native void jniGetLocalPoint (long addr, float worldPointX, float worldPointY, float[] localPoint);
 
 	public final Vector2 localVector = new Vector2();
+
 	/**
 	 * Gets a local vector given a world vector.
 	 * @param worldVector a vector in world coordinates.
@@ -382,6 +433,7 @@ public class Body {
 	private native void jniGetLocalVector (long addr, float worldVectorX, float worldVectorY, float[] worldVector);
 
 	public final Vector2 linVelWorld = new Vector2();
+
 	/**
 	 * Get the world linear velocity of a world point attached to this body.
 	 * @param worldPoint a point in world coordinates.
@@ -397,6 +449,7 @@ public class Body {
 	private native void jniGetLinearVelocityFromWorldPoint (long addr, float worldPointX, float worldPointY, float[] linVelWorld);
 
 	public final Vector2 linVelLoc = new Vector2();
+
 	/**
 	 * Get the world velocity of a local point.
 	 * @param localPoint a point in local coordinates.

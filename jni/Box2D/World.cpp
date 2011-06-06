@@ -1,18 +1,15 @@
-/**
-* Copyright 2010 Mario Zechner (contact@badlogicgames.com)
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+/*
+ * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 #include "Box2D.h"
 #include "World.h"
 #ifdef ANDROID
@@ -24,6 +21,27 @@ static jmethodID shouldCollideID = 0;
 static jmethodID beginContactID = 0;
 static jmethodID endContactID = 0;
 static jmethodID reportFixtureID = 0;
+static jmethodID reportRayFixtureID = 0;
+
+class CustomRayCastCallback: public b2RayCastCallback
+{
+private:
+	JNIEnv* env;
+	jobject obj;
+
+public:
+	CustomRayCastCallback( JNIEnv *env, jobject obj )
+	{
+		this->env = env;
+		this->obj = obj;
+	}
+
+	virtual float32 ReportFixture( b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
+	{
+		return env->CallFloatMethod(obj, reportRayFixtureID, (jlong)fixture, (jfloat)point.x, (jfloat)point.y,
+																(jfloat)normal.x, (jfloat)normal.y, (jfloat)fraction );
+	}
+};
 
 class CustomContactFilter: public b2ContactFilter
 {
@@ -106,6 +124,7 @@ JNIEXPORT jlong JNICALL Java_com_badlogic_gdx_physics_box2d_World_newWorld
 	beginContactID = env->GetMethodID(worldClass, "beginContact", "(J)V" );
 	endContactID = env->GetMethodID( worldClass, "endContact", "(J)V" );
 	reportFixtureID = env->GetMethodID(worldClass, "reportFixture", "(J)Z" );
+	reportRayFixtureID = env->GetMethodID(worldClass, "reportRayFixture", "(JFFFFF)F" );
 	shouldCollideID = env->GetMethodID( worldClass, "contactFilter", "(JJ)Z");
 
 	b2World* world = new b2World( b2Vec2( gravityX, gravityY ), doSleep );
@@ -446,6 +465,8 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDestroyJoint
  * Method:    jniStep
  * Signature: (JFII)V
  */
+b2ContactFilter defaultFilter;
+
 JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniStep
  (JNIEnv *env, jobject obj, jlong addr, jfloat timeStep, jint velocityIterations, jint positionIterations)
 {
@@ -455,7 +476,7 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniStep
 	world->SetContactFilter(&contactFilter);
 	world->SetContactListener(&contactListener);
 	world->Step( timeStep, velocityIterations, positionIterations );
-	world->SetContactFilter(0);
+	world->SetContactFilter(&defaultFilter);
 	world->SetContactListener(0);
 }
 
@@ -656,4 +677,18 @@ JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniDispose
 {
 	b2World* world = (b2World*)(addr);
 	delete world;
+}
+
+/*
+ * Class:			com_badlogic_gdx_physics_box2d_World
+ * Method:		jniRayCast
+ * Signature:	(JFFFF)V
+ */
+JNIEXPORT void JNICALL Java_com_badlogic_gdx_physics_box2d_World_jniRayCast
+	(JNIEnv *env, jobject obj, jlong addr, jfloat aX, jfloat aY, jfloat bX, jfloat bY)
+{
+	b2World *world = (b2World*)addr;
+
+	CustomRayCastCallback callback( env, obj );	
+	world->RayCast( &callback, b2Vec2(aX,aY), b2Vec2(bX,bY) );
 }

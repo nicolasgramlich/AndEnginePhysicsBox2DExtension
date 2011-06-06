@@ -1,16 +1,18 @@
 /*******************************************************************************
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com)
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  ******************************************************************************/
-
 package com.badlogic.gdx.physics.box2d;
 
 import com.badlogic.gdx.math.Vector2;
@@ -25,6 +27,9 @@ public class Fixture {
 
 	/** the shape, initialized lazy **/
 	protected Shape shape;
+
+	/** user specified data **/
+	protected Object userData;
 
 	/**
 	 * Constructs a new fixture
@@ -127,6 +132,15 @@ public class Fixture {
 	public boolean testPoint (Vector2 p) {
 		return jniTestPoint(addr, p.x, p.y);
 	}
+	
+	/**
+	 * Test a point for containment in this fixture.
+	 * @param x the x-coordinate
+	 * @param y the y-coordinate
+	 */
+	public boolean testPoint(float x, float y) {
+		return jniTestPoint(addr, x, y);
+	}
 
 	private native boolean jniTestPoint (long addr, float x, float y);
 
@@ -213,4 +227,18 @@ public class Fixture {
 // /// If you need a more accurate AABB, compute it using the shape and
 // /// the body transform.
 // const b2AABB& GetAABB() const;
+
+	/**
+	 * Sets custom user data.
+	 */
+	public void setUserData (Object userData) {
+		this.userData = userData;
+	}
+
+	/**
+	 * @return custom user data
+	 */
+	public Object getUserData () {
+		return userData;
+	}
 }
