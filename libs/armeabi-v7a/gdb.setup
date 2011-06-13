@@ -1,0 +1,3 @@
+set solib-search-path /cygdrive/e/android/AndEnginePhysicsBox2DExtension/bin/ndk/local/armeabi-v7a
+directory /cygdrive/e/sdk/android-ndk-r4/build/platforms/android-4/arch-arm/usr/include
+directory /cygdrive/e/android/AndEnginePhysicsBox2DExtension/jni
