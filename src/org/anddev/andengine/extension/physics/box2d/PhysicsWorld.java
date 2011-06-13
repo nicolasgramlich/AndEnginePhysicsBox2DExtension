@@ -48,13 +48,15 @@ public class PhysicsWorld implements IUpdateHandler {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	
+
 	public PhysicsWorld(final Vector2 pGravity, final boolean pAllowSleep) {
 		this(pGravity, pAllowSleep, VELOCITY_ITERATIONS_DEFAULT, POSITION_ITERATIONS_DEFAULT);
 	}
 
 	public PhysicsWorld(final Vector2 pGravity, final boolean pAllowSleep, final int pVelocityIterations, final int pPositionIterations) {
 		this.mWorld = new World(pGravity, pAllowSleep);
+		this.mVelocityIterations = pVelocityIterations;
+		this.mPositionIterations = pPositionIterations;
 	}
 
 	// ===========================================================
@@ -150,7 +152,7 @@ public class PhysicsWorld implements IUpdateHandler {
 	public boolean getAutoClearForces() {
 		return this.mWorld.getAutoClearForces();
 	}
-	
+
 	public Iterator<Body> getBodies() {
 		return this.mWorld.getBodies();
 	}
@@ -170,7 +172,7 @@ public class PhysicsWorld implements IUpdateHandler {
 	public Vector2 getGravity() {
 		return this.mWorld.getGravity();
 	}
-	
+
 	public Iterator<Joint> getJoints() {
 		return this.mWorld.getJoints();
 	}

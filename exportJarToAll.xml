@@ -3,19 +3,19 @@
 
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 	
-	<property environment="env" />
-	<property name="ECLIPSE_HOME" value="E:/eclipse/galileo-android" />
-	<property name="debuglevel" value="source,lines,vars" />
-	<property name="target" value="1.6" />
-	<property name="source" value="1.6" />
-	<property name="bin" value="bin" />
-	<property name="src" value="src" />
+	<property environment="env"/>
+	<property name="ECLIPSE_HOME" value="E:/eclipse/galileo-android"/>
+	<property name="debuglevel" value="source,lines,vars"/>
+	<property name="target" value="1.6"/>
+	<property name="source" value="1.6"/>
+	<property name="bin" value="bin"/>
+	<property name="src" value="src"/>
 	
-	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2dextension.so" />
+	<property name="nativelib" value="libs/armeabi/libandenginephysicsbox2dextension.so"/>
 	
-	<property name="binfile" value="bin/andenginephysicsbox2dextension.jar" />
+	<property name="binfile" value="bin/andenginephysicsbox2dextension.jar"/>
 	
-	<property name="nativetargetlist" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2dextension.so,
+	<property name="nativetargetlist_armeabi" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../AndEngineGameTemplate/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../SuperDroid/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2dextension.so,
@@ -29,6 +29,21 @@
 	../TetrisTower/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../SuperPool/libs/armeabi/libandenginephysicsbox2dextension.so,
 	../APlay/libs/armeabi/libandenginephysicsbox2dextension.so"/>
+	
+	<property name="nativetargetlist_armeabi_v7a" value="../AndEngineExamples/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../AndEngineGameTemplate/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../SuperDroid/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../BoxFacePhysicsLiveWallpaper/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../BoxFaceStacker/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../GravityCollector/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../ABCShooter/libs/armeabi-v7a/libandenginephysicsbox2dextension.so, 
+	../BirdHunt/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../MasterBowMan/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../FarmTower/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../BlockSmasher/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../TetrisTower/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../SuperPool/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
+	../APlay/libs/armeabi-v7a/libandenginephysicsbox2dextension.so"/>
 	
 	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar,
 	../AndEngineGameTemplate/lib/andenginephysicsbox2dextension.jar,
@@ -49,7 +64,7 @@
 	../SuperPool/lib/andenginephysicsbox2dextension.jar,
 	../APlay/lib/andenginephysicsbox2dextension.jar"/>
 	
-	<target name="createjar" >
+	<target name="createjar">
 		<echo>${targetfile}</echo>
         
 		<copy file="${binfile}" tofile="${targetfile}"/>
@@ -57,26 +72,27 @@
 		<eclipse.refreshLocal resource="${targetfile}" depth="infinite"/>
     </target>
     
-   	<target name="copynative" >
+   	<target name="copynative">
 		<echo>Native: ${nativetargetfile}</echo>
         
 		<copy file="${nativelib}" tofile="${nativetargetfile}"/>
     </target>
    
-	<target name="createjars" >
+	<target name="createjars">
 		<jar destfile="${binfile}">
 			<zipfileset dir="${src}">
-				<include name="**/*.*" />
-				<exclude name="**/R.java" />
+				<include name="**/*.*"/>
+				<exclude name="**/R.java"/>
 			</zipfileset>
 			<zipfileset dir="${bin}">
-				<include name="**/*.class" />
-				<exclude name="**/R.class" />
-				<exclude name="**/R$*.class" />
+				<include name="**/*.class"/>
+				<exclude name="**/R.class"/>
+				<exclude name="**/R$*.class"/>
 			</zipfileset>
         </jar>
         
-		<foreach list="${nativetargetlist}" target="copynative" param="nativetargetfile" delimiter="," trim="true" />
-		<foreach list="${targetlist}" target="createjar" param="targetfile" delimiter="," trim="true" />	
+		<foreach list="${nativetargetlist_armeabi}" target="copynative" param="nativetargetfile" delimiter="," trim="true"/>
+		<foreach list="${nativetargetlist_armeabi_v7a}" target="copynative" param="nativetargetfile" delimiter="," trim="true"/>
+		<foreach list="${targetlist}" target="createjar" param="targetfile" delimiter="," trim="true"/>	
     </target>
 </project>
