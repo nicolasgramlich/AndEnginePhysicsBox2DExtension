@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.DestructionListener;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.JointDef;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
@@ -219,6 +220,10 @@ public class PhysicsWorld implements IUpdateHandler {
 
 	public void setWarmStarting(final boolean pFlag) {
 		this.mWorld.setWarmStarting(pFlag);
+	}
+
+	public void rayCast(final RayCastCallback pRayCastCallback, final Vector2 pPoint1, final Vector2 pPoint2) {
+		this.mWorld.rayCast(pRayCastCallback, pPoint1, pPoint2);
 	}
 
 	// ===========================================================
