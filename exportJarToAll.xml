@@ -15,54 +15,9 @@
 	
 	<property name="binfile" value="bin/andenginephysicsbox2dextension.jar"/>
 	
-	<property name="nativetargetlist_armeabi" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../AndEngineGameTemplate/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../SuperDroid/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../BoxFacePhysicsLiveWallpaper/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../BoxFaceStacker/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../GravityCollector/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../ABCShooter/libs/armeabi/libandenginephysicsbox2dextension.so, 
-	../BirdHunt/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../MasterBowMan/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../FarmTower/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../BlockSmasher/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../TetrisTower/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../SuperPool/libs/armeabi/libandenginephysicsbox2dextension.so,
-	../APlay/libs/armeabi/libandenginephysicsbox2dextension.so"/>
-	
-	<property name="nativetargetlist_armeabi_v7a" value="../AndEngineExamples/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../AndEngineGameTemplate/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../SuperDroid/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../BoxFacePhysicsLiveWallpaper/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../BoxFaceStacker/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../GravityCollector/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../ABCShooter/libs/armeabi-v7a/libandenginephysicsbox2dextension.so, 
-	../BirdHunt/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../MasterBowMan/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../FarmTower/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../BlockSmasher/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../TetrisTower/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../SuperPool/libs/armeabi-v7a/libandenginephysicsbox2dextension.so,
-	../APlay/libs/armeabi-v7a/libandenginephysicsbox2dextension.so"/>
-	
-	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar,
-	../AndEngineGameTemplate/lib/andenginephysicsbox2dextension.jar,
-	../SuperDroid/lib/andenginephysicsbox2dextension.jar,
-	../BoxFacePhysicsLiveWallpaper/lib/andenginephysicsbox2dextension.jar, 
-	../BoxFaceStacker/lib/andenginephysicsbox2dextension.jar, 
-	../GravityCollector/lib/andenginephysicsbox2dextension.jar, 
-	../ABCShooter/lib/andenginephysicsbox2dextension.jar, 
-	../BirdHunt/lib/andenginephysicsbox2dextension.jar, 
-	../MasterBowMan/lib/andenginephysicsbox2dextension.jar, 
-	../FarmTower/lib/andenginephysicsbox2dextension.jar, 
-	../FarmTowerEco/lib/andenginephysicsbox2dextension.jar, 
-	../FarmTowerPro/lib/andenginephysicsbox2dextension.jar, 
-	../BlockSmasher/lib/andenginephysicsbox2dextension.jar, 
-	../BlockSmasherEco/lib/andenginephysicsbox2dextension.jar, 
-	../BlockSmasherPro/lib/andenginephysicsbox2dextension.jar, 
-	../TetrisTower/lib/andenginephysicsbox2dextension.jar,
-	../SuperPool/lib/andenginephysicsbox2dextension.jar,
-	../APlay/lib/andenginephysicsbox2dextension.jar"/>
+	<property name="nativetargetlist_armeabi" value="../AndEngineExamples/libs/armeabi/libandenginephysicsbox2dextension.so"/>
+	<property name="nativetargetlist_armeabi_v7a" value="../AndEngineExamples/libs/armeabi-v7a/libandenginephysicsbox2dextension.so"/>
+	<property name="targetlist" value="../AndEngineExamples/lib/andenginephysicsbox2dextension.jar"/>
 	
 	<target name="createjar">
 		<echo>${targetfile}</echo>
