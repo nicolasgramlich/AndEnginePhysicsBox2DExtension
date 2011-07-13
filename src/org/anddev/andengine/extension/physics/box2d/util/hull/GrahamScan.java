@@ -3,6 +3,9 @@ package org.anddev.andengine.extension.physics.box2d.util.hull;
 import com.badlogic.gdx.math.Vector2;
 
 /**
+ * (c) 2010 Nicolas Gramlich 
+ * (c) 2011 Zynga Inc.
+ * 
  * @author Nicolas Gramlich
  * @since 14:00:50 - 14.09.2010
  * @see http://www.iti.fh-flensburg.de/lang/algorithmen/geo/

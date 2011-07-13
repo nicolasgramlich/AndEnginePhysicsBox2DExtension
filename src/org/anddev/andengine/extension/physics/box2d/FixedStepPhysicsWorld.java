@@ -7,6 +7,9 @@ import com.badlogic.gdx.physics.box2d.World;
  * A subclass of {@link PhysicsWorld} that tries to achieve a specific amount of steps per second.
  * When the time since the last step is bigger long the steplength, additional steps are executed.
  * 
+ * (c) 2010 Nicolas Gramlich 
+ * (c) 2011 Zynga Inc.
+ * 
  * @author Nicolas Gramlich
  * @since 12:39:42 - 25.07.2010
  */

@@ -8,6 +8,9 @@ import org.anddev.andengine.entity.shape.IShape;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
+ * (c) 2010 Nicolas Gramlich 
+ * (c) 2011 Zynga Inc.
+ * 
  * @author Nicolas Gramlich
  * @since 15:52:27 - 15.07.2010
  */

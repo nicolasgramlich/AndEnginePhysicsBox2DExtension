@@ -28,6 +28,9 @@ import com.badlogic.gdx.math.Vector2;
  * @see http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
  * 
  * @author badlogicgames@gmail.com
+ * (c) 2010 Nicolas Gramlich 
+ * (c) 2011 Zynga Inc.
+ * 
  * @author Nicolas Gramlich (Improved performance. Collinear edges are now supported.)
  */
 public final class EarClippingTriangulator implements ITriangulationAlgoritm {

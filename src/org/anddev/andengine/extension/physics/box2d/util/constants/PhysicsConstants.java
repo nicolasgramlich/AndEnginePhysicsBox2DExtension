@@ -1,6 +1,9 @@
 package org.anddev.andengine.extension.physics.box2d.util.constants;
 
 /**
+ * (c) 2010 Nicolas Gramlich 
+ * (c) 2011 Zynga Inc.
+ * 
  * @author Nicolas Gramlich
  * @since 13:01:50 - 28.07.2010
  */
