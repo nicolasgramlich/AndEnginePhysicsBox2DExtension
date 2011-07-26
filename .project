@@ -30,4 +30,11 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>AndEngine_src</name>
+			<type>2</type>
+			<locationURI>_android_AndEngine_6e0d82d9/src</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
