@@ -6,10 +6,11 @@ import static org.anddev.andengine.extension.physics.box2d.util.constants.Physic
 import java.util.List;
 
 import org.anddev.andengine.entity.primitive.Line;
+import org.anddev.andengine.entity.shape.IAreaShape;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
-import org.anddev.andengine.util.MathUtils;
 import org.anddev.andengine.util.constants.Constants;
+import org.anddev.andengine.util.math.MathUtils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -75,15 +76,15 @@ public class PhysicsFactory {
 		return fixtureDef;
 	}
 
-	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IShape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
-		return PhysicsFactory.createBoxBody(pPhysicsWorld, pShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createBoxBody(pPhysicsWorld, pAreaShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IShape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		final float[] sceneCenterCoordinates = pAreaShape.getSceneCenterCoordinates();
 		final float centerX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
 		final float centerY = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y];
-		return PhysicsFactory.createBoxBody(pPhysicsWorld, centerX, centerY, pShape.getWidthScaled(), pShape.getHeightScaled(), pShape.getRotation(), pBodyType, pFixtureDef, pPixelToMeterRatio);
+		return PhysicsFactory.createBoxBody(pPhysicsWorld, centerX, centerY, pAreaShape.getWidthScaled(), pAreaShape.getHeightScaled(), pAreaShape.getRotation(), pBodyType, pFixtureDef, pPixelToMeterRatio);
 	}
 
 	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final float pCenterX, final float pCenterY, final float pWidth, final float pHeight, final float pRotation, final BodyType pBodyType, final FixtureDef pFixtureDef) {
@@ -116,15 +117,15 @@ public class PhysicsFactory {
 		return boxBody;
 	}
 
-	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IShape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
-		return PhysicsFactory.createCircleBody(pPhysicsWorld, pShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
+	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+		return PhysicsFactory.createCircleBody(pPhysicsWorld, pAreaShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IShape pShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-		final float[] sceneCenterCoordinates = pShape.getSceneCenterCoordinates();
+	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+		final float[] sceneCenterCoordinates = pAreaShape.getSceneCenterCoordinates();
 		final float centerX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
 		final float centerY = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y];
-		return PhysicsFactory.createCircleBody(pPhysicsWorld, centerX, centerY, pShape.getWidthScaled() * 0.5f, pShape.getRotation(), pBodyType, pFixtureDef, pPixelToMeterRatio);
+		return PhysicsFactory.createCircleBody(pPhysicsWorld, centerX, centerY, pAreaShape.getWidthScaled() * 0.5f, pAreaShape.getRotation(), pBodyType, pFixtureDef, pPixelToMeterRatio);
 	}
 
 	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final float pCenterX, final float pCenterY, final float pRadius, final float pRotation, final BodyType pBodyType, final FixtureDef pFixtureDef) {

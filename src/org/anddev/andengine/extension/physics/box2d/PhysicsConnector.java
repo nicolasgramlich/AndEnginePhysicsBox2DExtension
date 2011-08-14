@@ -1,9 +1,10 @@
 package org.anddev.andengine.extension.physics.box2d;
 
 import org.anddev.andengine.engine.handler.IUpdateHandler;
+import org.anddev.andengine.entity.shape.IAreaShape;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
-import org.anddev.andengine.util.MathUtils;
+import org.anddev.andengine.util.math.MathUtils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -38,28 +39,28 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Constructors
 	// ===========================================================
 
-	public PhysicsConnector(final IShape pShape, final Body pBody) {
-		this(pShape, pBody, true, true);
+	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody) {
+		this(pAreaShape, pBody, true, true);
 	}
 
-	public PhysicsConnector(final IShape pShape, final Body pBody, final float pPixelToMeterRatio) {
-		this(pShape, pBody, true, true, pPixelToMeterRatio);
+	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final float pPixelToMeterRatio) {
+		this(pAreaShape, pBody, true, true, pPixelToMeterRatio);
 	}
 
-	public PhysicsConnector(final IShape pShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
-		this(pShape, pBody, pUdatePosition, pUpdateRotation, PIXEL_TO_METER_RATIO_DEFAULT);
+	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
+		this(pAreaShape, pBody, pUdatePosition, pUpdateRotation, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public PhysicsConnector(final IShape pShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
-		this.mShape = pShape;
+	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
+		this.mShape = pAreaShape;
 		this.mBody = pBody;
 
 		this.mUpdatePosition = pUdatePosition;
 		this.mUpdateRotation = pUpdateRotation;
 		this.mPixelToMeterRatio = pPixelToMeterRatio;
 
-		this.mShapeHalfBaseWidth = pShape.getBaseWidth() * 0.5f;
-		this.mShapeHalfBaseHeight = pShape.getBaseHeight() * 0.5f;
+		this.mShapeHalfBaseWidth = pAreaShape.getBaseWidth() * 0.5f;
+		this.mShapeHalfBaseHeight = pAreaShape.getBaseHeight() * 0.5f;
 	}
 
 	// ===========================================================
