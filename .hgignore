@@ -1,2 +1,7 @@
 syntax: glob
 bin/**
+obj/**
+.DS_Store
+Thumbs.db
+gdb.setup
+gdbserver
