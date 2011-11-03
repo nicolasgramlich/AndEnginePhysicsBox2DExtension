@@ -1,7 +1,7 @@
 #! /bin/sh
 
-NDK_DIRECTORY="/Users/ngramlich/SDKs/Android/ndk/r6/"
-PROJECT_DIRECTORY="/Users/ngramlich/Workspace/AndEnginePhysicsBox2DExtension/"
+NDK_DIRECTORY="/Users/ngramlich/SDKs/Android/ndk/r6b/"
+PROJECT_DIRECTORY="/Users/ngramlich/Workspace/GLES2/AndEnginePhysicsBox2DExtension/"
 
 # Run build:
 cd ${PROJECT_DIRECTORY}
