@@ -1,7 +1,9 @@
 syntax: glob
 bin/**
-obj/**
+doc/**
+gen/**
 .DS_Store
 Thumbs.db
 gdb.setup
 gdbserver
+.svn
