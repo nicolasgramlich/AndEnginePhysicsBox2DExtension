@@ -1,22 +1,20 @@
-package org.anddev.andengine.extension.physics.box2d.util.hull;
-
-import com.badlogic.gdx.math.Vector2;
+package org.andengine.extension.physics.box2d.util.constants;
 
 /**
  * (c) 2010 Nicolas Gramlich 
  * (c) 2011 Zynga Inc.
  * 
  * @author Nicolas Gramlich
- * @since 13:46:22 - 14.09.2010
+ * @since 13:01:50 - 28.07.2010
  */
-public interface IHullAlgorithm {
+public interface PhysicsConstants {
 	// ===========================================================
 	// Final Fields
 	// ===========================================================
+	
+	public static final float PIXEL_TO_METER_RATIO_DEFAULT = 32.0f;
 
 	// ===========================================================
 	// Methods
 	// ===========================================================
-
-	public int computeHull(final Vector2[] pVertices);
 }

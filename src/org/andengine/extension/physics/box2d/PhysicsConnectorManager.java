@@ -1,9 +1,9 @@
-package org.anddev.andengine.extension.physics.box2d;
+package org.andengine.extension.physics.box2d;
 
 import java.util.ArrayList;
 
-import org.anddev.andengine.engine.handler.IUpdateHandler;
-import org.anddev.andengine.entity.shape.IShape;
+import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.entity.shape.IShape;
 
 import com.badlogic.gdx.physics.box2d.Body;
 

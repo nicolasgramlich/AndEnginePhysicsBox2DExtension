@@ -1,10 +1,10 @@
-package org.anddev.andengine.extension.physics.box2d;
+package org.andengine.extension.physics.box2d;
 
-import org.anddev.andengine.engine.handler.IUpdateHandler;
-import org.anddev.andengine.entity.shape.IAreaShape;
-import org.anddev.andengine.entity.shape.IShape;
-import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
-import org.anddev.andengine.util.math.MathUtils;
+import org.andengine.engine.handler.IUpdateHandler;
+import org.andengine.entity.shape.IAreaShape;
+import org.andengine.entity.shape.IShape;
+import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
+import org.andengine.util.math.MathUtils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;

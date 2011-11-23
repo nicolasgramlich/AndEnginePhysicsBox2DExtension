@@ -1,4 +1,4 @@
-package org.anddev.andengine.extension.physics.box2d.util.triangulation;
+package org.andengine.extension.physics.box2d.util.triangulation;
 
 import java.util.List;
 

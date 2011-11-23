@@ -1,6 +1,4 @@
-package org.anddev.andengine.extension.physics.box2d.util;
-
-import org.anddev.andengine.util.pool.GenericPool;
+package org.andengine.extension.physics.box2d.util.hull;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -9,9 +7,9 @@ import com.badlogic.gdx.math.Vector2;
  * (c) 2011 Zynga Inc.
  * 
  * @author Nicolas Gramlich
- * @since 16:22:23 - 14.09.2010
+ * @since 13:43:54 - 14.09.2010
  */
-public class Vector2Pool {
+class Vector2Line {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -20,16 +18,17 @@ public class Vector2Pool {
 	// Fields
 	// ===========================================================
 
-	private static final GenericPool<Vector2> POOL = new GenericPool<Vector2>() {
-		@Override
-		protected Vector2 onAllocatePoolItem() {
-			return new Vector2();
-		}
-	};
+	Vector2 mVertexA;
+	Vector2 mVertexB;
 
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	public Vector2Line(final Vector2 pVertexA, final Vector2 pVertexB) {
+		this.mVertexA = pVertexA;
+		this.mVertexB = pVertexB;
+	}
 
 	// ===========================================================
 	// Getter & Setter
@@ -38,22 +37,6 @@ public class Vector2Pool {
 	// ===========================================================
 	// Methods for/from SuperClass/Interfaces
 	// ===========================================================
-
-	public static Vector2 obtain() {
-		return POOL.obtainPoolItem();
-	}
-
-	public static Vector2 obtain(final Vector2 pCopyFrom) {
-		return POOL.obtainPoolItem().set(pCopyFrom);
-	}
-
-	public static Vector2 obtain(final float pX, final float pY) {
-		return POOL.obtainPoolItem().set(pX, pY);
-	}
-
-	public static void recycle(final Vector2 pVector2) {
-		POOL.recyclePoolItem(pVector2);
-	}
 
 	// ===========================================================
 	// Methods

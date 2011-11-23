@@ -1,4 +1,4 @@
-package org.anddev.andengine.extension.physics.box2d.util.hull;
+package org.andengine.extension.physics.box2d.util.hull;
 
 import com.badlogic.gdx.math.Vector2;
 
