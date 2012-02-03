@@ -1,6 +1,6 @@
 package org.andengine.extension.physics.box2d.util;
 
-import org.andengine.util.pool.GenericPool;
+import org.andengine.util.adt.pool.GenericPool;
 
 import com.badlogic.gdx.math.Vector2;
 

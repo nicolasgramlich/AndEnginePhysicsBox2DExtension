@@ -9,7 +9,7 @@ import org.andengine.entity.primitive.Line;
 import org.andengine.entity.shape.IAreaShape;
 import org.andengine.entity.shape.IShape;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
-import org.andengine.util.constants.Constants;
+import org.andengine.util.Constants;
 import org.andengine.util.math.MathUtils;
 
 import com.badlogic.gdx.math.Vector2;
