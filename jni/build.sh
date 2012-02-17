@@ -1,7 +1,7 @@
 #! /bin/sh
 
 NDK_DIRECTORY="/Users/ngramlich/SDKs/Android/ndk/r6b/"
-PROJECT_DIRECTORY="/Users/ngramlich/Workspace/ZooMobileAndroidClient/AndEnginePhysicsBox2DExtension/"
+PROJECT_DIRECTORY="/Users/ngramlich/Workspace/gdk/graphic_engines/AndEngine/AndEnginePhysicsBox2DExtension/"
 
 # Run build:
 cd ${PROJECT_DIRECTORY}
