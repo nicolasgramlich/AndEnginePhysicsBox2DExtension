@@ -59,8 +59,8 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 		this.mUpdateRotation = pUpdateRotation;
 		this.mPixelToMeterRatio = pPixelToMeterRatio;
 
-		this.mShapeHalfBaseWidth = pAreaShape.getBaseWidth() * 0.5f;
-		this.mShapeHalfBaseHeight = pAreaShape.getBaseHeight() * 0.5f;
+		this.mShapeHalfBaseWidth = pAreaShape.getWidthScaled() * 0.5f;
+		this.mShapeHalfBaseHeight = pAreaShape.getHeightScaled() * 0.5f;
 	}
 
 	// ===========================================================
