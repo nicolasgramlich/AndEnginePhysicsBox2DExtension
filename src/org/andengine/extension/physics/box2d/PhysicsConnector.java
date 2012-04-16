@@ -1,8 +1,7 @@
 package org.andengine.extension.physics.box2d;
 
 import org.andengine.engine.handler.IUpdateHandler;
-import org.andengine.entity.shape.IAreaShape;
-import org.andengine.entity.shape.IShape;
+import org.andengine.entity.IEntity;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.util.math.MathUtils;
 
@@ -25,11 +24,11 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Fields
 	// ===========================================================
 
-	protected final IShape mShape;
+	protected final IEntity mEntity;
 	protected final Body mBody;
 
-	protected final float mShapeHalfBaseWidth;
-	protected final float mShapeHalfBaseHeight;
+	protected final float mShapeWidthHalf;
+	protected final float mShapeHeightHalf;
 
 	protected boolean mUpdatePosition;
 	protected boolean mUpdateRotation;
@@ -39,36 +38,36 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Constructors
 	// ===========================================================
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody) {
-		this(pAreaShape, pBody, true, true);
+	public PhysicsConnector(final IEntity pEntity, final Body pBody) {
+		this(pEntity, pBody, true, true);
 	}
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final float pPixelToMeterRatio) {
-		this(pAreaShape, pBody, true, true, pPixelToMeterRatio);
+	public PhysicsConnector(final IEntity pEntity, final Body pBody, final float pPixelToMeterRatio) {
+		this(pEntity, pBody, true, true, pPixelToMeterRatio);
 	}
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
-		this(pAreaShape, pBody, pUdatePosition, pUpdateRotation, PIXEL_TO_METER_RATIO_DEFAULT);
+	public PhysicsConnector(final IEntity pEntity, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
+		this(pEntity, pBody, pUdatePosition, pUpdateRotation, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
-		this.mShape = pAreaShape;
+	public PhysicsConnector(final IEntity pEntity, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
+		this.mEntity = pEntity;
 		this.mBody = pBody;
 
 		this.mUpdatePosition = pUdatePosition;
 		this.mUpdateRotation = pUpdateRotation;
 		this.mPixelToMeterRatio = pPixelToMeterRatio;
 
-		this.mShapeHalfBaseWidth = pAreaShape.getBaseWidth() * 0.5f;
-		this.mShapeHalfBaseHeight = pAreaShape.getBaseHeight() * 0.5f;
+		this.mShapeWidthHalf = pEntity.getWidth() * 0.5f;
+		this.mShapeHeightHalf = pEntity.getHeight() * 0.5f;
 	}
 
 	// ===========================================================
 	// Getter & Setter
 	// ===========================================================
 
-	public IShape getShape() {
-		return this.mShape;
+	public IEntity getEntity() {
+		return this.mEntity;
 	}
 
 	public Body getBody() {
@@ -97,18 +96,18 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
-		final IShape shape = this.mShape;
+		final IEntity entity = this.mEntity;
 		final Body body = this.mBody;
 
 		if(this.mUpdatePosition) {
 			final Vector2 position = body.getPosition();
 			final float pixelToMeterRatio = this.mPixelToMeterRatio;
-			shape.setPosition(position.x * pixelToMeterRatio - this.mShapeHalfBaseWidth, position.y * pixelToMeterRatio - this.mShapeHalfBaseHeight);
+			entity.setPosition(position.x * pixelToMeterRatio - this.mShapeWidthHalf, position.y * pixelToMeterRatio - this.mShapeHeightHalf);
 		}
 
 		if(this.mUpdateRotation) {
 			final float angle = body.getAngle();
-			shape.setRotation(MathUtils.radToDeg(angle));
+			entity.setRotation(MathUtils.radToDeg(angle));
 		}
 	}
 

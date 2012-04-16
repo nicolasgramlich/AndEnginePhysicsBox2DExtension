@@ -65,7 +65,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
 		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
 			final PhysicsConnector physicsConnector = physicsConnectors.get(i);
-			if(physicsConnector.mShape == pShape){
+			if(physicsConnector.mEntity == pShape){
 				return physicsConnector.mBody;
 			}
 		}
@@ -76,7 +76,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
 		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
 			final PhysicsConnector physicsConnector = physicsConnectors.get(i);
-			if(physicsConnector.mShape == pShape){
+			if(physicsConnector.mEntity == pShape){
 				return physicsConnector;
 			}
 		}
