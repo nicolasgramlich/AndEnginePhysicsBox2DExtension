@@ -27,9 +27,6 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	protected final IEntity mEntity;
 	protected final Body mBody;
 
-	protected final float mShapeWidthHalf;
-	protected final float mShapeHeightHalf;
-
 	protected boolean mUpdatePosition;
 	protected boolean mUpdateRotation;
 	protected final float mPixelToMeterRatio;
@@ -57,9 +54,6 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 		this.mUpdatePosition = pUdatePosition;
 		this.mUpdateRotation = pUpdateRotation;
 		this.mPixelToMeterRatio = pPixelToMeterRatio;
-
-		this.mShapeWidthHalf = pEntity.getWidth() * 0.5f;
-		this.mShapeHeightHalf = pEntity.getHeight() * 0.5f;
 	}
 
 	// ===========================================================
@@ -102,12 +96,12 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 		if(this.mUpdatePosition) {
 			final Vector2 position = body.getPosition();
 			final float pixelToMeterRatio = this.mPixelToMeterRatio;
-			entity.setPosition(position.x * pixelToMeterRatio - this.mShapeWidthHalf, position.y * pixelToMeterRatio - this.mShapeHeightHalf);
+			entity.setPosition(position.x * pixelToMeterRatio, position.y * pixelToMeterRatio);
 		}
 
 		if(this.mUpdateRotation) {
 			final float angle = body.getAngle();
-			entity.setRotation(MathUtils.radToDeg(angle));
+			entity.setRotation(-MathUtils.radToDeg(angle));
 		}
 	}
 

@@ -178,11 +178,11 @@ public class PhysicsFactory {
 	}
 
 	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-		final float[] sceneCoordinates = pLine.convertLocalToSceneCoordinates(0, 0);
+		final float[] sceneCoordinates = pLine.convertLocalCoordinatesToSceneCoordinates(0, 0);
 		final float x1 = sceneCoordinates[Constants.VERTEX_INDEX_X];
 		final float y1 = sceneCoordinates[Constants.VERTEX_INDEX_Y];
 		
-		pLine.convertLocalToSceneCoordinates(pLine.getX2() - pLine.getX1(), pLine.getY2() - pLine.getY1());
+		pLine.convertLocalCoordinatesToSceneCoordinates(pLine.getX2() - pLine.getX1(), pLine.getY2() - pLine.getY1());
 		final float x2 = sceneCoordinates[Constants.VERTEX_INDEX_X];
 		final float y2 = sceneCoordinates[Constants.VERTEX_INDEX_Y];
 		
