@@ -69,7 +69,7 @@ public class GrahamScan extends BaseHullAlgorithm {
 	private void makeAllVerticesRelativeTo(final Vector2 pVector) {
 		final Vector2[] vertices = this.mVertices;
 		final int vertexCount = this.mVertexCount;
-		
+
 		final Vector2 vertexCopy = new Vector2(pVector); // necessary, as pVector might be in mVertices[]
 		for(int i = 0; i < vertexCount; i++) {
 			vertices[i].sub(vertexCopy);
@@ -89,7 +89,7 @@ public class GrahamScan extends BaseHullAlgorithm {
 		final Vector2[] vertices = this.mVertices;
 		int i = pFromIndex;
 		int j = pToIndex;
-		
+
 		final Vector2 q = vertices[(pFromIndex + pToIndex) / 2];
 		while(i <= j) {
 			while(Vector2Util.isLess(vertices[i], q)) {

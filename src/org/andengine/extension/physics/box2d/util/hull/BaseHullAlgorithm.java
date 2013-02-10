@@ -55,7 +55,7 @@ public abstract class BaseHullAlgorithm implements IHullAlgorithm {
 
 	protected void swap(final int pIndexA, final int pIndexB) {
 		final Vector2[] vertices = this.mVertices;
-		
+
 		final Vector2 tmp = vertices[pIndexA];
 		vertices[pIndexA] = vertices[pIndexB];
 		vertices[pIndexB] = tmp;

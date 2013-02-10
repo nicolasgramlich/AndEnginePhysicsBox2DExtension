@@ -25,7 +25,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 
 public interface RayCastCallback {
-	
+
 	/** Called for each fixture found in the query. You control how the ray cast
 		 proceeds by returning a float:
 		 return -1: ignore this fixture and continue

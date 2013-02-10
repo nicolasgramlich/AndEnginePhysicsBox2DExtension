@@ -113,7 +113,7 @@ public class Body {
 	public void setTransform (Vector2 position, float angle) {
 		jniSetTransform(addr, position.x, position.y, angle);
 	}
-	
+
 	/**
 	 * Set the position of the body's origin and rotation. This breaks any contacts and wakes the other bodies. Manipulating a
 	 * body's transform may cause non-physical behavior.
@@ -124,7 +124,7 @@ public class Body {
 	public void setTransform(float x, float y, float angle) {
 		jniSetTransform(addr, x, y, angle);
 	}
-	
+
 
 	private native void jniSetTransform (long addr, float positionX, float positionY, float angle);
 
@@ -199,7 +199,7 @@ public class Body {
 	public void setLinearVelocity (Vector2 v) {
 		jniSetLinearVelocity(addr, v.x, v.y);
 	}
-	
+
 	/**
 	 * Set the linear velocity of the center of mass.
 	 */
@@ -250,7 +250,7 @@ public class Body {
 	public void applyForce (Vector2 force, Vector2 point) {
 		jniApplyForce(addr, force.x, force.y, point.x, point.y);
 	}
-	
+
 	/**
 	 * Apply a force at a world point. If the force is not applied at the center of mass, it will generate a torque and affect the
 	 * angular velocity. This wakes up the body.
@@ -285,7 +285,7 @@ public class Body {
 	public void applyLinearImpulse (Vector2 impulse, Vector2 point) {
 		jniApplyLinearImpulse(addr, impulse.x, impulse.y, point.x, point.y);
 	}
-	
+
 	/**
 	 * Apply an impulse at a point. This immediately modifies the velocity. It also modifies the angular velocity if the point of
 	 * application is not at the center of mass. This wakes up the body.

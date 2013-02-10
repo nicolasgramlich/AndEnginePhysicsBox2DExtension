@@ -18,7 +18,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 	// ===========================================================
 	// Constants
 	// ===========================================================
-	
+
 	private static final long serialVersionUID = 412969510084261799L;
 
 	// ===========================================================
@@ -28,9 +28,9 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 	// ===========================================================
 	// Constructors
 	// ===========================================================
-	
+
 	PhysicsConnectorManager() {
-		
+
 	}
 
 	// ===========================================================
@@ -48,7 +48,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 			physicsConnectors.get(i).onUpdate(pSecondsElapsed);
 		}
 	}
-	
+
 	@Override
 	public void reset() {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
@@ -60,7 +60,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 	// ===========================================================
 	// Methods
 	// ===========================================================
-	
+
 	public Body findBodyByShape(final IShape pShape) {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
 		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
@@ -71,7 +71,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 		}
 		return null;
 	}
-	
+
 	public PhysicsConnector findPhysicsConnectorByShape(final IShape pShape) {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
 		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {

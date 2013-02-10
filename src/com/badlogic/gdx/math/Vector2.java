@@ -216,7 +216,7 @@ public final class Vector2 {
 	public Vector2 tmp () {
 		return tmp.set(this);
 	}
-	
+
 	/**
 	 * @param v the other vector
 	 * @return The cross product between this and the other vector
