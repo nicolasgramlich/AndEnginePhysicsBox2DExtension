@@ -288,7 +288,7 @@ public class PhysicsFactory {
 		final Body boxBody = pPhysicsWorld.createBody(boxBodyDef);
 
 		final int vertexCount = pTriangleVertices.size();
-		for(int i = 0; i < vertexCount; /* */) {
+		for (int i = 0; i < vertexCount; /* */) {
 			final PolygonShape boxPoly = new PolygonShape();
 
 			TMP_TRIANGLE[2] = pTriangleVertices.get(i++);

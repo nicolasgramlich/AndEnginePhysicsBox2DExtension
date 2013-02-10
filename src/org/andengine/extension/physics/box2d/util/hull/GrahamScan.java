@@ -35,7 +35,7 @@ public class GrahamScan extends BaseHullAlgorithm {
 	public int computeHull(final Vector2[] pVertices) {
 		this.mVertices = pVertices;
 		this.mVertexCount = pVertices.length;
-		if(this.mVertexCount < 3) {
+		if (this.mVertexCount < 3) {
 			return this.mVertexCount;
 		}
 		this.mHullVertexCount = 0;
@@ -71,7 +71,7 @@ public class GrahamScan extends BaseHullAlgorithm {
 		final int vertexCount = this.mVertexCount;
 
 		final Vector2 vertexCopy = new Vector2(pVector); // necessary, as pVector might be in mVertices[]
-		for(int i = 0; i < vertexCount; i++) {
+		for (int i = 0; i < vertexCount; i++) {
 			vertices[i].sub(vertexCopy);
 		}
 	}
@@ -98,14 +98,14 @@ public class GrahamScan extends BaseHullAlgorithm {
 			while(Vector2Util.isLess(q, vertices[j])) {
 				j--;
 			}
-			if(i <= j) {
+			if (i <= j) {
 				this.swap(i++, j--);
 			}
 		}
-		if(pFromIndex < j) {
+		if (pFromIndex < j) {
 			this.quicksort(pFromIndex, j);
 		}
-		if(i < pToIndex) {
+		if (i < pToIndex) {
 			this.quicksort(i, pToIndex);
 		}
 	}

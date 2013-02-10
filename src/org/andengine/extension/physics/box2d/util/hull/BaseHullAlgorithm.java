@@ -43,10 +43,10 @@ public abstract class BaseHullAlgorithm implements IHullAlgorithm {
 		final int vertexCount = this.mVertexCount;
 
 		int min = 0;
-		for(int i = 1; i < vertexCount; i++) {
+		for (int i = 1; i < vertexCount; i++) {
 			final float dY = vertices[i].y - vertices[min].y;
 			final float dX = vertices[i].x - vertices[min].x;
-			if(dY < 0 || dY == 0 && dX < 0) {
+			if (dY < 0 || dY == 0 && dX < 0) {
 				min = i;
 			}
 		}

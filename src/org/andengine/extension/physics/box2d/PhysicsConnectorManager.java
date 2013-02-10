@@ -44,7 +44,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 	@Override
 	public void onUpdate(final float pSecondsElapsed) {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
-		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
+		for (int i = physicsConnectors.size() - 1; i >= 0; i--) {
 			physicsConnectors.get(i).onUpdate(pSecondsElapsed);
 		}
 	}
@@ -52,7 +52,7 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 	@Override
 	public void reset() {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
-		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
+		for (int i = physicsConnectors.size() - 1; i >= 0; i--) {
 			physicsConnectors.get(i).reset();
 		}
 	}
@@ -63,9 +63,9 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 
 	public Body findBodyByShape(final IShape pShape) {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
-		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
+		for (int i = physicsConnectors.size() - 1; i >= 0; i--) {
 			final PhysicsConnector physicsConnector = physicsConnectors.get(i);
-			if(physicsConnector.mEntity == pShape){
+			if (physicsConnector.mEntity == pShape) {
 				return physicsConnector.mBody;
 			}
 		}
@@ -74,9 +74,9 @@ public class PhysicsConnectorManager extends ArrayList<PhysicsConnector> impleme
 
 	public PhysicsConnector findPhysicsConnectorByShape(final IShape pShape) {
 		final ArrayList<PhysicsConnector> physicsConnectors = this;
-		for(int i = physicsConnectors.size() - 1; i >= 0; i--) {
+		for (int i = physicsConnectors.size() - 1; i >= 0; i--) {
 			final PhysicsConnector physicsConnector = physicsConnectors.get(i);
-			if(physicsConnector.mEntity == pShape){
+			if (physicsConnector.mEntity == pShape) {
 				return physicsConnector;
 			}
 		}

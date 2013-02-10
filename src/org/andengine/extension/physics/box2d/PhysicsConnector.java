@@ -93,13 +93,13 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 		final IEntity entity = this.mEntity;
 		final Body body = this.mBody;
 
-		if(this.mUpdatePosition) {
+		if (this.mUpdatePosition) {
 			final Vector2 position = body.getPosition();
 			final float pixelToMeterRatio = this.mPixelToMeterRatio;
 			entity.setPosition(position.x * pixelToMeterRatio, position.y * pixelToMeterRatio);
 		}
 
-		if(this.mUpdateRotation) {
+		if (this.mUpdateRotation) {
 			final float angle = body.getAngle();
 			entity.setRotation(-MathUtils.radToDeg(angle));
 		}

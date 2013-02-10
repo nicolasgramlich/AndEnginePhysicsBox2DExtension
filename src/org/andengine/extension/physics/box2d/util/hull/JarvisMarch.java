@@ -62,11 +62,11 @@ public class JarvisMarch extends BaseHullAlgorithm {
 		final int vertexCount = this.mVertexCount;
 
 		int i = 0;
-		for(int j = 1; j < vertexCount; j++) {
+		for (int j = 1; j < vertexCount; j++) {
 
 			final Vector2 vector2A = Vector2Pool.obtain().set(vertices[j]);
 			final Vector2 vector2B = Vector2Pool.obtain().set(vertices[i]);
-			if(Vector2Util.isLess(vector2A.sub(pVector), vector2B.sub(pVector))) {
+			if (Vector2Util.isLess(vector2A.sub(pVector), vector2B.sub(pVector))) {
 				i = j;
 			}
 			Vector2Pool.recycle(vector2A);

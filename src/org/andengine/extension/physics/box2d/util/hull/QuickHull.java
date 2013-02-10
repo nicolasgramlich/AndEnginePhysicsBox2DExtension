@@ -58,7 +58,7 @@ public class QuickHull extends BaseHullAlgorithm {
 	}
 
 	private void computeHullVertices(final Vector2Line pLine, final int pIndexFrom, final int pIndexTo) {
-		if(pIndexFrom > pIndexTo) {
+		if (pIndexFrom > pIndexTo) {
 			return;
 		}
 		final int k = this.indexOfFurthestVertex(pLine, pIndexFrom, pIndexTo);
@@ -88,9 +88,9 @@ public class QuickHull extends BaseHullAlgorithm {
 
 		int f = pFromIndex;
 		float mx = 0;
-		for(int i = pFromIndex; i <= pToIndex; i++) {
+		for (int i = pFromIndex; i <= pToIndex; i++) {
 			final float d = -Vector2Util.area2(vertices[i], pLine);
-			if(d > mx || d == mx && vertices[i].x > vertices[f].y) {
+			if (d > mx || d == mx && vertices[i].x > vertices[f].y) {
 				mx = d;
 				f = i;
 			}
@@ -110,7 +110,7 @@ public class QuickHull extends BaseHullAlgorithm {
 			while(i <= j && !Vector2Util.isRightOf(vertices[j], pLine)) {
 				j--;
 			}
-			if(i <= j) {
+			if (i <= j) {
 				this.swap(i++, j--);
 			}
 		}
