@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2010 Mario Zechner (contact@badlogicgames.com)
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,11 +26,11 @@ import com.badlogic.gdx.math.Vector2;
  * polygons without holes. For more information:
  * @see http://cgm.cs.mcgill.ca/~godfried/teaching/cg-projects/97/Ian/algorithm2.html
  * @see http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
- * 
+ *
  * @author badlogicgames@gmail.com
- * (c) 2010 Nicolas Gramlich 
+ * (c) 2010 Nicolas Gramlich
  * (c) 2011 Zynga Inc.
- * 
+ *
  * @author Nicolas Gramlich (Improved performance. Collinear edges are now supported.)
  */
 public final class EarClippingTriangulator implements ITriangulationAlgoritm {
@@ -175,8 +175,8 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 				final float currentVertexX = currentVertex.x;
 				final float currentVertexY = currentVertex.y;
 
-				/* TODO The following condition fails for perpendicular, axis aligned triangles! 
-				 * Removing it doesn't seem to cause problems. 
+				/* TODO The following condition fails for perpendicular, axis aligned triangles!
+				 * Removing it doesn't seem to cause problems.
 				 * Maybe it was an optimization?
 				 * Maybe it tried to handle collinear pieces ? */
 //				if (((currentVertexX != pX1) && (currentVertexY != pY1)) || ((currentVertexX != pX2) && (currentVertexY != pY2)) || ((currentVertexX != pX3) && (currentVertexY != pY3))) {

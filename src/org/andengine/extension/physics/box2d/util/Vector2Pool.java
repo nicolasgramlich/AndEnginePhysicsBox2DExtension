@@ -5,9 +5,9 @@ import org.andengine.util.adt.pool.GenericPool;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * (c) 2010 Nicolas Gramlich 
+ * (c) 2010 Nicolas Gramlich
  * (c) 2011 Zynga Inc.
- * 
+ *
  * @author Nicolas Gramlich
  * @since 16:22:23 - 14.09.2010
  */
