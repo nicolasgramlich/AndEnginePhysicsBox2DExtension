@@ -1,4 +1,4 @@
-# AndEngine - PhysicBox2DExtension
+# AndEngine - PhysicsBox2DExtension
 This is an extension for AndEngine which adds supports for Box2D physics. All
 physics-related examples from AndEngineExamples repository depend on it.
 
