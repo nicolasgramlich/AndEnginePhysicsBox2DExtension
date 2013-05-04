@@ -71,7 +71,7 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 			return triangles;
 		}
 
-		while(vertices.size() >= 3) {
+		while (vertices.size() >= 3) {
 			// TODO Usually(Always?) only the Types of the vertices next to the ear change! --> Improve
 			final int vertexTypes[] = this.classifyVertices(vertices);
 
@@ -168,7 +168,7 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 		int i = 0;
 
 		final int vertexCount = pVertices.size();
-		while(i < vertexCount - 1) {
+		while (i < vertexCount - 1) {
 			if ((pVertexTypes[i] == CONCAVE)) {
 				final Vector2 currentVertex = pVertices.get(i);
 

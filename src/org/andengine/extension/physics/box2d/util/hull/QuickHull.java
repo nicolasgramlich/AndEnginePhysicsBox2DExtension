@@ -103,11 +103,11 @@ public class QuickHull extends BaseHullAlgorithm {
 
 		int i = pFromIndex;
 		int j = pToIndex;
-		while(i <= j) {
-			while(i <= j && Vector2Util.isRightOf(vertices[i], pLine)) {
+		while (i <= j) {
+			while (i <= j && Vector2Util.isRightOf(vertices[i], pLine)) {
 				i++;
 			}
-			while(i <= j && !Vector2Util.isRightOf(vertices[j], pLine)) {
+			while (i <= j && !Vector2Util.isRightOf(vertices[j], pLine)) {
 				j--;
 			}
 			if (i <= j) {

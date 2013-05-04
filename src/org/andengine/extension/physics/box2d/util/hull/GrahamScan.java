@@ -55,9 +55,9 @@ public class GrahamScan extends BaseHullAlgorithm {
 		this.makeAllVerticesRelativeTo(new Vector2(pl).mul(-1));
 		int i = 3;
 		int k = 3;
-		while(k < this.mVertexCount) {
+		while (k < this.mVertexCount) {
 			this.swap(i, k);
-			while(!this.isConvex(i - 1)) {
+			while (!this.isConvex(i - 1)) {
 				this.swap(i - 1, i--);
 			}
 			k++;
@@ -91,11 +91,11 @@ public class GrahamScan extends BaseHullAlgorithm {
 		int j = pToIndex;
 
 		final Vector2 q = vertices[(pFromIndex + pToIndex) / 2];
-		while(i <= j) {
-			while(Vector2Util.isLess(vertices[i], q)) {
+		while (i <= j) {
+			while (Vector2Util.isLess(vertices[i], q)) {
 				i++;
 			}
-			while(Vector2Util.isLess(q, vertices[j])) {
+			while (Vector2Util.isLess(q, vertices[j])) {
 				j--;
 			}
 			if (i <= j) {

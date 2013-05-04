@@ -73,7 +73,7 @@ public class FixedStepPhysicsWorld extends PhysicsWorld {
 
 		int stepsAllowed = this.mMaximumStepsPerUpdate;
 
-		while(this.mSecondsElapsedAccumulator >= stepLength && stepsAllowed > 0) {
+		while (this.mSecondsElapsedAccumulator >= stepLength && stepsAllowed > 0) {
 			world.step(stepLength, velocityIterations, positionIterations);
 			this.mSecondsElapsedAccumulator -= stepLength;
 			stepsAllowed--;

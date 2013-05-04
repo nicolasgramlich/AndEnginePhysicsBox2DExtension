@@ -28,7 +28,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
  * @author Nicolas Gramlich
  * @since 13:59:03 - 15.07.2010
  */
-public class PhysicsFactory {
+public final class PhysicsFactory {
 	// ===========================================================
 	// Constants
 	// ===========================================================
@@ -40,6 +40,10 @@ public class PhysicsFactory {
 	// ===========================================================
 	// Constructors
 	// ===========================================================
+
+	private PhysicsFactory() {
+
+	}
 
 	// ===========================================================
 	// Getter & Setter

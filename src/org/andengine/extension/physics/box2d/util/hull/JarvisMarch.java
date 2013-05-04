@@ -54,7 +54,7 @@ public class JarvisMarch extends BaseHullAlgorithm {
 			this.swap(this.mHullVertexCount, index);
 			index = this.indexOfRightmostVertexOf(vertices[this.mHullVertexCount]);
 			this.mHullVertexCount++;
-		} while(index > 0);
+		} while (index > 0);
 	}
 
 	private int indexOfRightmostVertexOf(final Vector2 pVector) {
