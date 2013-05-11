@@ -110,8 +110,8 @@ public final class EarClippingTriangulator implements ITriangulationAlgoritm {
 
 	/**
 	 * @param pVertices
-	 * @return An array of length <code>pVertices.size()</code> filled with either {@link EarClippingTriangulator#CONCAVE} or
-	 * {@link EarClippingTriangulator#CONVEX}.
+	 * @return An array of length <code>pVertices.size()</code> filled with either {@link #CONCAVE} or
+	 * {@link #CONVEX}.
 	 */
 	private int[] classifyVertices(final ArrayList<Vector2> pVertices) {
 		final int vertexCount = pVertices.size();
