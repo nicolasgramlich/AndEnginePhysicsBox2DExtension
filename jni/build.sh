@@ -1,11 +1,14 @@
 #!/bin/bash
 
-NDK_DIRECTORY="/Users/ngramlich/SDKs/Android/ndk/r8/"
-PROJECT_DIRECTORY="/Users/ngramlich/Workspace/gdk/graphic_engines/AndEngine/AndEnginePhysicsBox2DExtension/"
+NDK_DIRECTORY="/Users/ngramlich/Applications/android/ndk/r8e/"
+
+SCRIPT_DIR="$( cd "$( dirname "${0}" )" && pwd )"
+
+PROJECT_DIRECTORY=${SCRIPT_DIR}/../
 
 # Run build:
 pushd ${PROJECT_DIRECTORY} > /dev/null
-${NDK_DIRECTORY}ndk-build NDK_DEBUG=1
+${NDK_DIRECTORY}ndk-build -j8
 
 # Clean temporary files:
 rm -rf ${PROJECT_DIRECTORY}obj
