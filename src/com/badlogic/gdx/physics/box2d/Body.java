@@ -43,7 +43,10 @@ public class Body {
 
 	/** user data **/
 	private Object userData;
-
+	
+	/** Assigns Sprite to body for look up **/
+    	private Sprite attachedsprite;
+    	
 	/**
 	 * Constructs a new body with the given address
 	 * @param world the world
@@ -53,7 +56,18 @@ public class Body {
 		this.world = world;
 		this.addr = addr;
 	}
-
+	
+	/** Assigns Sprite to body for look up **/
+    	public void setAttachedSprite(Sprite Sprite )
+    	{
+        	attachedsprite = Sprite;
+    	}
+ 
+	 /** gets the Sprite in order to be used for the physics look up **/
+    	public Sprite getAttachedSprite()
+    	{
+        	return attachedsprite;
+    	}
 	/**
 	 * Creates a fixture and attach it to this body. Use this function if you need to set some fixture parameters, like friction.
 	 * Otherwise you can create the fixture directly from a shape. If the density is non-zero, this function automatically updates
