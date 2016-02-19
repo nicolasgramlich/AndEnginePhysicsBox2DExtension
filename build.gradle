@@ -1,0 +1,99 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.0.0-beta2'
+    }
+}
+apply plugin: 'com.android.library'
+
+repositories {
+    jcenter()
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    sourceSets.main.jni.srcDirs = [] //disable automatic ndk-build call
+    sourceSets.main {
+        jniLibs.srcDirs = ['src/main/libs']
+    }
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
+}
+
+/**
+ * Задача в которой мы вызываем скрипт ndk-build для компиляции native исходников
+ * скрипт вызывается как команда из командной строки:
+ * path/to/ndk-build path/to/source/project/root
+ *
+ * До ndk-build путь абсолютный, берем из локальных настроек
+ * До корневой папки проекта указываем путь относительно build.gradle
+ */
+task('compileNative') {
+    def $ndkBuildScript = //путь то файла ndk-build (linux) / ndk-build.cmd (windows) относительно корня ndk
+            System.properties['os.name'].toLowerCase().contains('windows') ?
+                    'ndk-build.cmd' :
+                    'ndk-build'
+    def $ndkProjectRootFolder = 'src/main'
+    def $ndkDirPropertyName = 'ndk.dir' // Имя свойства пути до NDK в настройках
+    def $ndkDir = System.getenv('NDK_HOME')
+
+    // переменная для хранения настроек
+    Properties properties = new Properties()
+    def propFile = project.rootProject.file('local.properties');
+    // загружаем файл с настройками проекта
+    if(propFile.exists()) {
+        properties.load(propFile.newDataInputStream())
+        // получаем путь до корневой директории ndk
+        $ndkDir = properties.getProperty($ndkDirPropertyName)
+    }
+
+    // если не установлен то посоветуем это сделать в локальных настройках
+    if( $ndkDir == null)
+        throw new RuntimeException("Property 'ndk.dir' not found. Please specify it. \n" +
+                " It must be something like this in your local.properties file \n" +
+                " ndk.dir=path/to/your/ndk")
+
+    // вызываем на выполнение скрипт для компиляции native исходников
+    exec {
+        executable = $ndkDir + '/' + $ndkBuildScript
+        args = ["NDK_PROJECT_PATH=" + $ndkProjectRootFolder]
+    }
+
+}
+
+task nativeLibsToJar(type: Zip, description: 'create a jar archive of the native libs', dependsOn: 'compileNative') {
+    destinationDir file("$buildDir/native-libs")
+    baseName 'native-libs'
+    extension 'jar'
+    from fileTree(dir: 'jniLibs', include: '**/*.so')
+    into 'lib/'
+}
+
+tasks.withType(JavaCompile) {
+    compileTask -> compileTask.dependsOn(nativeLibsToJar)
+}
