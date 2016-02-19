@@ -6,7 +6,7 @@ import static org.andengine.extension.physics.box2d.util.constants.PhysicsConsta
 import java.util.List;
 
 import org.andengine.entity.primitive.Line;
-import org.andengine.entity.shape.IAreaShape;
+import org.andengine.entity.shape.IShape;
 import org.andengine.entity.shape.IShape;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.util.Constants;
@@ -76,11 +76,11 @@ public class PhysicsFactory {
 		return fixtureDef;
 	}
 
-	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
 		return PhysicsFactory.createBoxBody(pPhysicsWorld, pAreaShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createBoxBody(final PhysicsWorld pPhysicsWorld, final IShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final float[] sceneCenterCoordinates = pAreaShape.getSceneCenterCoordinates();
 		final float centerX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
 		final float centerY = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y];
@@ -125,11 +125,11 @@ public class PhysicsFactory {
 		return boxBody;
 	}
 
-	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
+	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef) {
 		return PhysicsFactory.createCircleBody(pPhysicsWorld, pAreaShape, pBodyType, pFixtureDef, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IAreaShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
+	public static Body createCircleBody(final PhysicsWorld pPhysicsWorld, final IShape pAreaShape, final BodyType pBodyType, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
 		final float[] sceneCenterCoordinates = pAreaShape.getSceneCenterCoordinates();
 		final float centerX = sceneCenterCoordinates[Constants.VERTEX_INDEX_X];
 		final float centerY = sceneCenterCoordinates[Constants.VERTEX_INDEX_Y];
@@ -177,11 +177,11 @@ public class PhysicsFactory {
 	}
 
 	public static Body createLineBody(final PhysicsWorld pPhysicsWorld, final Line pLine, final FixtureDef pFixtureDef, final float pPixelToMeterRatio) {
-		final float[] sceneCoordinates = pLine.convertLocalToSceneCoordinates(0, 0);
+		final float[] sceneCoordinates = pLine.convertLocalCoordinatesToSceneCoordinates(0, 0);
 		final float x1 = sceneCoordinates[Constants.VERTEX_INDEX_X];
 		final float y1 = sceneCoordinates[Constants.VERTEX_INDEX_Y];
 		
-		pLine.convertLocalToSceneCoordinates(pLine.getX2() - pLine.getX1(), pLine.getY2() - pLine.getY1());
+		pLine.convertLocalCoordinatesToSceneCoordinates(pLine.getX2() - pLine.getX1(), pLine.getY2() - pLine.getY1());
 		final float x2 = sceneCoordinates[Constants.VERTEX_INDEX_X];
 		final float y2 = sceneCoordinates[Constants.VERTEX_INDEX_Y];
 		

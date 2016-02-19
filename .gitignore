@@ -27,6 +27,7 @@ gdbserver
 
 # IntelliJ / Android Studio:
 idea
+*.iml
 
 # Crashlytics
 res/values/com_crashlytics_export_strings.xml

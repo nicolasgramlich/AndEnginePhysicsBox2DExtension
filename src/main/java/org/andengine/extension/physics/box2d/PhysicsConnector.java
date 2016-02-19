@@ -1,7 +1,7 @@
 package org.andengine.extension.physics.box2d;
 
 import org.andengine.engine.handler.IUpdateHandler;
-import org.andengine.entity.shape.IAreaShape;
+import org.andengine.entity.shape.IShape;
 import org.andengine.entity.shape.IShape;
 import org.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.andengine.util.math.MathUtils;
@@ -39,19 +39,19 @@ public class PhysicsConnector implements IUpdateHandler, PhysicsConstants {
 	// Constructors
 	// ===========================================================
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody) {
+	public PhysicsConnector(final IShape pAreaShape, final Body pBody) {
 		this(pAreaShape, pBody, true, true);
 	}
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final float pPixelToMeterRatio) {
+	public PhysicsConnector(final IShape pAreaShape, final Body pBody, final float pPixelToMeterRatio) {
 		this(pAreaShape, pBody, true, true, pPixelToMeterRatio);
 	}
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
+	public PhysicsConnector(final IShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation) {
 		this(pAreaShape, pBody, pUdatePosition, pUpdateRotation, PIXEL_TO_METER_RATIO_DEFAULT);
 	}
 
-	public PhysicsConnector(final IAreaShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
+	public PhysicsConnector(final IShape pAreaShape, final Body pBody, final boolean pUdatePosition, final boolean pUpdateRotation, final float pPixelToMeterRatio) {
 		this.mShape = pAreaShape;
 		this.mBody = pBody;
 
